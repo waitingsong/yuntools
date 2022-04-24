@@ -1,7 +1,7 @@
 {
   "name": "yuntools",
   "version": "1.0.0",
-  "description": "",
+  "description": "云工具封装",
   "private": true,
   "devDependencies": {
     "@commitlint/cli": "16",
