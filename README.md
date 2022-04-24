@@ -1,4 +1,4 @@
-# NPM mono repository
+# yuntools repository
 
 
 [![GitHub tag](https://img.shields.io/github/tag/waitingsong/npm-mono-base.svg)]()
@@ -11,57 +11,6 @@
 
 
 以下所有命令行操作都在 `git-bash` 窗口中执行
-
-## 创建新项目
-
-### 克隆新项目仓库
-
-```sh
-git clone git@git.foo.com:<group>/<project> && cd <project>
-# 比如
-git clone git@git.foo.com:foo/uc && cd uc
-```
-
-### 初始化仓库
-
-```sh
-# GitLab
-git archive --remote=git@github.com:waitingsong/npm-mono-base.git HEAD package.json | tar -x > package.json
-# GitHub
-curl -kL https://github.com.cnpmjs.org/waitingsong/npm-mono-base/raw/main/package.json > package.json
-git add package.json
-git commit -m "chore: initialize"
-npm run bp:add
-git fetch bp -v && git merge bp/main --allow-unrelated-histories -m "Merge remote-tracking branch 'bp/main'"
-
-# 使用目录名作为项目名
-sh init-project.sh
-# 或者指定项目名
-sh init-project.sh @foo/my_project
-
-# 初始化依赖
-npm run repo:init
-lerna list
-```
-
-### 根据模板选择初始化子包
-
-#### 创建目录
-```sh
-npm run add:pkg my_pkg
-```
-
-#### 更新项目配置
-
-1. 更新仓库顶级 `package.json` 文件 `description` 等字段
-2. 修改**新建**各子包配置文件 `package.json`
-3. 更新本文档 [Packages](#packages) 表格的子包信息
-
----
-
-
-
-
 
 
 
