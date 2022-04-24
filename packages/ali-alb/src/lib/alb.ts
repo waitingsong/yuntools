@@ -37,8 +37,19 @@ import {
 /** 阿里云 ALB 负载均衡服务接口 */
 export class ALBService {
 
-  client: Alb
+  /**
+   * 是否输出日志
+   * @default false
+   */
   debug = false
+
+  /**
+   * 是否输出渐进日志
+   * @default true
+   */
+  showProgressLog = true
+
+  client: Alb
   nextToken = ''
   ecsInst: ECSService
 
@@ -324,9 +335,15 @@ export class ALBService {
       return
     }
 
+    if (this.showProgressLog || this.debug) {
+      console.info({ range })
+    }
+
     let ret
     for await (const val of range) {
-      this.debug && console.info(`Set weight of "${ecsId}": ${val} at ${new Date().toLocaleString()}`)
+      if (this.showProgressLog || this.debug) {
+        console.info(`Set weight of "${ecsId}": ${val} at ${new Date().toLocaleString()}`)
+      }
       const { jobId } = await this.setServersWeight(serverGroupId, [ecsId], val)
       assert(jobId, 'no jobId')
       ret = jobId
