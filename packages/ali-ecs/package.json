@@ -1,7 +1,7 @@
 {
   "name": "@yuntools/ali-ecs",
   "author": "waiting",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "阿里云 ECS 相关操作",
   "keywords": [
     "aliyun",

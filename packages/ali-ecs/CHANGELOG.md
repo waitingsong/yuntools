@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/waitingsong/yuntools/compare/v1.0.0...v1.1.0) (2022-04-24)
+
+
+### Features
+
+* **ali-ecs:** export types ([72891b2](https://github.com/waitingsong/yuntools/commit/72891b29a466b015cfdf6d752ef2811bdec33172))
+
+
+
+
+
 # 1.0.0 (2022-04-24)
 
 
