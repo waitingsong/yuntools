@@ -4,5 +4,7 @@
 import Alb from '@alicloud/alb20200616'
 
 
-export const _Client = (Alb as any).default as typeof Alb
+// for ESM module
+// export const _Client = (Alb as any).default as typeof Alb
+export const _Client = Alb
 
