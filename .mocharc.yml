@@ -1,0 +1,15 @@
+
+bail: true
+full-trace: true
+enable-source-maps: true
+require:
+  - ts-node/register
+  - tsconfig-paths/register
+  - test/root.hooks.ts
+spec:
+  - test/**/*.test.ts
+timeout: 60000
+ui: bdd
+parallel: true
+exit: true
+

@@ -1,0 +1,37 @@
+{
+  "version": "0.0.0",
+  "packages": [
+    "packages/*"
+  ],
+  "ignore": [],
+  "command": {
+    "publish": {
+      "ignoreChanges": [
+        "*.md",
+        ".githooks",
+        ".scripts",
+        ".vscode",
+        "package-lock.json",
+        "packages/demo",
+        "packages/mw-demo"
+      ]
+    },
+    "bootstrap": {
+      "hoist": true,
+      "noCi": true,
+      "nohoist": [
+        "cross-env",
+        "egg"
+      ],
+      "npmClientArgs": [
+        "--legacy-peer-deps"
+      ]
+    },
+    "version": {
+      "conventionalCommits": true,
+      "allowBranch": ["main", "release"],
+      "registry": "https://registry.npmjs.org/"
+    }
+  },
+  "npmClient": "npm"
+}
