@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/waitingsong/yuntools/compare/v1.1.0...v1.1.1) (2022-04-24)
+
+
+### Bug Fixes
+
+* **ali-alb:** client import ([4f814c9](https://github.com/waitingsong/yuntools/commit/4f814c96e7c2330e0f59762d105e31ca49e8f9ab))
+
+
+
+
+
 # [1.1.0](https://github.com/waitingsong/yuntools/compare/v1.0.0...v1.1.0) (2022-04-24)
 
 
