@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.1](https://github.com/waitingsong/yuntools/compare/v1.2.0...v1.2.1) (2022-04-26)
+
+
+### Bug Fixes
+
+* **ali-ecs:** update getInstanceByIp() ([7225860](https://github.com/waitingsong/yuntools/commit/7225860cf190ad8c0d3c63bf248ad5f0f3af56d3))
+
+
+
+
+
 ## [1.1.1](https://github.com/waitingsong/yuntools/compare/v1.1.0...v1.1.1) (2022-04-24)
 
 
