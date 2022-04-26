@@ -54,6 +54,7 @@ export class ECSService {
       action: Action.DescribeInstances,
       nextToken: this.nextToken,
       regionId,
+      publicIpAddresses: [ip],
     }
     const req = new DescribeInstancesRequest(opts)
     this.debug && console.info({ req })
