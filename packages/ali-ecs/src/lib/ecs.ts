@@ -18,6 +18,7 @@ export class ECSService {
   nextToken = ''
   /** ip -> instanceId */
   nodeIp2IdCache = new Map<string, string>()
+  instancesCache: DescribeInstancesResponseBodyInstancesInstance[] = []
 
   constructor(
     protected id: string,
@@ -50,12 +51,19 @@ export class ECSService {
     regionId = 'cn-hangzhou',
   ): Promise<DescribeInstancesResponseBodyInstancesInstance | undefined> {
 
+    const node = this._getInstanceByIp(ip, this.instancesCache)
+    if (node) {
+      return node
+    }
+
     const opts = {
       action: Action.DescribeInstances,
       nextToken: this.nextToken,
       regionId,
       publicIpAddresses: [ip],
+      eipAddresses: [ip],
     }
+
     const req = new DescribeInstancesRequest(opts)
     this.debug && console.info({ req })
 
@@ -68,6 +76,9 @@ export class ECSService {
     if (! insts) {
       return
     }
+    this.instancesCache = insts
+    this.debug && console.info({ insts })
+
     for (const inst of insts) {
       const ips = inst.publicIpAddress?.ipAddress
       if (ips?.includes(ip)) {
@@ -76,6 +87,23 @@ export class ECSService {
     }
   }
 
+
+  private _getInstanceByIp(
+    ip: string,
+    instances: DescribeInstancesResponseBodyInstancesInstance[],
+  ): DescribeInstancesResponseBodyInstancesInstance | undefined {
+
+    if (! instances.length) {
+      return
+    }
+
+    for (const inst of instances) {
+      const ips = inst.publicIpAddress?.ipAddress
+      if (ips?.includes(ip)) {
+        return inst
+      }
+    }
+  }
 
   private createClient(accessKeyId: string, accessKeySecret: string): Ecs {
     const config = new ApiConfig({ accessKeyId, accessKeySecret })
