@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/waitingsong/yuntools/compare/v1.2.1...v1.3.0) (2022-04-26)
+
+
+### Features
+
+* **ali-ecs:** add ECSService:instancesCache ([15fd28c](https://github.com/waitingsong/yuntools/commit/15fd28c56157451d5b6552c248efcfca150e6b09))
+
+
+
+
+
 ## [1.2.1](https://github.com/waitingsong/yuntools/compare/v1.2.0...v1.2.1) (2022-04-26)
 
 
