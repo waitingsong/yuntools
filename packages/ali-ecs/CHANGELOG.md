@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.1](https://github.com/waitingsong/yuntools/compare/v1.6.0...v1.6.1) (2022-04-30)
+
+
+### Bug Fixes
+
+* **ali-ecs:** fix max query number to 100 ([a7e16e3](https://github.com/waitingsong/yuntools/commit/a7e16e3de7485164b61bf28317ad3884bf680b3d))
+
+
+
+
+
 # [1.6.0](https://github.com/waitingsong/yuntools/compare/v1.5.0...v1.6.0) (2022-04-30)
 
 

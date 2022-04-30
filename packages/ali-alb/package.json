@@ -1,7 +1,7 @@
 {
   "name": "@yuntools/ali-alb",
   "author": "waiting",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "阿里云 ALB 负载均衡相关操作",
   "keywords": [
     "aliyun",
@@ -27,7 +27,7 @@
   "dependencies": {
     "@alicloud/alb20200616": "^1.0.1",
     "@alicloud/openapi-client": "^0.4.1",
-    "@yuntools/ali-ecs": "^1.6.0",
+    "@yuntools/ali-ecs": "^1.6.1",
     "rxjs": "^7.4.0"
   },
   "devDependencies": {
