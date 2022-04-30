@@ -19,6 +19,8 @@ export class ECSService {
   /** ip -> instanceId */
   nodeIp2IdCache = new Map<string, string>()
   instancesCache: DescribeInstancesResponseBodyInstancesInstance[] = []
+  cacheTime: number
+  cacheTTLSec: 30
 
   constructor(
     protected id: string,
@@ -31,6 +33,9 @@ export class ECSService {
   /** 根据公网 IP 获取 Ecs 实例 ID */
   async getInstanceIdByIp(ip: string): Promise<string | undefined> {
     assert(ip, 'ip is required')
+
+    this.cleanCache()
+
     const nodeId = this.nodeIp2IdCache.get(ip)
     if (nodeId) {
       this.debug && console.info(`getInstanceIdByIp from cache: ${ip} -> ${nodeId}`)
@@ -53,6 +58,8 @@ export class ECSService {
 
     assert(Array.isArray(ips), 'ips must be an array')
 
+    this.cleanCache()
+
     const ret = new Map<string, DescribeInstancesResponseBodyInstancesInstance | undefined>()
     for await (const ip of ips) {
       if (! ip || typeof ip !== 'string') {
@@ -73,6 +80,7 @@ export class ECSService {
 
     assert(typeof ip === 'string', 'ip must be a string')
 
+    this.cleanCache()
     const node = this._getInstanceByIp(ip, this.instancesCache)
     if (node) {
       return node
@@ -98,7 +106,7 @@ export class ECSService {
     if (! insts) {
       return
     }
-    this.instancesCache = insts
+    this.updateInstancedCache(insts)
     this.debug && console.info({ insts })
 
     for (const inst of insts) {
@@ -109,6 +117,20 @@ export class ECSService {
     }
   }
 
+
+  cleanCache(): void {
+    const now = Date.now()
+    if (this.cacheTime && now - this.cacheTime > this.cacheTTLSec * 1000) {
+      this.nodeIp2IdCache.clear()
+      this.instancesCache = []
+      this.cacheTime = 0
+    }
+  }
+
+  updateInstancedCache(instances: DescribeInstancesResponseBodyInstancesInstance[]): void {
+    this.instancesCache = instances
+    this.cacheTime = Date.now()
+  }
 
   private _getInstanceByIp(
     ip: string,
