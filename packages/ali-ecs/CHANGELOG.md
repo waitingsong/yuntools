@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/waitingsong/yuntools/compare/v1.3.0...v1.4.0) (2022-04-30)
+
+
+### Features
+
+* **ali-ecs:** add cleanCache() and updateInstancedCache() ([0f93ced](https://github.com/waitingsong/yuntools/commit/0f93cedbf2d20e1441689480f78a0698e50c0947))
+* **ali-ecs:** add getInstancesByIps() ([a67bab6](https://github.com/waitingsong/yuntools/commit/a67bab66608ee2158ca19f67890aa470ad87a10b))
+
+
+
+
+
 # [1.3.0](https://github.com/waitingsong/yuntools/compare/v1.2.1...v1.3.0) (2022-04-26)
 
 
