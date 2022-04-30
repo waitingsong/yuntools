@@ -3,7 +3,7 @@
   "compilerOptions": {
     "declaration": false,
     "inlineSourceMap": false,
-    "module": "ESNext",
+    "module": "commonjs",
     "noEmit": true,
     "noImplicitAny": false,
     "noImplicitThis": false,
