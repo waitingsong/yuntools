@@ -1,4 +1,4 @@
-import assert from 'assert/strict'
+import assert from 'assert'
 
 import Ecs, { DescribeInstancesRequest } from '@alicloud/ecs20140526'
 import { Config as ApiConfig } from '@alicloud/openapi-client'
@@ -14,7 +14,10 @@ import {
 } from './types'
 
 
-/** 阿里云 ECS 服务接口 */
+/**
+ * 阿里云 ECS 服务接口
+ * 最多支持 100 个实例
+ */
 export class ECSService {
 
   client: Ecs
@@ -127,8 +130,9 @@ export class ECSService {
     assert(typeof ip === 'string', 'ip must be a string')
 
     this.cleanCache()
-    const node = this._getInstanceByIp(ip, this.instancesCache)
+    const node = this._getInstanceByIpFromCache(ip)
     if (node) {
+      console.log(`getInstanceByIp from cache: ${ip}`)
       return node
     }
 
@@ -138,6 +142,9 @@ export class ECSService {
       regionId,
       publicIpAddresses: [ip],
       eipAddresses: [ip],
+      // pageNumber: 0,
+      pageSize: 100,
+      totalCount: 100,
     }
 
     const req = new DescribeInstancesRequest(opts)
@@ -152,6 +159,7 @@ export class ECSService {
     if (! insts) {
       return
     }
+    this.debug && console.log(`${ip} found ${insts.length}`)
     this.updateInstancedCache(insts)
     this.debug && console.info({ insts })
 
@@ -166,7 +174,8 @@ export class ECSService {
 
   cleanCache(): void {
     const now = Date.now()
-    if (this.cacheTime && now - this.cacheTime > this.cacheTTLSec * 1000) {
+    if (this.cacheTime && (now - this.cacheTime > this.cacheTTLSec * 1000)) {
+      console.log('cache expired')
       this.nodeIp2IdCache.clear()
       this.instancesCache = []
       this.cacheTime = 0
@@ -178,17 +187,23 @@ export class ECSService {
     this.cacheTime = Date.now()
   }
 
-  private _getInstanceByIp(
+  private _getInstanceByIpFromCache(
     ip: string,
-    instances: EcsNodeDetail[],
   ): EcsNodeDetail | undefined {
 
+    if (! ip.length) {
+      console.warn('_getInstanceByIpFromCache: ip is empty')
+      return
+    }
+
+    const instances = this.instancesCache
     if (! instances.length) {
       return
     }
 
     for (const inst of instances) {
       const ips = inst.publicIpAddress?.ipAddress
+      // console.log(`_getInstanceByIp ips ${ip}`, ips)
       if (ips?.includes(ip)) {
         return inst
       }
