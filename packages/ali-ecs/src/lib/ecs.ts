@@ -45,11 +45,33 @@ export class ECSService {
     }
   }
 
+  /** 根据公网 IP 数组获取 Ecs 实例信息 */
+  async getInstancesByIps(
+    ips: string[],
+    regionId = 'cn-hangzhou',
+  ): Promise<Map<string, DescribeInstancesResponseBodyInstancesInstance | undefined>> {
+
+    assert(Array.isArray(ips), 'ips must be an array')
+
+    const ret = new Map<string, DescribeInstancesResponseBodyInstancesInstance | undefined>()
+    for await (const ip of ips) {
+      if (! ip || typeof ip !== 'string') {
+        continue
+      }
+      const inst = await this.getInstanceByIp(ip, regionId)
+      ret.set(ip, inst)
+    }
+    return ret
+  }
+
+
   /** 根据公网 IP 获取 Ecs 实例信息 */
   async getInstanceByIp(
     ip: string,
     regionId = 'cn-hangzhou',
   ): Promise<DescribeInstancesResponseBodyInstancesInstance | undefined> {
+
+    assert(typeof ip === 'string', 'ip must be a string')
 
     const node = this._getInstanceByIp(ip, this.instancesCache)
     if (node) {
