@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.6.0](https://github.com/waitingsong/yuntools/compare/v1.5.0...v1.6.0) (2022-04-30)
+
+
+### Features
+
+* **ali-ecs:** add ECSService methods ([268660d](https://github.com/waitingsong/yuntools/commit/268660da3703210a0127d4de7e768f2e8665f87a))
+* **ali-ecs:** export type EcsNodeDetail and remove DescribeInstancesResponseBodyInstancesInstance ([44d6203](https://github.com/waitingsong/yuntools/commit/44d62033d2986e2184f19e31b22a2048f0e9101a))
+
+
+
+
+
 # [1.5.0](https://github.com/waitingsong/yuntools/compare/v1.4.0...v1.5.0) (2022-04-30)
 
 
