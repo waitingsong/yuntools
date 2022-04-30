@@ -12,4 +12,6 @@ rules:
   "node/no-unpublished-import": ['error', { "tryExtensions": [".ts"] }]
   "@typescript-eslint/prefer-ts-expect-error": 0
   "unicorn/filename-case": 0
+  "no-console": 0
+  "node/shebang": 0
 
