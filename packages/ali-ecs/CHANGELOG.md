@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/waitingsong/yuntools/compare/v1.4.0...v1.5.0) (2022-04-30)
+
+
+### Features
+
+* **ali-ecs:** export type DescribeInstancesResponseBodyInstancesInstance ([03184bf](https://github.com/waitingsong/yuntools/commit/03184bfbc8bce47fda6fabad8876f3e2b37c70ab))
+
+
+
+
+
 # [1.4.0](https://github.com/waitingsong/yuntools/compare/v1.3.0...v1.4.0) (2022-04-30)
 
 
