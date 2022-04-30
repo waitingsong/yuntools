@@ -4,7 +4,14 @@ import Ecs, { DescribeInstancesRequest } from '@alicloud/ecs20140526'
 import { Config as ApiConfig } from '@alicloud/openapi-client'
 
 import { _Client } from './client'
-import { Action, EcsNodeDetail } from './types'
+import {
+  Action,
+  EcsStatusKey,
+  EcsNodeDetail,
+  EcsNodeStatus,
+  EcsNodeInfo,
+  EcsInfoKey,
+} from './types'
 
 
 /** 阿里云 ECS 服务接口 */
@@ -26,6 +33,48 @@ export class ECSService {
   ) {
     this.client = this.createClient(id, key)
   }
+
+
+  /** 根据公网 IP 数组获取 Ecs 实例状态信息 */
+  async getNodeStatusByIps(
+    ips: string[],
+    regionId = 'cn-hangzhou',
+  ): Promise<Map<string, EcsNodeStatus | undefined>> {
+
+    const ret = new Map<string, EcsNodeStatus | undefined>()
+    const nodes = await this.getInstancesByIps(ips, regionId)
+    nodes.forEach((row, ip) => {
+      const info = {} as EcsNodeStatus
+      Object.values(EcsStatusKey).forEach((key) => {
+        // @ts-expect-error
+        info[key] = row?.[key]
+      })
+      ret.set(ip, info)
+    })
+
+    return ret
+  }
+
+  /** 根据公网 IP 数组获取 Ecs 实例信息 */
+  async getNodeInfoByIps(
+    ips: string[],
+    regionId = 'cn-hangzhou',
+  ): Promise<Map<string, EcsNodeInfo | undefined>> {
+
+    const ret = new Map<string, EcsNodeInfo | undefined>()
+    const nodes = await this.getInstancesByIps(ips, regionId)
+    nodes.forEach((row, ip) => {
+      const info = {} as EcsNodeInfo
+      Object.values(EcsInfoKey).forEach((key) => {
+        // @ts-expect-error
+        info[key] = row?.[key]
+      })
+      ret.set(ip, info)
+    })
+
+    return ret
+  }
+
 
   /** 根据公网 IP 获取 Ecs 实例 ID */
   async getInstanceIdByIp(ip: string): Promise<string | undefined> {
@@ -155,5 +204,4 @@ export class ECSService {
   }
 
 }
-
 
