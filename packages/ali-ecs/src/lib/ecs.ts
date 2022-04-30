@@ -1,13 +1,10 @@
 import assert from 'assert/strict'
 
-import Ecs, {
-  DescribeInstancesRequest,
-  DescribeInstancesResponseBodyInstancesInstance,
-} from '@alicloud/ecs20140526'
+import Ecs, { DescribeInstancesRequest } from '@alicloud/ecs20140526'
 import { Config as ApiConfig } from '@alicloud/openapi-client'
 
 import { _Client } from './client'
-import { Action } from './types'
+import { Action, EcsNodeDetail } from './types'
 
 
 /** 阿里云 ECS 服务接口 */
@@ -18,7 +15,7 @@ export class ECSService {
   nextToken = ''
   /** ip -> instanceId */
   nodeIp2IdCache = new Map<string, string>()
-  instancesCache: DescribeInstancesResponseBodyInstancesInstance[] = []
+  instancesCache: EcsNodeDetail[] = []
   cacheTime: number
   cacheTTLSec: 30
 
@@ -54,13 +51,13 @@ export class ECSService {
   async getInstancesByIps(
     ips: string[],
     regionId = 'cn-hangzhou',
-  ): Promise<Map<string, DescribeInstancesResponseBodyInstancesInstance | undefined>> {
+  ): Promise<Map<string, EcsNodeDetail | undefined>> {
 
     assert(Array.isArray(ips), 'ips must be an array')
 
     this.cleanCache()
 
-    const ret = new Map<string, DescribeInstancesResponseBodyInstancesInstance | undefined>()
+    const ret = new Map<string, EcsNodeDetail | undefined>()
     for await (const ip of ips) {
       if (! ip || typeof ip !== 'string') {
         continue
@@ -76,7 +73,7 @@ export class ECSService {
   async getInstanceByIp(
     ip: string,
     regionId = 'cn-hangzhou',
-  ): Promise<DescribeInstancesResponseBodyInstancesInstance | undefined> {
+  ): Promise<EcsNodeDetail | undefined> {
 
     assert(typeof ip === 'string', 'ip must be a string')
 
@@ -127,15 +124,15 @@ export class ECSService {
     }
   }
 
-  updateInstancedCache(instances: DescribeInstancesResponseBodyInstancesInstance[]): void {
+  updateInstancedCache(instances: EcsNodeDetail[]): void {
     this.instancesCache = instances
     this.cacheTime = Date.now()
   }
 
   private _getInstanceByIp(
     ip: string,
-    instances: DescribeInstancesResponseBodyInstancesInstance[],
-  ): DescribeInstancesResponseBodyInstancesInstance | undefined {
+    instances: EcsNodeDetail[],
+  ): EcsNodeDetail | undefined {
 
     if (! instances.length) {
       return
