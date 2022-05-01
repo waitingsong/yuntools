@@ -108,6 +108,24 @@ export class ALBService {
   }
 
   /**
+   * 根据公网 IPs 获取指定服务组指定服务器信息
+   */
+  async getGroupServerByPublicIps(
+    serverGroupId: string,
+    ips: string[],
+  ): Promise<Map<string, ListServerGroupServersResponseBodyServers>> {
+
+    const ret = new Map<string, ListServerGroupServersResponseBodyServers>()
+    for await (const ip of ips) {
+      const server = await this.getGroupServerByPublicIp(serverGroupId, ip)
+      if (server) {
+        ret.set(ip, server)
+      }
+    }
+    return ret
+  }
+
+  /**
    * 根据公网 IP 获取指定服务组指定服务器信息
    */
   async getGroupServerByPublicIp(
