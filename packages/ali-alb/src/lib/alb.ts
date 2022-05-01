@@ -57,12 +57,12 @@ export class ALBService {
     protected id: string,
     protected key: string,
     public endpoint = 'alb.cn-hangzhou.aliyuncs.com',
-    public ecsInstance?: ECSService,
+    public ecsService?: ECSService,
   ) {
 
     this.client = this.createClient(id, key)
-    if (ecsInstance) {
-      this.ecsInst = ecsInstance
+    if (ecsService) {
+      this.ecsInst = ecsService
     }
     else {
       this.ecsInst = new ECSService(id, key)
