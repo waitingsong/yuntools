@@ -51,21 +51,21 @@ export class ALBService {
 
   client: Alb
   nextToken = ''
-  ecsInst: ECSService
+  ecsService: ECSService
 
   constructor(
     protected id: string,
-    protected key: string,
+    protected secret: string,
     public endpoint = 'alb.cn-hangzhou.aliyuncs.com',
-    public ecsService?: ECSService,
+    public ecsServiceInstance?: ECSService,
   ) {
 
-    this.client = this.createClient(id, key)
-    if (ecsService) {
-      this.ecsInst = ecsService
+    this.client = this.createClient(id, secret)
+    if (ecsServiceInstance) {
+      this.ecsService = ecsServiceInstance
     }
     else {
-      this.ecsInst = new ECSService(id, key)
+      this.ecsService = new ECSService(id, secret)
     }
   }
 
@@ -133,7 +133,7 @@ export class ALBService {
     ip: string,
   ): Promise<ListServerGroupServersResponseBodyServers | undefined> {
 
-    const ecsId = await this.ecsInst.getInstanceIdByIp(ip)
+    const ecsId = await this.ecsService.getInstanceIdByIp(ip)
     if (! ecsId) {
       console.error(`getGroupServerByPublicIp: ECS 服务器 ${ip} 未找到`)
       return
@@ -210,7 +210,7 @@ export class ALBService {
     const { ip: publicIp } = options
     assert(publicIp, 'publicIp is required')
 
-    const ecsId = await this.ecsInst.getInstanceIdByIp(publicIp)
+    const ecsId = await this.ecsService.getInstanceIdByIp(publicIp)
 
     if (! ecsId) {
       throw new Error(`no ecs found by ip ${publicIp}`)
