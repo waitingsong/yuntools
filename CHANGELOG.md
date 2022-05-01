@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0](/compare/v1.6.1...v2.0.0) (2022-05-01)
+
+
+### Features
+
+* **ali-alb:** add getGroupServerByPublicIps() 0cac4d3
+* **ali-alb:** add groupServersCache property with default 5sec TTL 3432506
+
+
+
+
+
 ## [1.6.1](/compare/v1.6.0...v1.6.1) (2022-04-30)
 
 
