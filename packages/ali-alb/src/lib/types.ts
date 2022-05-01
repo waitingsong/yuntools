@@ -4,11 +4,14 @@ import {
 } from '@alicloud/alb20200616'
 
 
+export type ServerGroupId = string
+export type GroupServer = ListServerGroupServersResponseBodyServers
+
 export interface ActionRet {
   /** 异步任务信息 */
   jobInfo: ListAsynJobsResponseBodyJobs | undefined
   /** 服务器属性 */
-  groupServer: ListServerGroupServersResponseBodyServers | undefined
+  groupServer: GroupServer | undefined
 }
 
 export type JobId = string

@@ -6,7 +6,6 @@ import Alb, {
   ListServerGroupsRequest,
   ListServerGroupsResponseBodyServerGroups,
   ListServerGroupServersRequest,
-  ListServerGroupServersResponseBodyServers,
   UpdateServerGroupServersAttributeRequest,
   ListAsynJobsResponseBodyJobs,
 } from '@alicloud/alb20200616'
@@ -27,8 +26,10 @@ import {
   Action,
   ActionRet,
   CalcuWeightOptions,
+  GroupServer,
   JobId,
   JobStatus,
+  ServerGroupId,
   UpdateServerWeightOptions,
   UpdateServerWeightOptionsInner,
 } from './types'
@@ -52,6 +53,9 @@ export class ALBService {
   client: Alb
   nextToken = ''
   ecsService: ECSService
+  groupServersCache = new Map<ServerGroupId, GroupServer[]>()
+  cacheTime: number
+  cacheTTLSec: 5
 
   constructor(
     protected id: string,
@@ -97,7 +101,7 @@ export class ALBService {
   async getGroupServer(
     serverGroupId: string,
     serverId: string,
-  ): Promise<ListServerGroupServersResponseBodyServers | undefined> {
+  ): Promise<GroupServer | undefined> {
 
     assert(serverId, 'serverId is required')
 
@@ -113,9 +117,9 @@ export class ALBService {
   async getGroupServerByPublicIps(
     serverGroupId: string,
     ips: string[],
-  ): Promise<Map<string, ListServerGroupServersResponseBodyServers>> {
+  ): Promise<Map<string, GroupServer>> {
 
-    const ret = new Map<string, ListServerGroupServersResponseBodyServers>()
+    const ret = new Map<string, GroupServer>()
     for await (const ip of ips) {
       const server = await this.getGroupServerByPublicIp(serverGroupId, ip)
       if (server) {
@@ -131,7 +135,7 @@ export class ALBService {
   async getGroupServerByPublicIp(
     serverGroupId: string,
     ip: string,
-  ): Promise<ListServerGroupServersResponseBodyServers | undefined> {
+  ): Promise<GroupServer | undefined> {
 
     const ecsId = await this.ecsService.getInstanceIdByIp(ip)
     if (! ecsId) {
@@ -154,7 +158,12 @@ export class ALBService {
   /**
    * 列出指定服务器组的服务器列表信息
    */
-  async listGroupServers(serverGroupId: string): Promise<ListServerGroupServersResponseBodyServers[] | undefined> {
+  async listGroupServers(serverGroupId: string): Promise<GroupServer[] | undefined> {
+    this.cleanCache()
+    const cache = this.groupServersCache.get(serverGroupId)
+    if (cache) {
+      return cache
+    }
     const opts = {
       Action: Action.ListServerGroupServers,
       NextToken: this.nextToken,
@@ -172,6 +181,7 @@ export class ALBService {
 
     const ret = resp.body.servers
     this.debug && console.info({ resp, ret })
+    this.updateCache(serverGroupId, ret)
     return ret
   }
 
@@ -235,6 +245,7 @@ export class ALBService {
     assert(ecsId, 'ecsId is required')
 
     if (typeof options.currentWeight === 'undefined') {
+      this.cleanCache(true)
       const server = await this.getGroupServer(serverGroupId, ecsId)
       if (! server) {
         throw new Error(`No server found by ecsId ${ecsId} and serverGroupId ${serverGroupId}`)
@@ -251,6 +262,7 @@ export class ALBService {
 
     const jobId = await this.loopServerUntilWeight(options as UpdateServerWeightOptionsInner)
     const jobInfo = jobId ? await this.getJobInfo(jobId) : void 0
+    this.cleanCache(true)
     const groupServer = await this.getGroupServer(serverGroupId, ecsId)
     const ret = {
       jobInfo,
@@ -331,10 +343,35 @@ export class ALBService {
   }
 
 
+  cleanCache(force = false): void {
+    const now = Date.now()
+    if (force) {
+      this.groupServersCache.clear()
+      this.cacheTime = 0
+    }
+    else if (this.cacheTime && (now - this.cacheTime > this.cacheTTLSec * 1000)) {
+      console.log('cache expired')
+      this.groupServersCache.clear()
+      this.cacheTime = 0
+    }
+  }
+
+  updateCache(groupId: ServerGroupId, servers: GroupServer[] | undefined): void {
+    if (servers) {
+      this.groupServersCache.set(groupId, servers)
+    }
+    else {
+      this.groupServersCache.delete(groupId)
+    }
+    this.cacheTime = Date.now()
+  }
+
+
   private async loopServerUntilWeight(options: UpdateServerWeightOptionsInner): Promise<JobId | undefined> {
     const { serverGroupId, ecsId } = options
     assert(ecsId, 'ecsId is required')
 
+    this.cleanCache(true)
     const groupServer = await this.getGroupServer(serverGroupId, ecsId)
     if (! groupServer) {
       throw new Error(`no server found in group ${serverGroupId} by ecs ${ecsId}`)
@@ -363,6 +400,7 @@ export class ALBService {
         console.info(`Set weight of "${ecsId}": ${val} at ${new Date().toLocaleString()}`)
       }
       const { jobId } = await this.setServersWeight(serverGroupId, [ecsId], val)
+      this.cleanCache(true)
       assert(jobId, 'no jobId')
       ret = jobId
       await this.loopJobUntilStatuses(jobId, [JobStatus.Succeeded, JobStatus.Failed], 9000)
