@@ -7,7 +7,7 @@ export {
   ListServerGroupsRequest,
   ListServerGroupsResponseBodyServerGroups,
   ListServerGroupServersRequest,
-  ListServerGroupServersResponseBodyServers,
+  // ListServerGroupServersResponseBodyServers,
   UpdateServerGroupServersAttributeRequest,
   ListAsynJobsResponseBodyJobs,
 } from '@alicloud/alb20200616'
