@@ -153,7 +153,7 @@ export class ECSService {
     this.cleanCache()
     const node = this._getInstanceByIpFromCache(ip)
     if (node) {
-      console.log(`getInstanceByIp from cache: ${ip}`)
+      this.debug && console.log(`getInstanceByIp from cache: ${ip}`)
       return node
     }
 
@@ -224,7 +224,6 @@ export class ECSService {
 
     for (const inst of instances) {
       const ips = inst.publicIpAddress?.ipAddress
-      // console.log(`_getInstanceByIp ips ${ip}`, ips)
       if (ips?.includes(ip)) {
         return inst
       }
