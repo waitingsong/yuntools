@@ -42,16 +42,25 @@ export class ECSService {
   async getNodeStatusByIps(
     ips: string[],
     regionId = 'cn-hangzhou',
-  ): Promise<Map<string, EcsNodeStatus | undefined>> {
+  ): Promise<Map<string, EcsNodeStatus>> {
 
-    const ret = new Map<string, EcsNodeStatus | undefined>()
+    const ret = new Map<string, EcsNodeStatus>()
     const nodes = await this.getInstancesByIps(ips, regionId)
     nodes.forEach((row, ip) => {
+      if (typeof row === 'undefined') { return }
       const info = {} as EcsNodeStatus
       Object.values(EcsStatusKey).forEach((key) => {
+        const val = row[key]
+        if (typeof val === 'undefined') {
+          return
+        }
         // @ts-expect-error
-        info[key] = row?.[key]
+        info[key] = val
       })
+      if (! Object.keys(info).length) {
+        return
+      }
+
       ret.set(ip, info)
     })
 
@@ -62,16 +71,25 @@ export class ECSService {
   async getNodeInfoByIps(
     ips: string[],
     regionId = 'cn-hangzhou',
-  ): Promise<Map<string, EcsNodeInfo | undefined>> {
+  ): Promise<Map<string, EcsNodeInfo>> {
 
-    const ret = new Map<string, EcsNodeInfo | undefined>()
+    const ret = new Map<string, EcsNodeInfo>()
     const nodes = await this.getInstancesByIps(ips, regionId)
     nodes.forEach((row, ip) => {
+      if (typeof row === 'undefined') { return }
       const info = {} as EcsNodeInfo
       Object.values(EcsInfoKey).forEach((key) => {
+        const val = row[key]
+        if (typeof val === 'undefined') {
+          return
+        }
         // @ts-expect-error
-        info[key] = row?.[key]
+        info[key] = val
       })
+      if (! Object.keys(info).length) {
+        return
+      }
+
       ret.set(ip, info)
     })
 
@@ -103,18 +121,21 @@ export class ECSService {
   async getInstancesByIps(
     ips: string[],
     regionId = 'cn-hangzhou',
-  ): Promise<Map<string, EcsNodeDetail | undefined>> {
+  ): Promise<Map<string, EcsNodeDetail>> {
 
     assert(Array.isArray(ips), 'ips must be an array')
 
     this.cleanCache()
 
-    const ret = new Map<string, EcsNodeDetail | undefined>()
+    const ret = new Map<string, EcsNodeDetail>()
     for await (const ip of ips) {
       if (! ip || typeof ip !== 'string') {
         continue
       }
       const inst = await this.getInstanceByIp(ip, regionId)
+      if (! inst) {
+        continue
+      }
       ret.set(ip, inst)
     }
     return ret
