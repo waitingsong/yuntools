@@ -1,7 +1,7 @@
 {
   "name": "@yuntools/ali-oss",
   "author": "waiting",
-  "version": "0.0.1",
+  "version": "2.1.0",
   "description": "阿里云 OSS 相关操作",
   "keywords": [
     "aliyun",
@@ -36,8 +36,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "rxrunscript": "8",
-    "rxjs": "^7.5.0"
+    "rxjs": "^7.5.0",
+    "rxrunscript": "8"
   },
   "devDependencies": {
     "cross-env": "7"
