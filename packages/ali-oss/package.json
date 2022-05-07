@@ -4,9 +4,11 @@
   "version": "3.0.0",
   "description": "阿里云 OSS 相关操作",
   "keywords": [
+    "ali",
     "aliyun",
     "ali-sdk",
     "oss",
+    "ESM",
     "typescript",
     "ts"
   ],
