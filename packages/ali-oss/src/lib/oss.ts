@@ -77,6 +77,18 @@ export class OSSService {
     this.debug && console.log({ resp, txt })
   }
 
+  async cp(
+    src: string,
+    dst: string,
+    config?: Config | ConfigPath,
+  ): Promise<void> {
+
+    const ps = this.genCliParams(config)
+    const resp = await firstValueFrom(run(`ossutil cp ${ps.join(' ')} ${src} ${dst}`))
+    const txt = resp.toString('utf-8')
+    this.debug && console.log({ resp, txt })
+  }
+
   // private async genconfigFile(config: Config): Promise<ConfigPath> {
   //   this.validateConfig(config)
   //   const { language, endpoint, accessKeyID, accessKeySecret, stsToken } = config
