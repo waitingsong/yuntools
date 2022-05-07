@@ -1,5 +1,9 @@
 import assert from 'assert/strict'
-import { statSync } from 'fs'
+import { createHash } from 'crypto'
+import { statSync, writeFileSync } from 'fs'
+import { rm } from 'fs/promises'
+import { tmpdir } from 'os'
+import { join } from 'path'
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { firstValueFrom } from 'rxjs'
@@ -15,13 +19,22 @@ import { Config, ConfigPath } from './types'
 export class OSSService {
 
   debug = false
+  configHash: string
 
   constructor(
     /** 配置参数或者配置文件路径 */
     protected readonly config: Config | ConfigPath,
   ) {
+
     this.validateConfig(config)
+    if (typeof config !== 'string') {
+      const { path, hash } = this.init(config)
+      this.configHash = hash
+      this.config = path
+      this.validateConfig(this.config)
+    }
   }
+
 
   validateConfig(config: Config | ConfigPath): void {
     if (typeof config === 'string') {
@@ -42,6 +55,7 @@ export class OSSService {
     assert(accessKeyId, 'accessKeyID is required')
     assert(accessKeySecret, 'accessKeySecret is required')
   }
+
 
   genCliParams(config?: Config | ConfigPath): string[] {
     const conf = config ?? this.config
@@ -72,8 +86,12 @@ export class OSSService {
     config?: Config | ConfigPath,
   ): Promise<void> {
 
-    const ps = this.genCliParams(config)
-    const resp = await firstValueFrom(run(`ossutil mkdir ${ps.join(' ')} ${dir}`))
+    assert(typeof this.config === 'string')
+    void config
+
+    // const ps = this.genCliParams(config)
+    const ps: string[] = []
+    const resp = await firstValueFrom(run(`ossutil mkdir -c ${this.config} ${ps.join(' ')} ${dir}`))
     const txt = resp.toString('utf-8')
     this.debug && console.log({ resp, txt })
   }
@@ -90,16 +108,45 @@ export class OSSService {
     this.debug && console.log({ resp, txt })
   }
 
-  // private async genconfigFile(config: Config): Promise<ConfigPath> {
-  //   this.validateConfig(config)
-  //   const { language, endpoint, accessKeyID, accessKeySecret, stsToken } = config
-  //   const path = join(tmpdir(), Math.random().toString() + 'oss.conf')
-  //   const ps = [
-  //     '-c', path,
 
-  //   ]
-  //   await quiet($`ossutil config `)
-  // }
+  private init(config: Config): { path: ConfigPath, hash: string } {
+    this.validateConfig(config)
+
+    const sha1 = createHash('sha1')
+    const hash = sha1.update(JSON.stringify(config)).digest('hex')
+    const path = join(tmpdir(), `${hash}.tmp`)
+    // console.info({ hash, path })
+    try {
+      const exists = statSync(path).isFile()
+      if (exists) {
+        return { path, hash }
+      }
+    }
+    catch (ex) {
+      void ex
+    }
+
+    const arr: string[] = ['[Credentials]']
+    const { language, endpoint, accessKeyId, accessKeySecret, stsToken } = config
+    arr.push(`language = ${language ?? 'EN'}`)
+    arr.push(`endpoint = ${endpoint}`)
+    arr.push(`accessKeyID = ${accessKeyId}`)
+    arr.push(`accessKeySecret = ${accessKeySecret}`)
+    stsToken && arr.push(`stsToken = ${stsToken}`)
+
+    writeFileSync(path, arr.join('\n'))
+    return { path, hash }
+  }
+
+  /**
+   * 删除OSS配置文件
+   */
+  async destroy(): Promise<void> {
+    const { config } = this
+    if (config && typeof config === 'string') {
+      await rm(config)
+    }
+  }
 
 }
 
