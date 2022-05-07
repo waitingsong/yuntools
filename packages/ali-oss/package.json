@@ -1,7 +1,7 @@
 {
   "name": "@yuntools/ali-oss",
   "author": "waiting",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "阿里云 OSS 相关操作",
   "keywords": [
     "aliyun",
