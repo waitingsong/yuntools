@@ -1,6 +1,7 @@
 import assert from 'assert/strict'
 import { statSync } from 'fs'
 
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { firstValueFrom } from 'rxjs'
 import { run } from 'rxrunscript'
 

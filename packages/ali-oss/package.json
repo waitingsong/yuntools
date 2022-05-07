@@ -37,11 +37,13 @@
   },
   "license": "MIT",
   "dependencies": {
-    "rxjs": "^7.5.0",
     "rxrunscript": "8"
   },
   "devDependencies": {
     "cross-env": "7"
+  },
+  "peerDependencies": {
+    "rxjs": "^7.5.0"
   },
   "engines": {
     "node": ">=16.13.0"
