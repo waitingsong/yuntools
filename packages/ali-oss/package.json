@@ -1,34 +1,45 @@
 {
-  "name": "ali-oss",
+  "name": "@yuntools/ali-oss",
   "author": "waiting",
-  "version": "2.0.0",
-  "description": "npm boilerplate",
-  "private": false,
+  "version": "0.0.1",
+  "description": "阿里云 OSS 相关操作",
   "keywords": [
-    "种子项目",
+    "aliyun",
+    "ali-sdk",
+    "oss",
     "typescript",
     "ts"
   ],
   "bin": {},
   "browser": "",
-  "es2015": "",
-  "main": "dist/index.cjs.js",
+  "main": "dist/index.mjs",
   "module": "dist/index.js",
-  "types": "src/index.ts",
-  "bugs": {
-    "url": "https://github.com/waitingsong/npm-mono-base/issues"
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./index.min.js": {
+      "import": "./dist/index.min.mjs",
+      "require": "./dist/index.min.cjs"
+    },
+    "./package.json": "./package.json"
   },
-  "homepage": "https://github.com/waitingsong/npm-mono-base#readme",
+  "bugs": {
+    "url": "https://github.com/waitingsong/yuntools/issues"
+  },
+  "homepage": "https://github.com/waitingsong/yuntools#readme",
   "repository": {
     "type": "git",
     "url": "git@github.com:waitingsong/yuntools.git"
   },
   "license": "MIT",
   "dependencies": {
-    "@waiting/shared-types": "^17.0.0"
+    "rxrunscript": "8",
+    "rxjs": "^7.5.0"
   },
   "devDependencies": {
-    "@waiting/shared-core": "^17.0.0",
     "cross-env": "7"
   },
   "engines": {

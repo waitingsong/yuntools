@@ -7,6 +7,8 @@ rules:
   "node/no-extraneous-import": 0
   "unicorn/filename-case": 0
   "@typescript-eslint/prefer-ts-expect-error": 0
+  "no-console": 0
+  "node/shebang": 0
 
 ignorePatterns:
   - fixtures
