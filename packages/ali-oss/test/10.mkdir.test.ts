@@ -3,7 +3,7 @@ import { relative } from 'path'
 
 import { OSSService, Config } from '../src/index'
 
-import { endpoint, accessKeyID, accessKeySecret, bucket } from '@/root.config'
+import { endpoint, accessKeyId, accessKeySecret, bucket } from '@/root.config'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -15,7 +15,7 @@ describe(filename, () => {
       const config: Config = {
         // language: 'EN',
         endpoint,
-        accessKeyID,
+        accessKeyId,
         accessKeySecret,
       }
 

@@ -31,14 +31,14 @@ export class OSSService {
       return
     }
 
-    const { language, endpoint, accessKeyID, accessKeySecret } = config
+    const { language, endpoint, accessKeyId, accessKeySecret } = config
 
     if (typeof language !== 'undefined') {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       assert(language === 'CH' || language === 'EN', 'language must be CH or EN')
     }
     assert(endpoint, 'endpoint is required')
-    assert(accessKeyID, 'accessKeyID is required')
+    assert(accessKeyId, 'accessKeyID is required')
     assert(accessKeySecret, 'accessKeySecret is required')
   }
 
@@ -50,11 +50,11 @@ export class OSSService {
       return ['-c', conf]
     }
 
-    const { language, endpoint, accessKeyID, accessKeySecret, stsToken } = conf
+    const { language, endpoint, accessKeyId, accessKeySecret, stsToken } = conf
     const ps: string[] = []
 
     language && ps.push('-L', language)
-    accessKeyID && ps.push('-i', accessKeyID)
+    accessKeyId && ps.push('-i', accessKeyId)
     accessKeySecret && ps.push('-k', accessKeySecret)
     endpoint && ps.push('-e', endpoint)
     stsToken && ps.push('-t', stsToken)
@@ -72,7 +72,7 @@ export class OSSService {
   ): Promise<void> {
 
     const ps = this.genCliParams(config)
-    const resp = await firstValueFrom(run(`ossutil mkdir  ${ps.join(' ')} ${dir}`))
+    const resp = await firstValueFrom(run(`ossutil mkdir ${ps.join(' ')} ${dir}`))
     const txt = resp.toString('utf-8')
     this.debug && console.log({ resp, txt })
   }

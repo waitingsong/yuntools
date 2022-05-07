@@ -7,7 +7,7 @@ export interface Config {
    */
   language?: 'CH' | 'EN'
   endpoint: string
-  accessKeyID: string
+  accessKeyId: string
   accessKeySecret: string
   stsToken?: string
 }
