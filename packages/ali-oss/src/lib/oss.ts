@@ -108,6 +108,18 @@ export class OSSService {
     this.debug && console.log({ resp, txt })
   }
 
+  async createSymlink(
+    src: string,
+    dst: string,
+  ): Promise<void> {
+
+    assert(src, 'src is required')
+    assert(dst, 'dst is required')
+
+    const resp = await firstValueFrom(run(`ossutil create-symlink ${dst} ${src}`))
+    const txt = resp.toString('utf-8')
+    this.debug && console.log({ resp, txt })
+  }
 
   private init(config: Config): { path: ConfigPath, hash: string } {
     this.validateConfig(config)
