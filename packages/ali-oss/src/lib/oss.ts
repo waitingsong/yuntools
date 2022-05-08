@@ -102,6 +102,9 @@ export class OSSService {
     config?: Config | ConfigPath,
   ): Promise<void> {
 
+    assert(src, 'src is required')
+    assert(dst, 'dst is required')
+
     const ps = this.genCliParams(config)
     const resp = await firstValueFrom(run(`ossutil cp ${ps.join(' ')} ${src} ${dst}`))
     const txt = resp.toString('utf-8')
