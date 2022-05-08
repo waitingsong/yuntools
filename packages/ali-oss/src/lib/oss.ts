@@ -119,7 +119,8 @@ export class OSSService {
     assert(src, 'src is required')
     assert(dst, 'dst is required')
 
-    const resp = await firstValueFrom(run(`ossutil create-symlink ${dst} ${src}`))
+    const ps = this.genCliParams()
+    const resp = await firstValueFrom(run(`ossutil create-symlink ${ps.join(' ')} ${dst} ${src}`))
     const txt = resp.toString('utf-8')
     this.debug && console.log({ resp, txt })
   }
