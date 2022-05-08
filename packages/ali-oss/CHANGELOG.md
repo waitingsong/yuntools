@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.2.0](https://github.com/waitingsong/yuntools/compare/v3.1.1...v3.2.0) (2022-05-08)
+
+
+### Features
+
+* **ali-oss:** probeUpload() ([b4a599c](https://github.com/waitingsong/yuntools/commit/b4a599c9f6b59f220420c364816519b714494963))
+* **ali-oss:** rm() ([a01419e](https://github.com/waitingsong/yuntools/commit/a01419ec2f6d0970193486955b071ea8d79132be))
+
+
+
+
+
 ## [3.1.1](https://github.com/waitingsong/yuntools/compare/v3.1.0...v3.1.1) (2022-05-08)
 
 
