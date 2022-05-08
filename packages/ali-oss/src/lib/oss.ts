@@ -125,6 +125,20 @@ export class OSSService {
     this.debug && console.log({ txt })
   }
 
+
+  async rm(
+    path: string,
+  ): Promise<void> {
+
+    assert(path, 'src is required')
+
+    const ps = this.genCliParams()
+    const resp = await firstValueFrom(run(`ossutil rm ${ps.join(' ')} ${path} `))
+    const txt = resp.toString('utf-8')
+    this.debug && console.log({ txt })
+  }
+
+
   private init(config: Config): { path: ConfigPath, hash: string } {
     this.validateConfig(config)
 
