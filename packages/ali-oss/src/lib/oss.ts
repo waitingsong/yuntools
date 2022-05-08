@@ -93,7 +93,7 @@ export class OSSService {
     const ps: string[] = []
     const resp = await firstValueFrom(run(`ossutil mkdir -c ${this.config} ${ps.join(' ')} ${dir}`))
     const txt = resp.toString('utf-8')
-    this.debug && console.log({ resp, txt })
+    this.debug && console.log({ txt })
   }
 
   async cp(
@@ -108,7 +108,7 @@ export class OSSService {
     const ps = this.genCliParams(config)
     const resp = await firstValueFrom(run(`ossutil cp ${ps.join(' ')} ${src} ${dst}`))
     const txt = resp.toString('utf-8')
-    this.debug && console.log({ resp, txt })
+    this.debug && console.log({ txt })
   }
 
   async createSymlink(
@@ -122,7 +122,7 @@ export class OSSService {
     const ps = this.genCliParams()
     const resp = await firstValueFrom(run(`ossutil create-symlink ${ps.join(' ')} ${dst} ${src}`))
     const txt = resp.toString('utf-8')
-    this.debug && console.log({ resp, txt })
+    this.debug && console.log({ txt })
   }
 
   private init(config: Config): { path: ConfigPath, hash: string } {
