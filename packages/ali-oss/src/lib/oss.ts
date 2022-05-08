@@ -6,7 +6,7 @@ import { tmpdir } from 'os'
 import { join } from 'path'
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { firstValueFrom } from 'rxjs'
+import { firstValueFrom, reduce } from 'rxjs'
 import { run } from 'rxrunscript'
 
 import { Config, ConfigPath } from './types'
@@ -135,6 +135,29 @@ export class OSSService {
     const ps = this.genCliParams()
     const resp = await firstValueFrom(run(`ossutil rm ${ps.join(' ')} ${path} `))
     const txt = resp.toString('utf-8')
+    this.debug && console.log({ txt })
+  }
+
+  /**
+   * 探测上传状态
+   * @docs https://help.aliyun.com/document_detail/120061.html
+   */
+  async probeUpload(
+    bucket: string,
+  ): Promise<void> {
+
+    assert(bucket, 'bucket is required')
+    const ps = this.genCliParams()
+    // const resp = await firstValueFrom(run(`ossutil probe ${ps.join(' ')} --upload --bucketname ${bucket}`))
+    const stream$ = run(`ossutil probe ${ps.join(' ')} --upload --bucketname ${bucket}`)
+    const resp$ = stream$.pipe(
+      reduce((acc, curr) => {
+        acc.push(curr.toString('utf-8'))
+        return acc
+      }, [] as string[]),
+    )
+    const buffers = await firstValueFrom(resp$)
+    const txt = buffers.join('\n')
     this.debug && console.log({ txt })
   }
 

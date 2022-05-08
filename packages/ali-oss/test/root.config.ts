@@ -6,8 +6,10 @@ export const accessKeyId = process.env.ALI_OSS_ID ?? ''
 export const accessKeySecret = process.env.ALI_OSS_SECRET ?? ''
 export const bucket = process.env.ALI_OSS_BUCKET ?? ''
 
-assert(endpoint, 'endpoint is required')
-assert(accessKeyId, 'accessKeyId is required')
-assert(accessKeySecret, 'accessKeySecret is required')
-assert(bucket, 'bucket is required')
+assert(endpoint, 'ALI_OSS_ENDPOINT is required')
+assert(accessKeyId, 'ALI_OSS_ID is required')
+assert(accessKeySecret, 'ALI_OSS_SECRET is required')
+assert(bucket, 'ALI_OSS_BUCKET is required')
+
+export const pathPrefix = `oss://${bucket}/mobileFile`
 
