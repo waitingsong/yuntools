@@ -3,7 +3,12 @@ import { relative } from 'path'
 
 import { OSSService, Config } from '../src/index'
 
-import { endpoint, accessKeyId, accessKeySecret, bucket } from '@/root.config'
+import {
+  endpoint,
+  accessKeyId,
+  accessKeySecret,
+  pathPrefix,
+} from '@/root.config'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -20,9 +25,8 @@ describe(filename, () => {
       }
 
       const service = new OSSService(config)
-      service.debug = true
 
-      const dir = `${bucket}/test-1234/${Math.random().toString()}`
+      const dir = `${pathPrefix}/test-1234/${Math.random().toString()}`
       await service.mkdir(dir)
       assert(true)
     })

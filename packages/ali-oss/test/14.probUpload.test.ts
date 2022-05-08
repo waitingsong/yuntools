@@ -19,12 +19,11 @@ describe(filename, () => {
       }
 
       const service = new OSSService(config)
-      service.debug = true
 
       await service.probeUpload(bucket)
       assert(true)
     })
-  }).timeout(180_000)
+  })
 
 })
 
