@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.1.0](/compare/v3.0.3...v3.1.0) (2022-05-08)
+
+
+### Features
+
+* **ali-oss:** creatSymlink() 03c1136
+* **ali-oss:** generate config file by init() b56ff92
+* **ali-oss:** validate input of cp() 6389964
+
+
+
+
+
 ## [3.0.3](/compare/v3.0.2...v3.0.3) (2022-05-07)
 
 **Note:** Version bump only for package yuntools

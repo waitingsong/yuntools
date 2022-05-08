@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.1.0](https://github.com/waitingsong/yuntools/compare/v3.0.3...v3.1.0) (2022-05-08)
+
+
+### Features
+
+* **ali-oss:** creatSymlink() ([03c1136](https://github.com/waitingsong/yuntools/commit/03c113693ae6d2575585bb2de68d3a5573e0a8d1))
+* **ali-oss:** generate config file by init() ([b56ff92](https://github.com/waitingsong/yuntools/commit/b56ff927fc598c38d0ed56dcbe31781f8fb85f72))
+* **ali-oss:** validate input of cp() ([6389964](https://github.com/waitingsong/yuntools/commit/63899642434863bf9dc0277f102207c0c6eb0d3e))
+
+
+
+
+
 ## [3.0.3](https://github.com/waitingsong/yuntools/compare/v3.0.2...v3.0.3) (2022-05-07)
 
 **Note:** Version bump only for package @yuntools/ali-oss
