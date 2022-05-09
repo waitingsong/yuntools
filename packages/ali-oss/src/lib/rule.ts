@@ -5,7 +5,7 @@ export const regxStat = new Map<DataKey, RegExp>([
   [DataKey.acl, new RegExp(`${DataKey.acl}\\s+:\\s+(\\w+)`, 'u')],
   [DataKey.acceptRanges, new RegExp(`${DataKey.acceptRanges}\\s+:\\s+(\\d+)`, 'u')],
   [DataKey.contentLength, new RegExp(`${DataKey.contentLength}\\s+:\\s+(\\d+)`, 'u')],
-  [DataKey.contentMd5, new RegExp(`${DataKey.contentMd5}\\s+:\\s+(\\w+=*)`, 'u')],
+  [DataKey.contentMd5, new RegExp(`${DataKey.contentMd5}\\s+:\\s+(\\S+)`, 'u')],
   [DataKey.contentType, new RegExp(`${DataKey.contentType}\\s+:\\s+(\\S+)`, 'u')],
   [DataKey.etag, new RegExp(`${DataKey.etag}\\s+:\\s+(\\S+)`, 'u')],
   [DataKey.lastModified, new RegExp(`${DataKey.lastModified}\\s+:\\s+(\\d+.+)`, 'u')],
