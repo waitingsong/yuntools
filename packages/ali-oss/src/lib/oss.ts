@@ -54,7 +54,10 @@ export class OSSService {
     }
   }
 
-
+  /**
+   * 创建目录
+   * @link https://help.aliyun.com/document_detail/120062.html
+   */
   async mkdir(
     /**
      * 包含 bucket 和 object 的路径
@@ -73,7 +76,6 @@ export class OSSService {
     const ret = combineProcessRet(resp, data)
     return ret
   }
-
 
   /**
    * 拷贝文件
@@ -96,6 +98,10 @@ export class OSSService {
     return ret
   }
 
+  /**
+   * 创建软链接
+   * @link https://help.aliyun.com/document_detail/120059.html
+   */
   async createSymlink(
     src: string,
     dst: string,
@@ -112,7 +118,10 @@ export class OSSService {
     return ret
   }
 
-
+  /**
+   * 删除
+   * @link https://help.aliyun.com/document_detail/120053.html
+   */
   async rm(
     path: string,
   ): Promise<ProcessRet> {
