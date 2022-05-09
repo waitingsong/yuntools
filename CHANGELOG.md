@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0](/compare/v4.0.0...v5.0.0) (2022-05-09)
+
+
+### Features
+
+* **ali-oss:** refactor parseRespStdout() 02cfae7
+* **ali-oss:** update return type of cp() 653af2b
+
+
+
+
+
 # [4.0.0](/compare/v3.3.0...v4.0.0) (2022-05-09)
 
 

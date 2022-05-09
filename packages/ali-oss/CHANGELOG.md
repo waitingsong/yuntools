@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0](https://github.com/waitingsong/yuntools/compare/v4.0.0...v5.0.0) (2022-05-09)
+
+
+### Features
+
+* **ali-oss:** refactor parseRespStdout() ([02cfae7](https://github.com/waitingsong/yuntools/commit/02cfae73e6d2b68c73930cfc6d6cd6bcafe2afdb))
+* **ali-oss:** update return type of cp() ([653af2b](https://github.com/waitingsong/yuntools/commit/653af2b95f4de4c91b62fc1cbdbc9d965f0f9ebc))
+
+
+
+
+
 # [4.0.0](https://github.com/waitingsong/yuntools/compare/v3.3.0...v4.0.0) (2022-05-09)
 
 
