@@ -4,6 +4,7 @@ import { relative } from 'path'
 import {
   pathPrefix,
   service,
+  CI,
 } from '@/root.config'
 
 
@@ -15,6 +16,7 @@ describe(filename, () => {
     it('normal', async () => {
       const dir = `${pathPrefix}/test-1234/${Math.random().toString()}`
       const ret = await service.mkdir(dir)
+      CI || console.log(ret)
       assert(ret.data)
     })
   })

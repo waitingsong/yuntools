@@ -4,6 +4,7 @@ import { join, relative } from 'path'
 import {
   pathPrefix,
   service,
+  CI,
 } from '@/root.config'
 
 
@@ -19,6 +20,7 @@ describe(filename, () => {
 
       const link = `${dst}-link`
       const ret = await service.createSymlink(dst, link)
+      CI || console.log(ret)
       assert(ret.data)
     })
   })

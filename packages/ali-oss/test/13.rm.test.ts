@@ -4,6 +4,7 @@ import { join, relative } from 'path'
 import {
   pathPrefix,
   service,
+  CI,
 } from '@/root.config'
 
 
@@ -17,6 +18,7 @@ describe(filename, () => {
       const dst = `${pathPrefix}/test-1234/${Date.now().toString()}-tsconfig.json`
       await service.cp(src, dst)
       const ret = await service.rm(dst)
+      CI || console.log(ret)
       assert(ret.data)
     })
   })
