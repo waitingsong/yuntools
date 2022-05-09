@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.1](https://github.com/waitingsong/yuntools/compare/v5.1.0...v5.1.1) (2022-05-09)
+
+
+### Bug Fixes
+
+* **ali-oss:** regexp rule of contentMd5 ([afbdcd8](https://github.com/waitingsong/yuntools/commit/afbdcd8c89576bbcce6f5fa031e8cfd74c710476))
+
+
+
+
+
 # [5.1.0](https://github.com/waitingsong/yuntools/compare/v5.0.0...v5.1.0) (2022-05-09)
 
 
