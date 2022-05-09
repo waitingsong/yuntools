@@ -29,5 +29,11 @@ export interface DataBase {
   /**
    * @example 0.303190
    */
-  elapsed: string | undefined
+  [DataKey.elapsed]: string | undefined
 }
+
+export interface DataCp extends DataBase {
+  /** byte/s */
+  [DataKey.averageSpeed]: number | undefined
+}
+

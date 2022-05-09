@@ -9,11 +9,13 @@ import { join } from 'path'
 import { firstValueFrom, Observable, reduce, map } from 'rxjs'
 import { ExitCodeSignal, run } from 'rxrunscript'
 
-import { PickData } from './rule'
+import { pickData } from './rule'
 import {
   Config,
   ConfigPath,
   DataBase,
+  DataCp,
+  DataKey,
   ProcessRet,
 } from './types'
 
@@ -75,18 +77,15 @@ export class OSSService {
     return ret
   }
 
-  private genProcessRet<T extends DataBase = DataBase>(stdout: string, data: T): ProcessRet<T> {
-    const ret = {
-      data,
-      stdout,
-    }
-    return ret
-  }
 
+  /**
+   * 拷贝文件
+   * @link https://help.aliyun.com/document_detail/120057.html
+   */
   async cp(
     src: string,
     dst: string,
-  ): Promise<ProcessRet> {
+  ): Promise<ProcessRet<DataCp>> {
 
     assert(src, 'src is required')
     assert(dst, 'dst is required')
@@ -94,7 +93,8 @@ export class OSSService {
     const ps = this.genCliParams()
     const resp$ = run(`${this.cmd} cp ${ps.join(' ')} ${src} ${dst}`)
     const resp = await this.processResp(resp$)
-    const data = this.parseRespStdout(resp)
+    const keys = [DataKey.elapsed, DataKey.averageSpeed]
+    const data = this.parseRespStdout<DataCp>(resp, keys)
     const ret = this.genProcessRet(resp, data)
     return ret
   }
@@ -132,7 +132,7 @@ export class OSSService {
 
   /**
    * 探测上传状态
-   * @docs https://help.aliyun.com/document_detail/120061.html
+   * @link https://help.aliyun.com/document_detail/120061.html
    */
   async probeUpload(
     bucket: string,
@@ -245,13 +245,32 @@ export class OSSService {
 
   private parseRespStdout<T extends DataBase = DataBase>(
     input: string,
+    dataKeys: DataKey[] = [DataKey.elapsed],
     output?: T,
   ): T {
 
-    const ret = output ?? {} as T
-    const els = PickData.elapsed(input, this.debug)
-    ret.elapsed = els
+    const keys = [...new Set(dataKeys)]
 
+    const ret = output ?? {} as T
+    keys.forEach((key) => {
+      // @ts-ignore
+      if (typeof pickData[key] === 'function') {
+        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        const els = pickData[key](input, this.debug) as unknown
+        Object.defineProperty(ret, key, { value: els })
+      }
+    })
+
+    return ret
+  }
+
+
+  private genProcessRet<T extends DataBase = DataBase>(stdout: string, data: T): ProcessRet<T> {
+    const ret = {
+      data,
+      stdout,
+    }
     return ret
   }
 
