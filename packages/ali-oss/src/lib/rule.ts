@@ -1,4 +1,4 @@
-import { RespDataKey } from './types'
+import { DataKey } from './types'
 
 
 export const rules = {
@@ -6,7 +6,7 @@ export const rules = {
 }
 
 export const PickData = {
-  [RespDataKey.elapsed]: pickElapsed,
+  [DataKey.elapsed]: pickElapsed,
 }
 
 export function pickElapsed(input: string, debug = false): string | undefined {

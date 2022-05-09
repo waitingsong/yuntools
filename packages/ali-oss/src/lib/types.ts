@@ -17,7 +17,7 @@ export interface ProcessRet<T extends RespDataBase = RespDataBase> {
   readonly data: T
 }
 
-export enum RespDataKey {
+export enum DataKey {
   elapsed = 'elapsed',
   averageSpeed = 'averageSpeed',
   total = 'total',
