@@ -12,7 +12,7 @@ export interface Config {
   stsToken?: string
 }
 
-export interface ProcessRet<T extends RespDataBase = RespDataBase> {
+export interface ProcessRet<T extends DataBase = DataBase> {
   readonly stdout: string
   readonly data: T
 }
@@ -25,7 +25,7 @@ export enum DataKey {
   removed = 'removed',
 }
 
-export interface RespDataBase {
+export interface DataBase {
   /**
    * @example 0.303190
    */

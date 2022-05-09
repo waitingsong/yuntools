@@ -13,7 +13,7 @@ import { PickData } from './rule'
 import {
   Config,
   ConfigPath,
-  RespDataBase,
+  DataBase,
   ProcessRet,
 } from './types'
 
@@ -75,7 +75,7 @@ export class OSSService {
     return ret
   }
 
-  private genProcessRet<T extends RespDataBase = RespDataBase>(stdout: string, data: T): ProcessRet<T> {
+  private genProcessRet<T extends DataBase = DataBase>(stdout: string, data: T): ProcessRet<T> {
     const ret = {
       data,
       stdout,
@@ -243,7 +243,7 @@ export class OSSService {
     return ret
   }
 
-  private parseRespStdout<T extends RespDataBase = RespDataBase>(
+  private parseRespStdout<T extends DataBase = DataBase>(
     input: string,
     output?: T,
   ): T {
