@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0](/compare/v3.3.0...v4.0.0) (2022-05-09)
+
+
+### Bug Fixes
+
+* **boilerplate:** define enum without const 37ffd10
+* **boilerplate:** devDeps version 2e29b42
+
+
+### Features
+
+* **ali-oss:** breaking change refactor return type 021e39e
+
+
+
+
+
 # [3.3.0](/compare/v3.2.0...v3.3.0) (2022-05-09)
 
 

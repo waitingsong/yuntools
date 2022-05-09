@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0](https://github.com/waitingsong/yuntools/compare/v3.3.0...v4.0.0) (2022-05-09)
+
+
+### Features
+
+* **ali-oss:** breaking change refactor return type ([021e39e](https://github.com/waitingsong/yuntools/commit/021e39ea3ed9bbe5dc2f7658f9bff76ad8684508))
+
+
+
+
+
 # [3.3.0](https://github.com/waitingsong/yuntools/compare/v3.2.0...v3.3.0) (2022-05-09)
 
 
