@@ -20,9 +20,9 @@ export interface ProcessRet<T extends DataBase = DataBase> {
 export enum DataKey {
   elapsed = 'elapsed',
   averageSpeed = 'averageSpeed',
-  total = 'total',
-  succeed = 'succeed',
-  removed = 'removed',
+  // total = 'total',
+  // succeed = 'succeed',
+  // removed = 'removed',
 }
 
 export interface DataBase {

@@ -9,7 +9,7 @@ import { join } from 'path'
 import { firstValueFrom, Observable, reduce, map } from 'rxjs'
 import { ExitCodeSignal, run } from 'rxrunscript'
 
-import { pickData } from './rule'
+import { pickFuncMap, pickRegxMap } from './rule'
 import {
   Config,
   ConfigPath,
@@ -249,17 +249,24 @@ export class OSSService {
     output?: T,
   ): T {
 
-    const keys = [...new Set(dataKeys)]
-
     const ret = output ?? {} as T
+
+    const keys = [...new Set(dataKeys)]
     keys.forEach((key) => {
-      // @ts-ignore
-      if (typeof pickData[key] === 'function') {
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        const els = pickData[key](input, this.debug) as unknown
-        Object.defineProperty(ret, key, { value: els })
+      const rule = pickRegxMap.get(key)
+      if (! rule) {
+        console.warn(`rule not found for ${key}`)
+        return
       }
+
+      const func = pickFuncMap.get(key)
+      if (! func) {
+        console.warn(`func not found for ${key}`)
+        return
+      }
+
+      const els = func(input, rule, this.debug)
+      Object.defineProperty(ret, key, { value: els })
     })
 
     return ret

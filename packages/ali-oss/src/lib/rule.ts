@@ -1,33 +1,34 @@
 import { DataKey } from './types'
 
 
-export const rules = {
-  [DataKey.elapsed]: /(\d+\.\d+)\(s\)\s+elapsed(?=\s|\n|\r\n|$)/u,
+export const pickRegxMap = new Map<DataKey, RegExp>([
+  [DataKey.elapsed, /(\d+\.\d+)\(s\)\s+elapsed(?=\s|\n|\r\n|$)/u],
   /** average speed 1628000(byte/s)' */
-  [DataKey.averageSpeed]: /average\s+speed\s+(\d+)/u,
-}
+  [DataKey.averageSpeed, /average\s+speed\s+(\d+)/u],
+])
 
-export const pickData = {
-  [DataKey.elapsed]: pickElapsed,
-  [DataKey.averageSpeed]: pickAverageSpeed,
-} as const
 
-function pickElapsed(input: string, debug = false): string | undefined {
-  // '0.312022(s) elapsed\n'
-  debug && console.log({ pickElapsedInput: input })
-  const found = input.match(rules[DataKey.elapsed])
+export type PickFunc = (input: string, rule: RegExp, debug: boolean) => string | number | undefined
+export const pickFuncMap = new Map<DataKey, PickFunc>([
+  [DataKey.elapsed, pickString],
+  [DataKey.averageSpeed, pickNumber],
+])
+
+
+function pickString(input: string, rule: RegExp, debug = false): string | undefined {
+  debug && console.log({ pickStringInput: input })
+  const found = input.match(rule)
   if (found && found.length >= 1) {
-    debug && console.log({ pickElapsedFound: found })
+    debug && console.log({ pickStringFound: found })
     return found[1]
   }
 }
 
-function pickAverageSpeed(input: string, debug = false): number | undefined {
-  // 'average speed 1628000(byte/s)'
+function pickNumber(input: string, rule: RegExp, debug = false): number | undefined {
   debug && console.log({ pickAvgerageSpeedInput: input })
-  const found = input.match(rules[DataKey.averageSpeed])
+  const found = input.match(rule)
   if (found && found.length >= 1) {
-    debug && console.log({ pickAvgerageSpeedFound: found })
+    debug && console.log({ pickNumberFound: found })
     const str = found[1]
     return str ? parseInt(str, 10) : void 0
   }
