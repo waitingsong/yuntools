@@ -2,7 +2,7 @@ import assert from 'assert/strict'
 import { createHash } from 'crypto'
 import { statSync, writeFileSync } from 'fs'
 import { rm } from 'fs/promises'
-import { tmpdir } from 'os'
+import { tmpdir, homedir } from 'os'
 import { join } from 'path'
 
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -22,8 +22,12 @@ export class OSSService {
   configHash: string
 
   constructor(
-    /** 配置参数或者配置文件路径 */
-    protected readonly config: Config | ConfigPath,
+    /**
+     * 配置参数或者配置文件路径
+     * @default ~/.ossutilconfig
+     */
+    protected readonly config: Config | ConfigPath = join(homedir(), '.ossutilconfig'),
+    public cmd = 'ossutil',
   ) {
 
     this.validateConfig(config)
@@ -91,7 +95,7 @@ export class OSSService {
 
     // const ps = this.genCliParams(config)
     const ps: string[] = []
-    const resp = await firstValueFrom(run(`ossutil mkdir -c ${this.config} ${ps.join(' ')} ${dir}`))
+    const resp = await firstValueFrom(run(`${this.cmd} mkdir -c ${this.config} ${ps.join(' ')} ${dir}`))
     const txt = resp.toString('utf-8')
     this.debug && console.log({ txt })
   }
@@ -106,7 +110,7 @@ export class OSSService {
     assert(dst, 'dst is required')
 
     const ps = this.genCliParams(config)
-    const resp = await firstValueFrom(run(`ossutil cp ${ps.join(' ')} ${src} ${dst}`))
+    const resp = await firstValueFrom(run(`${this.cmd} cp ${ps.join(' ')} ${src} ${dst}`))
     const txt = resp.toString('utf-8')
     this.debug && console.log({ txt })
   }
@@ -120,7 +124,7 @@ export class OSSService {
     assert(dst, 'dst is required')
 
     const ps = this.genCliParams()
-    const resp = await firstValueFrom(run(`ossutil create-symlink ${ps.join(' ')} ${dst} ${src}`))
+    const resp = await firstValueFrom(run(`${this.cmd} create-symlink ${ps.join(' ')} ${dst} ${src}`))
     const txt = resp.toString('utf-8')
     this.debug && console.log({ txt })
   }
@@ -133,7 +137,7 @@ export class OSSService {
     assert(path, 'src is required')
 
     const ps = this.genCliParams()
-    const resp = await firstValueFrom(run(`ossutil rm ${ps.join(' ')} ${path} `))
+    const resp = await firstValueFrom(run(`${this.cmd} rm ${ps.join(' ')} ${path} `))
     const txt = resp.toString('utf-8')
     this.debug && console.log({ txt })
   }
@@ -148,8 +152,8 @@ export class OSSService {
 
     assert(bucket, 'bucket is required')
     const ps = this.genCliParams()
-    // const resp = await firstValueFrom(run(`ossutil probe ${ps.join(' ')} --upload --bucketname ${bucket}`))
-    const stream$ = run(`ossutil probe ${ps.join(' ')} --upload --bucketname ${bucket}`)
+    // const resp = await firstValueFrom(run(`${this.cmd} probe ${ps.join(' ')} --upload --bucketname ${bucket}`))
+    const stream$ = run(`${this.cmd} probe ${ps.join(' ')} --upload --bucketname ${bucket}`)
     const resp$ = stream$.pipe(
       reduce((acc, curr) => {
         acc.push(curr.toString('utf-8'))
