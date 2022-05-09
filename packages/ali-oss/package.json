@@ -37,7 +37,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "rxrunscript": "8"
+    "rxrunscript": "9"
   },
   "devDependencies": {
     "cross-env": "7"
