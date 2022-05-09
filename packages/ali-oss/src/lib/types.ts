@@ -20,6 +20,19 @@ export interface ProcessRet<T extends DataBase = DataBase> {
 export enum DataKey {
   elapsed = 'elapsed',
   averageSpeed = 'averageSpeed',
+
+  acl = 'ACL',
+  acceptRanges = 'Accept-Ranges',
+  contentLength = 'Content-Length',
+  contentMd5 = 'Content-Md5',
+  contentType = 'Content-Type',
+  etag = 'Etag',
+  lastModified = 'Last-Modified',
+  owner = 'Owner',
+  xOssHashCrc64ecma = 'X-Oss-Hash-Crc64ecma',
+  xOssObjectType = 'X-Oss-Object-Type',
+  xOssStorageClass = 'X-Oss-Storage-Class',
+
   // total = 'total',
   // succeed = 'succeed',
   // removed = 'removed',
@@ -36,4 +49,20 @@ export interface DataCp extends DataBase {
   /** byte/s */
   [DataKey.averageSpeed]: number | undefined
 }
+
+export interface DataStat extends DataBase {
+  [DataKey.acl]: string | undefined
+  [DataKey.acceptRanges]: string | undefined
+  [DataKey.contentLength]: number | undefined
+  [DataKey.contentMd5]: string | undefined
+  [DataKey.contentType]: string | undefined
+  [DataKey.etag]: string | undefined
+  [DataKey.lastModified]: string | undefined
+  [DataKey.owner]: string | undefined
+  [DataKey.xOssHashCrc64ecma]: string | undefined
+  [DataKey.xOssObjectType]: string | undefined
+  [DataKey.xOssStorageClass]: string | undefined
+}
+
+export type PickFunc = (input: string, rule: RegExp, debug: boolean) => string | number | undefined
 

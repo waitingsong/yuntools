@@ -8,11 +8,13 @@ import { join } from 'path'
 import { run } from 'rxrunscript'
 
 import { combineProcessRet, parseRespStdout, processResp } from './helper'
+import { regxStat } from './rule'
 import {
   Config,
   ConfigPath,
   DataCp,
   DataKey,
+  DataStat,
   ProcessRet,
 } from './types'
 
@@ -150,6 +152,25 @@ export class OSSService {
     const resp$ = run(`${this.cmd} probe ${ps.join(' ')} --upload --bucketname ${bucket}`)
     const resp = await processResp(resp$, this.debug)
     const data = parseRespStdout(resp, [DataKey.elapsed], this.debug)
+    const ret = combineProcessRet(resp, data)
+    return ret
+  }
+
+  /**
+   * 查看Bucket和Object信息
+   * @link https://help.aliyun.com/document_detail/120054.html
+   */
+  async stat(
+    path: string,
+  ): Promise<ProcessRet<DataStat>> {
+
+    assert(path, 'src is required')
+
+    const ps = this.genCliParams()
+    const resp$ = run(`${this.cmd} stat ${ps.join(' ')} ${path} `)
+    const resp = await processResp(resp$, this.debug)
+    const keys: DataKey[] = [DataKey.elapsed].concat(Array.from(regxStat.keys()))
+    const data = parseRespStdout<DataStat>(resp, keys, this.debug)
     const ret = combineProcessRet(resp, data)
     return ret
   }
