@@ -19,6 +19,8 @@ describe(filename, () => {
       const ret = await service.cp(src, dir)
       CI || console.log(ret)
       assert(ret.data)
+      assert(typeof ret.data.elapsed === 'string')
+      assert(typeof ret.data.averageSpeed === 'number')
     })
   })
 

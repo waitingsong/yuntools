@@ -18,6 +18,7 @@ describe(filename, () => {
       const ret = await service.mkdir(dir)
       CI || console.log(ret)
       assert(ret.data)
+      assert(typeof ret.data.elapsed === 'string')
     })
   })
 

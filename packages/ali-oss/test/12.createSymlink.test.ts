@@ -22,6 +22,7 @@ describe(filename, () => {
       const ret = await service.createSymlink(dst, link)
       CI || console.log(ret)
       assert(ret.data)
+      assert(typeof ret.data.elapsed === 'string')
     })
   })
 

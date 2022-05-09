@@ -5,15 +5,12 @@ import { rm } from 'fs/promises'
 import { tmpdir, homedir } from 'os'
 import { join } from 'path'
 
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { firstValueFrom, Observable, reduce, map } from 'rxjs'
-import { ExitCodeSignal, run } from 'rxrunscript'
+import { run } from 'rxrunscript'
 
-import { pickFuncMap, pickRegxMap } from './rule'
+import { combineProcessRet, parseRespStdout, processResp } from './helper'
 import {
   Config,
   ConfigPath,
-  DataBase,
   DataCp,
   DataKey,
   ProcessRet,
@@ -71,9 +68,9 @@ export class OSSService {
     // const ps = this.genCliParams(config)
     const ps: string[] = []
     const resp$ = run(`${this.cmd} mkdir -c ${this.config} ${ps.join(' ')} ${dir}`)
-    const resp = await this.processResp(resp$)
-    const data = this.parseRespStdout(resp)
-    const ret = this.genProcessRet(resp, data)
+    const resp = await processResp(resp$, this.debug)
+    const data = parseRespStdout(resp, [DataKey.elapsed], this.debug)
+    const ret = combineProcessRet(resp, data)
     return ret
   }
 
@@ -92,10 +89,10 @@ export class OSSService {
 
     const ps = this.genCliParams()
     const resp$ = run(`${this.cmd} cp ${ps.join(' ')} ${src} ${dst}`)
-    const resp = await this.processResp(resp$)
+    const resp = await processResp(resp$, this.debug)
     const keys = [DataKey.elapsed, DataKey.averageSpeed]
-    const data = this.parseRespStdout<DataCp>(resp, keys)
-    const ret = this.genProcessRet(resp, data)
+    const data = parseRespStdout<DataCp>(resp, keys, this.debug)
+    const ret = combineProcessRet(resp, data)
     return ret
   }
 
@@ -109,9 +106,9 @@ export class OSSService {
 
     const ps = this.genCliParams()
     const resp$ = run(`${this.cmd} create-symlink ${ps.join(' ')} ${dst} ${src}`)
-    const resp = await this.processResp(resp$)
-    const data = this.parseRespStdout(resp)
-    const ret = this.genProcessRet(resp, data)
+    const resp = await processResp(resp$, this.debug)
+    const data = parseRespStdout(resp, [DataKey.elapsed], this.debug)
+    const ret = combineProcessRet(resp, data)
     return ret
   }
 
@@ -124,9 +121,9 @@ export class OSSService {
 
     const ps = this.genCliParams()
     const resp$ = run(`${this.cmd} rm ${ps.join(' ')} ${path} `)
-    const resp = await this.processResp(resp$)
-    const data = this.parseRespStdout(resp)
-    const ret = this.genProcessRet(resp, data)
+    const resp = await processResp(resp$, this.debug)
+    const data = parseRespStdout(resp, [DataKey.elapsed], this.debug)
+    const ret = combineProcessRet(resp, data)
     return ret
   }
 
@@ -142,9 +139,9 @@ export class OSSService {
     const ps = this.genCliParams()
     // const resp = await firstValueFrom(run(`${this.cmd} probe ${ps.join(' ')} --upload --bucketname ${bucket}`))
     const resp$ = run(`${this.cmd} probe ${ps.join(' ')} --upload --bucketname ${bucket}`)
-    const resp = await this.processResp(resp$)
-    const data = this.parseRespStdout(resp)
-    const ret = this.genProcessRet(resp, data)
+    const resp = await processResp(resp$, this.debug)
+    const data = parseRespStdout(resp, [DataKey.elapsed], this.debug)
+    const ret = combineProcessRet(resp, data)
     return ret
   }
 
@@ -191,7 +188,6 @@ export class OSSService {
   }
 
 
-
   private init(config: Config): { path: ConfigPath, hash: string } {
     this.validateConfig(config)
 
@@ -220,67 +216,6 @@ export class OSSService {
     writeFileSync(path, arr.join('\n'))
     return { path, hash }
   }
-
-
-  private async processResp(input$: Observable<Buffer | ExitCodeSignal>): Promise<string> {
-    const buf$ = input$.pipe(
-      reduce((acc, curr) => {
-        if (Buffer.isBuffer(curr)) {
-          this.debug && console.log({ processResp: curr.toString('utf-8') })
-          acc.push(curr)
-          return acc
-        }
-        else if (curr.exitCode !== 0) {
-          const msg = `exitCode: ${curr.exitCode}, exitSignal: "${curr.exitSignal ?? ''}"\n${Buffer.concat(acc).toString('utf-8')}`
-          throw new Error(msg)
-        }
-        return acc
-      }, [] as Buffer[]),
-      map(arr => Buffer.concat(arr)),
-    )
-    const resp = await firstValueFrom(buf$)
-    const ret = resp.toString('utf-8').trim()
-    return ret
-  }
-
-  private parseRespStdout<T extends DataBase = DataBase>(
-    input: string,
-    dataKeys: DataKey[] = [DataKey.elapsed],
-    output?: T,
-  ): T {
-
-    const ret = output ?? {} as T
-
-    const keys = [...new Set(dataKeys)]
-    keys.forEach((key) => {
-      const rule = pickRegxMap.get(key)
-      if (! rule) {
-        console.warn(`rule not found for ${key}`)
-        return
-      }
-
-      const func = pickFuncMap.get(key)
-      if (! func) {
-        console.warn(`func not found for ${key}`)
-        return
-      }
-
-      const els = func(input, rule, this.debug)
-      Object.defineProperty(ret, key, { value: els })
-    })
-
-    return ret
-  }
-
-
-  private genProcessRet<T extends DataBase = DataBase>(stdout: string, data: T): ProcessRet<T> {
-    const ret = {
-      data,
-      stdout,
-    }
-    return ret
-  }
-
 
 }
 

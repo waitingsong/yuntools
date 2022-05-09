@@ -20,6 +20,7 @@ describe(filename, () => {
       const ret = await service.rm(dst)
       CI || console.log(ret)
       assert(ret.data)
+      assert(typeof ret.data.elapsed === 'string')
     })
   })
 
