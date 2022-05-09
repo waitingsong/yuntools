@@ -6,10 +6,16 @@ import { tmpdir, homedir } from 'os'
 import { join } from 'path'
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { firstValueFrom, reduce } from 'rxjs'
-import { run } from 'rxrunscript'
+import { firstValueFrom, Observable, reduce, map } from 'rxjs'
+import { ExitCodeSignal, run } from 'rxrunscript'
 
-import { Config, ConfigPath } from './types'
+import { PickData } from './rule'
+import {
+  Config,
+  ConfigPath,
+  RespDataBase,
+  ProcessRet,
+} from './types'
 
 
 /**
@@ -37,6 +43,109 @@ export class OSSService {
       this.config = path
       this.validateConfig(this.config)
     }
+  }
+
+  /**
+   * 删除OSS配置文件
+   */
+  async destroy(): Promise<void> {
+    const { config } = this
+    if (config && typeof config === 'string') {
+      await rm(config)
+    }
+  }
+
+
+  async mkdir(
+    /**
+     * 包含 bucket 和 object 的路径
+     * @example oss://bucket/foo
+     */
+    dir: string,
+  ): Promise<ProcessRet> {
+
+    assert(typeof this.config === 'string')
+
+    // const ps = this.genCliParams(config)
+    const ps: string[] = []
+    const resp$ = run(`${this.cmd} mkdir -c ${this.config} ${ps.join(' ')} ${dir}`)
+    const resp = await this.processResp(resp$)
+    const data = this.parseRespStdout(resp)
+    const ret = this.genProcessRet(resp, data)
+    return ret
+  }
+
+  private genProcessRet<T extends RespDataBase = RespDataBase>(stdout: string, data: T): ProcessRet<T> {
+    const ret = {
+      data,
+      stdout,
+    }
+    return ret
+  }
+
+  async cp(
+    src: string,
+    dst: string,
+  ): Promise<ProcessRet> {
+
+    assert(src, 'src is required')
+    assert(dst, 'dst is required')
+
+    const ps = this.genCliParams()
+    const resp$ = run(`${this.cmd} cp ${ps.join(' ')} ${src} ${dst}`)
+    const resp = await this.processResp(resp$)
+    const data = this.parseRespStdout(resp)
+    const ret = this.genProcessRet(resp, data)
+    return ret
+  }
+
+  async createSymlink(
+    src: string,
+    dst: string,
+  ): Promise<ProcessRet> {
+
+    assert(src, 'src is required')
+    assert(dst, 'dst is required')
+
+    const ps = this.genCliParams()
+    const resp$ = run(`${this.cmd} create-symlink ${ps.join(' ')} ${dst} ${src}`)
+    const resp = await this.processResp(resp$)
+    const data = this.parseRespStdout(resp)
+    const ret = this.genProcessRet(resp, data)
+    return ret
+  }
+
+
+  async rm(
+    path: string,
+  ): Promise<ProcessRet> {
+
+    assert(path, 'src is required')
+
+    const ps = this.genCliParams()
+    const resp$ = run(`${this.cmd} rm ${ps.join(' ')} ${path} `)
+    const resp = await this.processResp(resp$)
+    const data = this.parseRespStdout(resp)
+    const ret = this.genProcessRet(resp, data)
+    return ret
+  }
+
+  /**
+   * 探测上传状态
+   * @docs https://help.aliyun.com/document_detail/120061.html
+   */
+  async probeUpload(
+    bucket: string,
+  ): Promise<ProcessRet> {
+
+    assert(bucket, 'bucket is required')
+    const ps = this.genCliParams()
+    // const resp = await firstValueFrom(run(`${this.cmd} probe ${ps.join(' ')} --upload --bucketname ${bucket}`))
+    const resp$ = run(`${this.cmd} probe ${ps.join(' ')} --upload --bucketname ${bucket}`)
+    const resp = await this.processResp(resp$)
+    const data = this.parseRespStdout(resp)
+    const ret = this.genProcessRet(resp, data)
+    return ret
   }
 
 
@@ -81,89 +190,6 @@ export class OSSService {
     return ps
   }
 
-  async mkdir(
-    /**
-     * 包含 bucket 和 object 的路径
-     * @example oss://bucket/foo
-     */
-    dir: string,
-    config?: Config | ConfigPath,
-  ): Promise<void> {
-
-    assert(typeof this.config === 'string')
-    void config
-
-    // const ps = this.genCliParams(config)
-    const ps: string[] = []
-    const resp = await firstValueFrom(run(`${this.cmd} mkdir -c ${this.config} ${ps.join(' ')} ${dir}`))
-    const txt = resp.toString('utf-8')
-    this.debug && console.log({ txt })
-  }
-
-  async cp(
-    src: string,
-    dst: string,
-    config?: Config | ConfigPath,
-  ): Promise<void> {
-
-    assert(src, 'src is required')
-    assert(dst, 'dst is required')
-
-    const ps = this.genCliParams(config)
-    const resp = await firstValueFrom(run(`${this.cmd} cp ${ps.join(' ')} ${src} ${dst}`))
-    const txt = resp.toString('utf-8')
-    this.debug && console.log({ txt })
-  }
-
-  async createSymlink(
-    src: string,
-    dst: string,
-  ): Promise<void> {
-
-    assert(src, 'src is required')
-    assert(dst, 'dst is required')
-
-    const ps = this.genCliParams()
-    const resp = await firstValueFrom(run(`${this.cmd} create-symlink ${ps.join(' ')} ${dst} ${src}`))
-    const txt = resp.toString('utf-8')
-    this.debug && console.log({ txt })
-  }
-
-
-  async rm(
-    path: string,
-  ): Promise<void> {
-
-    assert(path, 'src is required')
-
-    const ps = this.genCliParams()
-    const resp = await firstValueFrom(run(`${this.cmd} rm ${ps.join(' ')} ${path} `))
-    const txt = resp.toString('utf-8')
-    this.debug && console.log({ txt })
-  }
-
-  /**
-   * 探测上传状态
-   * @docs https://help.aliyun.com/document_detail/120061.html
-   */
-  async probeUpload(
-    bucket: string,
-  ): Promise<void> {
-
-    assert(bucket, 'bucket is required')
-    const ps = this.genCliParams()
-    // const resp = await firstValueFrom(run(`${this.cmd} probe ${ps.join(' ')} --upload --bucketname ${bucket}`))
-    const stream$ = run(`${this.cmd} probe ${ps.join(' ')} --upload --bucketname ${bucket}`)
-    const resp$ = stream$.pipe(
-      reduce((acc, curr) => {
-        acc.push(curr.toString('utf-8'))
-        return acc
-      }, [] as string[]),
-    )
-    const buffers = await firstValueFrom(resp$)
-    const txt = buffers.join('\n')
-    this.debug && console.log({ txt })
-  }
 
 
   private init(config: Config): { path: ConfigPath, hash: string } {
@@ -195,15 +221,40 @@ export class OSSService {
     return { path, hash }
   }
 
-  /**
-   * 删除OSS配置文件
-   */
-  async destroy(): Promise<void> {
-    const { config } = this
-    if (config && typeof config === 'string') {
-      await rm(config)
-    }
+
+  private async processResp(input$: Observable<Buffer | ExitCodeSignal>): Promise<string> {
+    const buf$ = input$.pipe(
+      reduce((acc, curr) => {
+        if (Buffer.isBuffer(curr)) {
+          this.debug && console.log({ processResp: curr.toString('utf-8') })
+          acc.push(curr)
+          return acc
+        }
+        else if (curr.exitCode !== 0) {
+          const msg = `exitCode: ${curr.exitCode}, exitSignal: "${curr.exitSignal ?? ''}"\n${Buffer.concat(acc).toString('utf-8')}`
+          throw new Error(msg)
+        }
+        return acc
+      }, [] as Buffer[]),
+      map(arr => Buffer.concat(arr)),
+    )
+    const resp = await firstValueFrom(buf$)
+    const ret = resp.toString('utf-8').trim()
+    return ret
   }
+
+  private parseRespStdout<T extends RespDataBase = RespDataBase>(
+    input: string,
+    output?: T,
+  ): T {
+
+    const ret = output ?? {} as T
+    const els = PickData.elapsed(input, this.debug)
+    ret.elapsed = els
+
+    return ret
+  }
+
 
 }
 

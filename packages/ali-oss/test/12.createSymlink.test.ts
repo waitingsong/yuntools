@@ -18,9 +18,8 @@ describe(filename, () => {
       await service.cp(src, dst)
 
       const link = `${dst}-link`
-      await service.createSymlink(dst, link)
-
-      assert(true)
+      const ret = await service.createSymlink(dst, link)
+      assert(ret.data)
     })
   })
 

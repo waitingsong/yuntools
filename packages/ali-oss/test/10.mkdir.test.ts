@@ -14,8 +14,8 @@ describe(filename, () => {
   describe('mkdir should work', () => {
     it('normal', async () => {
       const dir = `${pathPrefix}/test-1234/${Math.random().toString()}`
-      await service.mkdir(dir)
-      assert(true)
+      const ret = await service.mkdir(dir)
+      assert(ret.data)
     })
   })
 

@@ -15,8 +15,8 @@ describe(filename, () => {
     it('normal', async () => {
       const src = join(__dirname, 'tsconfig.json')
       const dir = `${pathPrefix}/test-1234/${Date.now().toString()}-tsconfig.json`
-      await service.cp(src, dir)
-      assert(true)
+      const ret = await service.cp(src, dir)
+      assert(ret.data)
     })
   })
 

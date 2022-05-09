@@ -14,8 +14,8 @@ describe(filename, () => {
 
   describe('probeUpload should work', () => {
     it('normal', async () => {
-      await service.probeUpload(bucket)
-      assert(true)
+      const ret = await service.probeUpload(bucket)
+      assert(ret.data)
     })
   })
 
