@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0](https://github.com/waitingsong/yuntools/compare/v5.1.1...v5.2.0) (2022-05-10)
+
+
+### Features
+
+* **ali-oss:** cp() support 3rd parameter CpOptions ([f67f3e1](https://github.com/waitingsong/yuntools/commit/f67f3e17108a3e165bb4484d282f28ba1cb3a7fc))
+
+
+
+
+
 ## [5.1.1](https://github.com/waitingsong/yuntools/compare/v5.1.0...v5.1.1) (2022-05-09)
 
 
