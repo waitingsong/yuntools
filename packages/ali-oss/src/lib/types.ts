@@ -66,3 +66,24 @@ export interface DataStat extends DataBase {
 
 export type PickFunc = (input: string, rule: RegExp, debug: boolean) => string | number | undefined
 
+export interface BaseOptions {
+  endpoint?: string
+  accessKeyId?: string
+  accessKeySecret?: string
+  stsToken?: string
+  [k: string]: string | number | boolean | undefined
+}
+
+/**
+ * @link https://help.aliyun.com/document_detail/120057.html
+ */
+export interface CpOptions extends BaseOptions {
+  recursive?: boolean
+  force?: boolean
+  update?: boolean
+  'part-size'?: number
+  'encoding-type'?: string
+  jobs?: number
+  parallel?: number
+}
+
