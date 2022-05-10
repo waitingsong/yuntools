@@ -10,7 +10,7 @@ export const bucket = process.env.ALI_OSS_BUCKET ?? ''
 export const CI = process.env.CI
 
 assert(bucket, 'ALI_OSS_BUCKET is required')
-export const cloudUrlPrefix = `oss://${bucket}/mobileFile`
+export const cloudUrlPrefix = `oss://${bucket}/mobileFile/debug`
 
 let config: Config | undefined = void 0
 if (CI) {

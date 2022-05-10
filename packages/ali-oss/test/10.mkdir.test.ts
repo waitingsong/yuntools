@@ -14,7 +14,7 @@ describe(filename, () => {
 
   describe('mkdir should work', () => {
     it('normal', async () => {
-      const dir = `${cloudUrlPrefix}/test-1234/${Math.random().toString()}`
+      const dir = `${cloudUrlPrefix}/${Math.random().toString()}`
       const ret = await service.mkdir(dir)
       CI || console.log(ret)
       assert(ret.data)
