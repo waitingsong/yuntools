@@ -16,8 +16,8 @@ describe(filename, () => {
   describe('cp should work', () => {
     it('normal', async () => {
       const src = join(__dirname, 'tsconfig.json')
-      const dir = `${pathPrefix}/test-1234/${Date.now().toString()}-tsconfig.json`
-      const ret = await service.cp(src, dir)
+      const dst = `${pathPrefix}/test-1234/${Date.now().toString()}-tsconfig.json`
+      const ret = await service.cp(src, dst)
       CI || console.log(ret)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
@@ -26,17 +26,19 @@ describe(filename, () => {
 
     it('param:force', async () => {
       const src = join(__dirname, 'tsconfig.json')
-      const dir = `${pathPrefix}/test-1234/${Date.now().toString()}-tsconfig.json`
-      await service.cp(src, dir)
+      const dst = `${pathPrefix}/test-1234/${Date.now().toString()}-tsconfig.json`
+      await service.cp(src, dst)
 
       const opts: CpOptions = {
         force: true,
       }
-      const ret = await service.cp(src, dir, opts)
+      const ret = await service.cp(src, dst, opts)
       CI || console.log(ret)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
       assert(typeof ret.data.averageSpeed === 'number')
+
+      await service.rm(dst)
     })
   })
 

@@ -19,6 +19,8 @@ describe(filename, () => {
       CI || console.log(ret)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
+
+      await service.rm(dir)
     })
   })
 
