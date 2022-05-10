@@ -4,6 +4,7 @@ import { ExitCodeSignal } from 'rxrunscript'
 
 import { pickFuncMap, pickRegxMap } from './rule'
 import {
+  BaseOptions,
   DataBase,
   DataKey,
   ProcessRet,
@@ -77,3 +78,31 @@ export function combineProcessRet<T extends DataBase = DataBase>(stdout: string,
   return ret
 }
 
+
+export function genParams<T extends BaseOptions>(
+  config: string,
+  options?: T,
+): string[] {
+
+  const ps: string[] = ['-c', config]
+
+  if (typeof options === 'undefined') {
+    return ps
+  }
+
+  Object.entries(options).forEach(([key, value]) => {
+    if (typeof value === 'undefined') {
+      return
+    }
+    else if (typeof value === 'boolean') {
+      if (value === true) {
+        ps.push(`--${key}`)
+      }
+    }
+    else {
+      ps.push(`--${key} ${value.toString()}`)
+    }
+  })
+
+  return ps
+}

@@ -7,10 +7,9 @@ import { join } from 'path'
 
 import { run } from 'rxrunscript'
 
-import { combineProcessRet, parseRespStdout, processResp } from './helper'
+import { combineProcessRet, genParams, parseRespStdout, processResp } from './helper'
 import { regxStat } from './rule'
 import {
-  BaseOptions,
   Config,
   ConfigPath,
   CpOptions,
@@ -98,7 +97,7 @@ export class OSSService {
     assert(src, 'src is required')
     assert(dst, 'dst is required')
 
-    const ps = this.genCliParams2(options)
+    const ps = genParams(this.config, options)
     const resp$ = run(`${this.cmd} cp ${src} ${dst} ${ps.join(' ')} `)
     const resp = await processResp(resp$, this.debug)
     const keys = [DataKey.elapsed, DataKey.averageSpeed]
@@ -203,30 +202,6 @@ export class OSSService {
     assert(accessKeySecret, 'accessKeySecret is required')
   }
 
-
-  genCliParams2<T extends BaseOptions>(options?: T): string[] {
-    const ps: string[] = ['-c', this.config]
-
-    if (typeof options === 'undefined') {
-      return ps
-    }
-
-    Object.entries(options).forEach(([key, value]) => {
-      if (typeof value === 'undefined') {
-        return
-      }
-      else if (typeof value === 'boolean') {
-        if (value === true) {
-          ps.push(`--${key}`)
-        }
-      }
-      else {
-        ps.push(`--${key} ${value.toString()}`)
-      }
-    })
-
-    return ps
-  }
 
   genCliParams(config?: Config | ConfigPath): string[] {
     const conf = config ?? this.config
