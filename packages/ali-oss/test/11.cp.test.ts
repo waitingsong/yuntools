@@ -2,7 +2,7 @@ import assert from 'assert/strict'
 import { join, relative } from 'path'
 
 import {
-  pathPrefix,
+  cloudUrlPrefix,
   service,
   CI,
 } from '@/root.config'
@@ -16,7 +16,7 @@ describe(filename, () => {
   describe('cp should work', () => {
     it('normal', async () => {
       const src = join(__dirname, 'tsconfig.json')
-      const dst = `${pathPrefix}/test-1234/${Date.now().toString()}-tsconfig.json`
+      const dst = `${cloudUrlPrefix}/test-1234/${Date.now().toString()}-tsconfig.json`
       const ret = await service.cp(src, dst)
       CI || console.log(ret)
       assert(ret.data)
@@ -26,7 +26,7 @@ describe(filename, () => {
 
     it('param:force', async () => {
       const src = join(__dirname, 'tsconfig.json')
-      const dst = `${pathPrefix}/test-1234/${Date.now().toString()}-tsconfig.json`
+      const dst = `${cloudUrlPrefix}/test-1234/${Date.now().toString()}-tsconfig.json`
       await service.cp(src, dst)
 
       const opts: CpOptions = {

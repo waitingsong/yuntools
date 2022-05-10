@@ -2,7 +2,7 @@ import assert from 'assert/strict'
 import { relative } from 'path'
 
 import {
-  pathPrefix,
+  cloudUrlPrefix,
   service,
   CI,
 } from '@/root.config'
@@ -14,7 +14,7 @@ describe(filename, () => {
 
   describe('mkdir should work', () => {
     it('normal', async () => {
-      const dir = `${pathPrefix}/test-1234/${Math.random().toString()}`
+      const dir = `${cloudUrlPrefix}/test-1234/${Math.random().toString()}`
       const ret = await service.mkdir(dir)
       CI || console.log(ret)
       assert(ret.data)
