@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.1.0](https://github.com/waitingsong/yuntools/compare/v6.0.0...v6.1.0) (2022-05-11)
+
+
+### Features
+
+* **ali-oss:** detect cloud file exists within cp() ([8aea82b](https://github.com/waitingsong/yuntools/commit/8aea82b08ec63d7be244e81cd04d1fe51dbec145))
+
+
+
+
+
 # [6.0.0](https://github.com/waitingsong/yuntools/compare/v5.3.0...v6.0.0) (2022-05-11)
 
 **Note:** Version bump only for package @yuntools/ali-oss
