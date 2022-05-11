@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.3.0](https://github.com/waitingsong/yuntools/compare/v6.2.0...v6.3.0) (2022-05-11)
+
+
+### Features
+
+* **ali-oss:** def enum ACLKey and update CpOptions ([0f22864](https://github.com/waitingsong/yuntools/commit/0f22864c7c8651fcf8785045dee0838143b54d11))
+
+
+
+
+
 # [6.2.0](https://github.com/waitingsong/yuntools/compare/v6.1.0...v6.2.0) (2022-05-11)
 
 

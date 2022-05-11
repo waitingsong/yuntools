@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.3.0](/compare/v6.2.0...v6.3.0) (2022-05-11)
+
+
+### Features
+
+* **ali-oss:** def enum ACLKey and update CpOptions 0f22864
+
+
+
+
+
 # [6.2.0](/compare/v6.1.0...v6.2.0) (2022-05-11)
 
 
