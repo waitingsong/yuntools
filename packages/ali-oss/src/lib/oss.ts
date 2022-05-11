@@ -17,6 +17,7 @@ import {
   DataKey,
   DataStat,
   ProcessRet,
+  RmOptions,
 } from './types'
 
 
@@ -132,12 +133,13 @@ export class OSSService {
    */
   async rm(
     path: string,
+    options?: RmOptions,
   ): Promise<ProcessRet> {
 
     assert(path, 'src is required')
 
-    const ps = this.genCliParams()
-    const resp$ = run(`${this.cmd} rm ${ps.join(' ')} ${path} `)
+    const ps = genParams(this.config, options)
+    const resp$ = run(`${this.cmd} rm -f ${ps.join(' ')} ${path} `)
     const resp = await processResp(resp$, this.debug)
     const data = parseRespStdout(resp, [DataKey.elapsed], this.debug)
     const ret = combineProcessRet(resp, data)
