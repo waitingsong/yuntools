@@ -168,6 +168,19 @@ export class OSSService {
   }
 
   /**
+   * 强制级联删除，相当于 `rm -rf`
+   * @link https://help.aliyun.com/document_detail/120053.html
+   */
+  async rmrf(
+    path: string,
+    options?: Omit<RmOptions, 'recursive'>,
+  ): Promise<ProcessRet> {
+
+    const ret = await this.rm(path, { ...options, recursive: true })
+    return ret
+  }
+
+  /**
    * 探测上传状态
    * @link https://help.aliyun.com/document_detail/120061.html
    */
