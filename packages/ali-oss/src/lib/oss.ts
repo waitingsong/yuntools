@@ -168,7 +168,7 @@ export class OSSService {
   }
 
   /**
-   * 强制级联删除，相当于 `rm -rf`
+   * 递归删除，相当于 `rm -rf`
    * @link https://help.aliyun.com/document_detail/120053.html
    */
   async rmrf(
