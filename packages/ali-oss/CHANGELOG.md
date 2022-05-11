@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.2.0](https://github.com/waitingsong/yuntools/compare/v6.1.0...v6.2.0) (2022-05-11)
+
+
+### Features
+
+* **ali-oss:** rmrf() ([6cffdba](https://github.com/waitingsong/yuntools/commit/6cffdba2088eb7677cd46c53e2fde79a8a4d1e7e))
+
+
+
+
+
 # [6.1.0](https://github.com/waitingsong/yuntools/compare/v6.0.0...v6.1.0) (2022-05-11)
 
 
