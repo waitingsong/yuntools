@@ -83,7 +83,7 @@ export interface DataCp extends DataBase {
 }
 
 export interface DataStat extends DataBase {
-  [DataKey.acl]: string | undefined
+  [DataKey.acl]: 'default' | 'public' | 'private'
   [DataKey.acceptRanges]: string | undefined
   [DataKey.contentLength]: number | undefined
   [DataKey.contentMd5]: string | undefined
@@ -195,7 +195,7 @@ export interface CpOptions extends BaseOptions {
   meta?: string
 
   /**
-   * @default ACLKey.private
+   * @default ACLKey.default
    */
   acl?: ACLKey
 
