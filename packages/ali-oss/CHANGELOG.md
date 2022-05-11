@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0](https://github.com/waitingsong/yuntools/compare/v5.2.0...v5.3.0) (2022-05-11)
+
+
+### Features
+
+* **ali-oss:** rm() accept 2nd param RmOptions ([a52c49b](https://github.com/waitingsong/yuntools/commit/a52c49b855f88038e18ebde72a25bf0c93af1e7b))
+
+
+
+
+
 # [5.2.0](https://github.com/waitingsong/yuntools/compare/v5.1.1...v5.2.0) (2022-05-10)
 
 
