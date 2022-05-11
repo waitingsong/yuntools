@@ -12,6 +12,25 @@ export interface Config {
   stsToken?: string
 }
 
+export enum ACLKey {
+  /** 继承Bucket的读写权限 */
+  default = 'default',
+  /** 有该Bucket的拥有者可以对该Bucket内的文件进行读写操作，其他人无法访问该Bucket内的文件 */
+  private = 'private',
+  /**
+   * 只有Bucket拥有者可以对该Bucket内的文件进行写操作，其他用户（包括匿名访问者）都可以对该Bucket中的文件进行读操作。
+   * 这有可能造成您数据的外泄以及费用激增，如果被人恶意写入违法信息还可能会侵害您的合法权益。
+   * 除特殊场景外，不建议您配置此权限
+   */
+  publicRead = 'public-read',
+  /**
+   * 任何人（包括匿名访问者）都可以对该Bucket内文件进行读写操作。
+   * 这有可能造成您数据的外泄以及费用激增，
+   * \*\*请谨慎操作\*\*
+   */
+  publicReadWrite = 'public-read-write',
+}
+
 
 export interface ProcessResp {
   /**
@@ -49,10 +68,6 @@ export enum DataKey {
   xOssHashCrc64ecma = 'X-Oss-Hash-Crc64ecma',
   xOssObjectType = 'X-Oss-Object-Type',
   xOssStorageClass = 'X-Oss-Storage-Class',
-
-  // total = 'total',
-  // succeed = 'succeed',
-  // removed = 'removed',
 }
 
 export interface DataBase {
@@ -83,12 +98,42 @@ export interface DataStat extends DataBase {
 
 export type PickFunc = (input: string, rule: RegExp, debug: boolean) => string | number | undefined
 
+
+/** 扁担参数名映射 */
+export enum MKey {
+  /** 设置分片大小，单位为字节 */
+  partSize = 'part-size',
+  /** 文件名称的编码方式。取值为url。如果不指定该选项，则表示文件名称未经过编码 */
+  encodingType = 'encoding-type',
+  /** 上传链接子目录，默认不上传 */
+  enableSymlinkDir = 'enable-symlink-dir',
+  /** 批量操作时不忽略错误 */
+  disableIgnoreError = 'disable-ignore-error',
+  /** 仅上传当前目录下的文件，忽略子目录及子目录下的文件 */
+  onlyCurrentDir = 'only-current-dir',
+  /** 设置断点续传文件的大小阈值，单位为字节 */
+  bigfileThreshold = 'bigfile-threshold',
+  /** 指定断点续传记录信息所在的目录 */
+  checkpointDir = 'checkpoint-dir',
+  /** 指定保存上传文件时的快照信息所在的目录。在下一次上传文件时，ossutil会读取指定目录下的快照信息进行增量上传 */
+  snapshotPath = 'snapshot-path',
+  /** 表示上传文件时不为目录生成Object */
+  disableCrc64 = 'disable-crc64',
+  /** Object 的指定版本。仅适用于已开启或暂停版本控制状态 Bucket下的 Object */
+  versionId = 'version-id',
+  /**
+   * Object 的所有版本。
+   * 仅适用于已开启或暂停版本控制状态 Bucket 下的 Object，
+   * 且同一个删除示例中仅允许选择--version-id或--all-versions其中一个选项
+   */
+  allVersions = 'all-versions',
+}
+
 export interface BaseOptions {
   endpoint?: string
   accessKeyId?: string
   accessKeySecret?: string
   stsToken?: string
-  [k: string]: string | number | boolean | undefined
 }
 
 /**
@@ -100,18 +145,83 @@ export interface CpOptions extends BaseOptions {
    * 否则只对指定的单个 Object 进行操作
    */
   recursive?: boolean
+
   /** 强制操作，不进行询问提示 */
   force?: boolean
+
   /** 只有当目标文件不存在，或源文件的最后修改时间晚于目标文件时，才会执行上传操作 */
   update?: boolean
+
   /** 设置分片大小，单位为字节 */
-  'part-size'?: number
-  'encoding-type'?: string
+  [MKey.partSize]?: number
+
+  /** 文件名称的编码方式。取值为url。如果不指定该选项，则表示文件名称未经过编码 */
+  [MKey.encodingType]?: string
+
+  /**
+   * 最大上传速度，单位为 KB/s
+   * @default 0 不限制上传速度
+   */
+  maxupspeed?: number
+
+  /**
+   * 上传链接子目录，默认不上传
+   * @default false
+   * */
+  [MKey.enableSymlinkDir]?: boolean
+
+  /** 批量操作时不忽略错误 */
+  [MKey.disableIgnoreError]?: boolean
+
+  /** 仅上传当前目录下的文件，忽略子目录及子目录下的文件 */
+  [MKey.onlyCurrentDir]?: boolean
+
+  /**
+   * 设置断点续传文件的大小阈值，单位为字节
+   * @default 100 * 1024 * 1024 (100MB)
+   */
+  [MKey.bigfileThreshold]?: number
+
+  /** 指定断点续传记录信息所在的目录 */
+  [MKey.checkpointDir]?: string
+
+  /** 包含符合指定条件的所有文件 */
+  include?: string
+
+  /** 不包含任何符合指定条件的文件 */
+  exclude?: string
+
+  /** 文件的元信息。包括部分HTTP标准属性（HTTP Header）以及以x-oss-meta-开头的用户自定义元数据 */
+  meta?: string
+
+  /**
+   * @default ACLKey.private
+   */
+  acl?: ACLKey
+
+  /** 指定保存上传文件时的快照信息所在的目录。在下一次上传文件时，ossutil会读取指定目录下的快照信息进行增量上传 */
+  [MKey.snapshotPath]?: string
+
+  /**
+   * 表示上传文件时不为目录生成Object
+   * @default false
+   */
+  [MKey.disableCrc64]?: boolean
+
+  /** 请求的支付方式。如果希望访问指定路径下的资源产生的流量、请求次数等费用由请求者支付，请将此选项的值设置为requester */
+  payer?: string
+
+  /**
+   * 上传文件时设置标签信息，格式为 `TagkeyA=TagvalueA&TagkeyB=TagvalueB....`
+   */
+  tagging?: string
+
   /**
    * 多文件操作时的并发任务数
    * @default 3
    */
   jobs?: number
+
   /** 单文件操作时的并发任务数，取值范围为 1~10000 */
   parallel?: number
 }
@@ -126,25 +236,33 @@ export interface RmOptions extends BaseOptions {
    * 如果不指定该选项，则ossutil只删除指定Object
    */
   recursive?: boolean
+
   /** 仅在删除 Bucket 时使用此选项 */
   bucket?: string
+
   /** 指定操作的对象为 Bucket 中未完成的 Multipart 事件 */
   multipart?: boolean
+
   /** 包含符合指定条件的所有 Object */
   include?: string
+
   /** 不包含任何符合指定条件的 Object */
   exclude?: string
+
   /** Object 的指定版本。仅适用于已开启或暂停版本控制状态 Bucket下的 Object */
-  'version-id'?: string
+  [MKey.versionId]?: string
+
   /**
    * Object 的所有版本。
    * 仅适用于已开启或暂停版本控制状态 Bucket 下的 Object，
    * 且同一个删除示例中仅允许选择--version-id或--all-versions其中一个选项
    */
-  'all-versions'?: boolean
+  [MKey.allVersions]?: boolean
+
   /**
    * 对 `oss://bucket_name` 之后的 prefix 进行编码，取值为url
    * 如果不指定该选项，则表示 prefix 未经过编码
    */
-  'encoding-type'?: string
+  [MKey.encodingType]?: string
 }
+

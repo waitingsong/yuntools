@@ -118,16 +118,27 @@ export function genParams<T extends BaseOptions>(
   }
 
   Object.entries(options).forEach(([key, value]) => {
-    if (typeof value === 'undefined') {
-      return
-    }
-    else if (typeof value === 'boolean') {
-      if (value === true) {
-        ps.push(`--${key}`)
+    switch (typeof value) {
+      case 'undefined':
+        return
+
+      case 'boolean': {
+        if (value === true) {
+          ps.push(`--${key}`)
+        }
+        break
       }
-    }
-    else {
-      ps.push(`--${key} ${value.toString()}`)
+
+      case 'number':
+        ps.push(`--${key} ${value.toString()}`)
+        break
+
+      case 'string':
+        ps.push(`--${key} ${value}`)
+        break
+
+      default:
+        throw new TypeError(`unexpected typeof ${key}: ${typeof value}`)
     }
   })
 
