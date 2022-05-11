@@ -78,12 +78,24 @@ export interface BaseOptions {
  * @link https://help.aliyun.com/document_detail/120057.html
  */
 export interface CpOptions extends BaseOptions {
+  /** 递归操作。
+   * 当指定该选项时，ossutil 会对 Bucket下所有符合条件的 Object 进行操作，
+   * 否则只对指定的单个 Object 进行操作
+   */
   recursive?: boolean
+  /** 强制操作，不进行询问提示 */
   force?: boolean
+  /** 只有当目标文件不存在，或源文件的最后修改时间晚于目标文件时，才会执行上传操作 */
   update?: boolean
+  /** 设置分片大小，单位为字节 */
   'part-size'?: number
   'encoding-type'?: string
+  /**
+   * 多文件操作时的并发任务数
+   * @default 3
+   */
   jobs?: number
+  /** 单文件操作时的并发任务数，取值范围为 1~10000 */
   parallel?: number
 }
 
