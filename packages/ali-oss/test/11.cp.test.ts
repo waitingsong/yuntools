@@ -6,7 +6,7 @@ import {
   service,
   CI,
 } from '@/root.config'
-import { CpOptions } from '~/lib'
+import { ACLKey, CpOptions } from '~/lib'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -58,8 +58,61 @@ describe(filename, () => {
 
       await service.rm(dst)
     })
-  })
 
+    it('acl:private', async () => {
+      const src = join(__dirname, 'tsconfig.json')
+      const dst = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
+      const opts: CpOptions = {
+        acl: ACLKey.private,
+      }
+      const ret = await service.cp(src, dst, opts)
+      assert(ret.exitCode === 0)
+      assert(ret.data)
+
+      const statRet = await service.stat(dst)
+      assert(statRet.exitCode === 0)
+      const { data } = statRet
+      assert(data)
+      assert(data.ACL === 'private', data.ACL)
+      assert(data.ACL === ACLKey.private, data.ACL)
+    })
+
+    it('acl:public-read', async () => {
+      const src = join(__dirname, 'tsconfig.json')
+      const dst = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
+      const opts: CpOptions = {
+        acl: ACLKey.publicRead,
+      }
+      const ret = await service.cp(src, dst, opts)
+      assert(ret.exitCode === 0)
+      assert(ret.data)
+
+      const statRet = await service.stat(dst)
+      CI || console.log({ statRet })
+      assert(statRet.exitCode === 0)
+      const { data } = statRet
+      assert(data)
+      assert(data.ACL === 'public', data.ACL)
+    })
+
+    it('acl:public-read-write', async () => {
+      const src = join(__dirname, 'tsconfig.json')
+      const dst = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
+      const opts: CpOptions = {
+        acl: ACLKey.publicReadWrite,
+      }
+      const ret = await service.cp(src, dst, opts)
+      assert(ret.exitCode === 0)
+      assert(ret.data)
+
+      const statRet = await service.stat(dst)
+      CI || console.log({ statRet })
+      assert(statRet.exitCode === 0)
+      const { data } = statRet
+      assert(data)
+      assert(data.ACL === 'public', data.ACL)
+    })
+  })
 })
 
 
