@@ -1,7 +1,7 @@
 {
   "name": "@yuntools/ali-ecs",
   "author": "waiting",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "description": "阿里云 ECS 模块封装，支持 ESM，CJS 导入，提供 TypeScript 类型定义",
   "keywords": [
     "ali",
