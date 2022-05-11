@@ -17,6 +17,7 @@ describe(filename, () => {
       const dir = `${cloudUrlPrefix}/${Math.random().toString()}`
       const ret = await service.mkdir(dir)
       CI || console.log(ret)
+      assert(ret.exitCode === 0)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
 

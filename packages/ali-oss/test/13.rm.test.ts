@@ -24,7 +24,6 @@ describe(filename, () => {
     })
 
     it('rescusive', async () => {
-
       const src = join(__dirname, 'tsconfig.json')
       const dir = `${cloudUrlPrefix}/bbb/${Date.now().toString()}`
       const dst = `${dir}/${Date.now().toString()}-tsconfig.json`
@@ -51,15 +50,11 @@ describe(filename, () => {
       CI || console.log({ rmRes1 })
       assert(rmRes1.data)
 
-      try {
-        await service.stat(dst)
-      }
-      catch (ex) {
-        const { message } = ex as Error
-        assert(message.includes('NoSuchKey'))
-        return
-      }
-      assert(false, 'should throw error but not')
+      const statRes = await service.stat(dst)
+      console.log({ statRes })
+      assert(statRes.exitCode, 'file not exists after recursive rm')
+      assert(statRes.stderr.includes('NoSuchKey'))
+      assert(statRes.stderr.includes('404'))
     })
   })
 

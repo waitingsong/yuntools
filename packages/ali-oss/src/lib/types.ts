@@ -12,9 +12,26 @@ export interface Config {
   stsToken?: string
 }
 
-export interface ProcessRet<T extends DataBase = DataBase> {
+
+export interface ProcessResp {
+  /**
+   * 0: success, others: error
+   */
+  readonly exitCode: number
+  readonly exitSignal: string
   readonly stdout: string
-  readonly data: T
+  readonly stderr: string
+}
+
+export interface ProcessRet<T extends DataBase = DataBase> {
+  readonly data: T | undefined
+  readonly stdout: string
+  readonly stderr: string
+  /**
+   * 0: success, others: error
+   */
+  readonly exitCode: number
+  readonly exitSignal: string
 }
 
 export enum DataKey {

@@ -21,6 +21,7 @@ describe(filename, () => {
       const link = `${dst}-link`
       const ret = await service.createSymlink(dst, link)
       CI || console.log(ret)
+      assert(ret.exitCode === 0)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
 

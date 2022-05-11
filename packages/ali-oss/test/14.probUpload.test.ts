@@ -16,6 +16,7 @@ describe(filename, () => {
     it('normal', async () => {
       const ret = await service.probeUpload(bucket)
       CI || console.log(ret)
+      assert(ret.exitCode === 0)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
     })

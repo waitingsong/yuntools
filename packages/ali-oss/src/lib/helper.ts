@@ -1,47 +1,70 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { firstValueFrom, Observable, reduce, map } from 'rxjs'
-import { ExitCodeSignal } from 'rxrunscript'
+import { OutputRow } from 'rxrunscript'
 
 import { pickFuncMap, pickRegxMap } from './rule'
 import {
   BaseOptions,
   DataBase,
   DataKey,
+  ProcessResp,
   ProcessRet,
 } from './types'
 
 
 export async function processResp(
-  input$: Observable<Buffer | ExitCodeSignal>,
+  input$: Observable<OutputRow>,
   debug = false,
-): Promise<string> {
+): Promise<ProcessResp> {
+
+  let exitCode
+  let exitSignal
 
   const buf$ = input$.pipe(
-    reduce((acc, curr) => {
-      if (Buffer.isBuffer(curr)) {
-        debug && console.log({ processResp: curr.toString('utf-8') })
-        acc.push(curr)
-        return acc
+    reduce((acc: Buffer[], curr: OutputRow) => {
+      if (typeof curr.exitCode === 'undefined') {
+        debug && console.log({ processResp: curr.data.toString('utf-8') })
+        acc.push(curr.data)
       }
-      else if (curr.exitCode !== 0) {
-        const msg = `exitCode: ${curr.exitCode}, exitSignal: "${curr.exitSignal ?? ''}"\n${Buffer.concat(acc).toString('utf-8')}`
-        throw new Error(msg)
+      else { // last value
+        exitCode = curr.exitCode
+        exitSignal = curr.exitSignal
       }
       return acc
     }, [] as Buffer[]),
     map(arr => Buffer.concat(arr)),
   )
-  const resp = await firstValueFrom(buf$)
-  const ret = resp.toString('utf-8').trim()
+
+  if (typeof exitCode === 'undefined') {
+    exitCode = 0
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (typeof exitSignal === 'undefined' || exitSignal === null) {
+    exitSignal = ''
+  }
+
+  const res = await firstValueFrom(buf$)
+  const content = res.toString('utf-8').trim()
+
+  const ret: ProcessResp = {
+    exitCode,
+    exitSignal,
+    stdout: exitCode === 0 ? content : '',
+    stderr: exitCode === 0 ? '' : content,
+  }
   return ret
 }
 
 export function parseRespStdout<T extends DataBase = DataBase>(
-  input: string,
+  input: ProcessResp,
   dataKeys: DataKey[] = [DataKey.elapsed],
   debug = false,
   output?: T,
-): T {
+): T | undefined {
+
+  if (input.exitCode !== 0) {
+    return void 0
+  }
 
   const ret = output ?? {} as T
 
@@ -59,7 +82,7 @@ export function parseRespStdout<T extends DataBase = DataBase>(
       return
     }
 
-    const value = func(input, rule, debug)
+    const value = func(input.stdout, rule, debug)
     Object.defineProperty(ret, key, {
       enumerable: true,
       value,
@@ -70,10 +93,14 @@ export function parseRespStdout<T extends DataBase = DataBase>(
 }
 
 
-export function combineProcessRet<T extends DataBase = DataBase>(stdout: string, data: T): ProcessRet <T> {
+export function combineProcessRet<T extends DataBase = DataBase>(
+  resp: ProcessResp,
+  data: T | undefined,
+): ProcessRet<T> {
+
   const ret = {
+    ...resp,
     data,
-    stdout,
   }
   return ret
 }

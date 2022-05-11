@@ -79,9 +79,12 @@ export class OSSService {
     // const ps = this.genCliParams(config)
     const ps: string[] = []
     const resp$ = run(`${this.cmd} mkdir -c ${this.config} ${ps.join(' ')} ${dir}`)
-    const resp = await processResp(resp$, this.debug)
-    const data = parseRespStdout(resp, [DataKey.elapsed], this.debug)
-    const ret = combineProcessRet(resp, data)
+    const res = await processResp(resp$, this.debug)
+
+    const keys: DataKey[] = [DataKey.elapsed]
+    const data = parseRespStdout<DataStat>(res, keys, this.debug)
+    const ret = combineProcessRet(res, data)
+
     return ret
   }
 
@@ -100,10 +103,11 @@ export class OSSService {
 
     const ps = genParams(this.config, options)
     const resp$ = run(`${this.cmd} cp ${src} ${dst} ${ps.join(' ')} `)
-    const resp = await processResp(resp$, this.debug)
+    const res = await processResp(resp$, this.debug)
+
     const keys = [DataKey.elapsed, DataKey.averageSpeed]
-    const data = parseRespStdout<DataCp>(resp, keys, this.debug)
-    const ret = combineProcessRet(resp, data)
+    const data = parseRespStdout<DataCp>(res, keys, this.debug)
+    const ret = combineProcessRet(res, data)
     return ret
   }
 
@@ -121,9 +125,10 @@ export class OSSService {
 
     const ps = this.genCliParams()
     const resp$ = run(`${this.cmd} create-symlink ${ps.join(' ')} ${dst} ${src}`)
-    const resp = await processResp(resp$, this.debug)
-    const data = parseRespStdout(resp, [DataKey.elapsed], this.debug)
-    const ret = combineProcessRet(resp, data)
+    const res = await processResp(resp$, this.debug)
+
+    const data = parseRespStdout(res, [DataKey.elapsed], this.debug)
+    const ret = combineProcessRet(res, data)
     return ret
   }
 
@@ -140,9 +145,10 @@ export class OSSService {
 
     const ps = genParams(this.config, options)
     const resp$ = run(`${this.cmd} rm -f ${ps.join(' ')} ${path} `)
-    const resp = await processResp(resp$, this.debug)
-    const data = parseRespStdout(resp, [DataKey.elapsed], this.debug)
-    const ret = combineProcessRet(resp, data)
+    const res = await processResp(resp$, this.debug)
+
+    const data = parseRespStdout(res, [DataKey.elapsed], this.debug)
+    const ret = combineProcessRet(res, data)
     return ret
   }
 
@@ -158,9 +164,10 @@ export class OSSService {
     const ps = this.genCliParams()
     // const resp = await firstValueFrom(run(`${this.cmd} probe ${ps.join(' ')} --upload --bucketname ${bucket}`))
     const resp$ = run(`${this.cmd} probe ${ps.join(' ')} --upload --bucketname ${bucket}`)
-    const resp = await processResp(resp$, this.debug)
-    const data = parseRespStdout(resp, [DataKey.elapsed], this.debug)
-    const ret = combineProcessRet(resp, data)
+    const res = await processResp(resp$, this.debug)
+
+    const data = parseRespStdout(res, [DataKey.elapsed], this.debug)
+    const ret = combineProcessRet(res, data)
     return ret
   }
 
@@ -176,10 +183,11 @@ export class OSSService {
 
     const ps = this.genCliParams()
     const resp$ = run(`${this.cmd} stat ${ps.join(' ')} ${path} `)
-    const resp = await processResp(resp$, this.debug)
+    const res = await processResp(resp$, this.debug)
+
     const keys: DataKey[] = [DataKey.elapsed].concat(Array.from(regxStat.keys()))
-    const data = parseRespStdout<DataStat>(resp, keys, this.debug)
-    const ret = combineProcessRet(resp, data)
+    const data = parseRespStdout<DataStat>(res, keys, this.debug)
+    const ret = combineProcessRet(res, data)
     return ret
   }
 
