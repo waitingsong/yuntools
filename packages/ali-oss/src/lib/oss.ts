@@ -102,6 +102,21 @@ export class OSSService {
     assert(dst, 'dst is required')
 
     const ps = genParams(this.config, options)
+
+    if (! options || ! options.force) {
+      const stat = await this.stat(dst)
+      if (! stat.exitCode) {
+        const ret: ProcessRet<DataCp> = {
+          exitCode: 1,
+          exitSignal: '',
+          stdout: '',
+          stderr: `Cloud File already exists: "${dst}"`,
+          data: void 0,
+        }
+        return ret
+      }
+    }
+
     const resp$ = run(`${this.cmd} cp ${src} ${dst} ${ps.join(' ')} `)
     const res = await processResp(resp$, this.debug)
 

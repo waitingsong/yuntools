@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
-    "@yuntools/ali-oss": "^5.2.0",
+    "@yuntools/ali-oss": "*",
     "ts-node": "^10.7.0",
     "zx": "^6.1.0"
   },

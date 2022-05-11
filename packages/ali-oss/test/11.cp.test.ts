@@ -42,6 +42,22 @@ describe(filename, () => {
 
       await service.rm(dst)
     })
+
+    it('duplicate detection', async () => {
+      const src = join(__dirname, 'tsconfig.json')
+      const dst = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
+      const ret = await service.cp(src, dst)
+      CI || console.log({ ret })
+      assert(ret.exitCode === 0)
+      assert(ret.data)
+
+      const ret2 = await service.cp(src, dst)
+      CI || console.log({ ret2 })
+      assert(ret2.exitCode === 1)
+      assert(ret2.stderr.includes('Cloud File already exists'))
+
+      await service.rm(dst)
+    })
   })
 
 })
