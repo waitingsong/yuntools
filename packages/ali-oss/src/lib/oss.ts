@@ -207,7 +207,7 @@ export class OSSService {
     path: string,
   ): Promise<ProcessRet<DataStat>> {
 
-    assert(path, 'src is required')
+    assert(path, 'path is required')
 
     const ps = this.genCliParams()
     const resp$ = run(`${this.cmd} stat ${ps.join(' ')} ${path} `)
@@ -219,6 +219,20 @@ export class OSSService {
     return ret
   }
 
+
+  /**
+   * OSS 远程路径是否存在
+   */
+  async pathExists(
+    path: string,
+  ): Promise<boolean> {
+
+    assert(path, 'path is required')
+
+    const stat = await this.stat(path)
+    const exists = !! (stat.exitCode === 0 && stat.data)
+    return exists
+  }
 
   validateConfig(config: Config | ConfigPath): void {
     if (typeof config === 'string') {
