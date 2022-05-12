@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0](/compare/v6.4.0...v7.0.0) (2022-05-12)
+
+
+### Features
+
+* **ali-oss:** mv() and enum Msg e2a0fa6
+
+
+### BREAKING CHANGES
+
+* **ali-oss:** error message prefix of cp() if duplicated
+
+
+
+
+
 # [6.4.0](/compare/v6.3.2...v6.4.0) (2022-05-12)
 
 
