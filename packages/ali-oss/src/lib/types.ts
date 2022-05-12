@@ -266,3 +266,12 @@ export interface RmOptions extends BaseOptions {
   [MKey.encodingType]?: string
 }
 
+export interface MvOptions extends BaseOptions {
+  /** 强制操作，不进行询问提示 */
+  force?: boolean
+}
+
+export enum Msg {
+  cloudFileAlreadyExists = 'Cloud file already exists',
+}
+

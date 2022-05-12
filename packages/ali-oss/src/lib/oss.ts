@@ -13,9 +13,12 @@ import {
   Config,
   ConfigPath,
   CpOptions,
+  DataBase,
   DataCp,
   DataKey,
   DataStat,
+  Msg,
+  MvOptions,
   ProcessRet,
   RmOptions,
 } from './types'
@@ -110,7 +113,7 @@ export class OSSService {
           exitCode: 1,
           exitSignal: '',
           stdout: '',
-          stderr: `Cloud File already exists: "${dst}"`,
+          stderr: `${Msg.cloudFileAlreadyExists}: "${dst}"`,
           data: void 0,
         }
         return ret
@@ -233,6 +236,36 @@ export class OSSService {
     const exists = !! (stat.exitCode === 0 && stat.data)
     return exists
   }
+
+
+  /**
+   * 移动 OSS 对象
+   * 流程为先 `cp()` 然后 `rm()`
+   */
+  async mv(
+    src: string,
+    dst: string,
+    options?: MvOptions,
+  ): Promise<ProcessRet<DataStat | DataBase>> {
+
+    assert(src, 'src is required')
+    assert(dst, 'dst is required')
+    assert(src !== dst, 'src and dst must not be the same')
+
+    const cp = await this.cp(src, dst, options)
+    if (cp.exitCode) {
+      return cp
+    }
+
+    const remove = await this.rm(src, options)
+    if (remove.exitCode) {
+      return remove
+    }
+
+    const stat = await this.stat(dst)
+    return stat
+  }
+
 
   validateConfig(config: Config | ConfigPath): void {
     if (typeof config === 'string') {

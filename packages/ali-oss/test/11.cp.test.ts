@@ -6,7 +6,7 @@ import {
   service,
   CI,
 } from '@/root.config'
-import { ACLKey, CpOptions } from '~/lib'
+import { ACLKey, CpOptions, Msg } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -56,7 +56,7 @@ describe(filename, () => {
       const ret2 = await service.cp(src, dst)
       CI || console.log({ ret2 })
       assert(ret2.exitCode === 1)
-      assert(ret2.stderr.includes('Cloud File already exists'))
+      assert(ret2.stderr.includes(Msg.cloudFileAlreadyExists))
 
       await service.rm(dst)
     })
