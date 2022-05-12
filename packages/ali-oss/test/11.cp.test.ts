@@ -23,6 +23,8 @@ describe(filename, () => {
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
       assert(typeof ret.data.averageSpeed === 'number')
+
+      await service.rm(dst)
     })
 
     it('param:force', async () => {
@@ -75,6 +77,8 @@ describe(filename, () => {
       assert(data)
       assert(data.ACL === 'private', data.ACL)
       assert(data.ACL === ACLKey.private, data.ACL)
+
+      await service.rm(dst)
     })
 
     it('acl:public-read', async () => {
@@ -111,6 +115,8 @@ describe(filename, () => {
       const { data } = statRet
       assert(data)
       assert(data.ACL === 'public', data.ACL)
+
+      await service.rm(dst)
     })
   })
 })
