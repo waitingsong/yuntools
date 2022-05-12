@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.4.0](https://github.com/waitingsong/yuntools/compare/v6.3.2...v6.4.0) (2022-05-12)
+
+
+### Features
+
+* **ali-oss:** pathExists() ([958917d](https://github.com/waitingsong/yuntools/commit/958917d06742bdf723c98c67c10e9908cb01a85f))
+
+
+
+
+
 ## [6.3.2](https://github.com/waitingsong/yuntools/compare/v6.3.1...v6.3.2) (2022-05-11)
 
 **Note:** Version bump only for package @yuntools/ali-oss
