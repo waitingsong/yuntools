@@ -19,7 +19,7 @@ describe(filename, () => {
       const dst = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
       const ret = await service.cp(src, dst)
       CI || console.log(ret)
-      assert(ret.exitCode === 0)
+      assert(! ret.exitCode, `cp ${src} ${dst} failed, ${ret.stderr}`)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
       assert(typeof ret.data.averageSpeed === 'number')
