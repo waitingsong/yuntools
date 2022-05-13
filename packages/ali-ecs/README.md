@@ -8,3 +8,7 @@
 ```sh
 npm i @yuntools/ali-ecs
 ```
+
+## License
+[MIT](LICENSE)
+
