@@ -25,7 +25,8 @@ sudo chmod a+x /usr/bin/ossutil
 ### Typescript 工程
 
 ```ts 
-// mkdir.ts
+// foo.ts
+import assert from 'node:assert'
 import { OSSService, Config } from '@yuntools/ali-oss'
 
 const ossConfig: Config = {
@@ -34,7 +35,18 @@ const ossConfig: Config = {
   accessKeySecret: 'bar',
 }
 const ossService = new OSSService(ossConfig)
-await ossService.mkdir('oss://bucketfoo/barz')
+
+// 创建目录
+const mkRet = await ossService.mkdir('oss://bucketfoo/barz')
+assert(! mkRet.exitCode, `mkdir ${dir} failed, ${mkRet.stderr}`)
+
+
+// 上传本地文件
+const src = 'tsconfig.json'
+const dst = `oss://bucketfoo/tsconfig.json`
+const ret = await service.cp(src, dst)
+assert(! ret.exitCode, `cp ${src} ${dst} failed, ${ret.stderr}`)
+assert(ret.data)
 ```
 
 ### CLI 命令行
@@ -56,3 +68,20 @@ cd example
 # ts-node 执行器
 ./ts-node-import.ts
 ```
+
+### OSS 操作实例方法
+
+- cp()
+- createSymlink()
+- mkdir()
+- mv()
+- pathExists()
+- probeUpload()
+- rm()
+- rmrf()
+- stat()
+
+
+## License
+[MIT](LICENSE)
+
