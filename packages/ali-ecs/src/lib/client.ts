@@ -6,5 +6,7 @@ import Ecs from '@alicloud/ecs20140526'
 
 // for ESM module
 // export const _Client = (Ecs as any).default as typeof Ecs
-export const _Client = Ecs
+export const _Client = typeof module === 'object'
+  ? Ecs
+  : (Ecs as any).default as typeof Ecs
 
