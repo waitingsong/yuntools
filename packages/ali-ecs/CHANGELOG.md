@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.1](https://github.com/waitingsong/yuntools/compare/v7.0.0...v7.0.1) (2022-05-16)
+
+
+### Bug Fixes
+
+* **ali-ecs:** client when esm ([0c94ef6](https://github.com/waitingsong/yuntools/commit/0c94ef67aab416ea3a65824cdd04cbd791afa7ee))
+
+
+
+
+
 # [7.0.0](https://github.com/waitingsong/yuntools/compare/v6.4.0...v7.0.0) (2022-05-12)
 
 **Note:** Version bump only for package @yuntools/ali-ecs

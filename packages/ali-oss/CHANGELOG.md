@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.1](https://github.com/waitingsong/yuntools/compare/v7.0.0...v7.0.1) (2022-05-16)
+
+**Note:** Version bump only for package @yuntools/ali-oss
+
+
+
+
+
 # [7.0.0](https://github.com/waitingsong/yuntools/compare/v6.4.0...v7.0.0) (2022-05-12)
 
 
