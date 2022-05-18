@@ -18,7 +18,7 @@ import {
  * 阿里云 ECS 服务接口
  * 最多支持 100 个实例
  */
-export class ECSService {
+export class EcsClient {
 
   client: Ecs
   debug = false
