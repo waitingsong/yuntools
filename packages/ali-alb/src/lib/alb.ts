@@ -10,7 +10,7 @@ import Alb, {
   ListAsynJobsResponseBodyJobs,
 } from '@alicloud/alb20200616'
 import { Config as ApiConfig } from '@alicloud/openapi-client'
-import { ECSService } from '@yuntools/ali-ecs'
+import { EcsClient } from '@yuntools/ali-ecs'
 import {
   firstValueFrom,
   timer,
@@ -52,7 +52,7 @@ export class AlbClient {
 
   client: Alb
   nextToken = ''
-  ecsService: ECSService
+  ecsService: EcsClient
   groupServersCache = new Map<ServerGroupId, GroupServer[]>()
   cacheTime: number
   cacheTTLSec: 5
@@ -61,7 +61,7 @@ export class AlbClient {
     protected id: string,
     protected secret: string,
     public endpoint = 'alb.cn-hangzhou.aliyuncs.com',
-    public ecsServiceInstance?: ECSService,
+    public ecsServiceInstance?: EcsClient,
   ) {
 
     this.client = this.createClient(id, secret)
@@ -69,7 +69,7 @@ export class AlbClient {
       this.ecsService = ecsServiceInstance
     }
     else {
-      this.ecsService = new ECSService(id, secret)
+      this.ecsService = new EcsClient(id, secret)
     }
   }
 
