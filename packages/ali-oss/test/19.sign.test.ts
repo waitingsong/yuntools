@@ -25,13 +25,23 @@ describe(filename, () => {
       const sign = await client.sign(dst, { 'disable-encode-slash': true })
       assert(! sign.exitCode, `sign ${dst} failed, ${sign.stderr}`)
       assert(sign.data)
-      assert(sign.data.httpUrl)
-      assert(sign.data.httpUrl.startsWith('https://'))
 
-      assert(sign.data.httpShareUrl)
-      assert(sign.data.httpShareUrl.startsWith('https://'))
-      assert(sign.data.httpShareUrl.includes('?Expires='))
-      assert(sign.data.httpShareUrl.includes('AccessKeyId='))
+      const { data } = sign
+      assert(data.httpUrl)
+      assert(data.httpUrl.startsWith('https://'))
+      assert(! data.httpUrl.includes('?Expires='))
+      assert(! data.httpUrl.includes('AccessKeyId='))
+
+      assert(data.httpShareUrl)
+      assert(data.httpShareUrl.startsWith('https://'))
+      assert(data.httpShareUrl.includes('?Expires='))
+      assert(data.httpShareUrl.includes('AccessKeyId='))
+
+      assert(data.link)
+      assert(data.link.startsWith('https://'))
+      assert(! data.link.includes('?Expires='))
+      assert(! data.link.includes('AccessKeyId='))
+      assert(! data.link.includes('%2F'))
 
       await client.rm(dst)
     })

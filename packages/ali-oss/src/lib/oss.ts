@@ -292,6 +292,11 @@ export class OssClient {
 
     const keys = [DataKey.elapsed, DataKey.httpUrl, DataKey.httpShareUrl]
     const data = parseRespStdout<DataSign>(res, keys, this.debug)
+    if (data?.httpUrl) {
+      data.link = opts['disable-encode-slash']
+        ? data.httpUrl
+        : decodeURIComponent(data.httpUrl)
+    }
     const ret = combineProcessRet(res, data)
     return ret
   }

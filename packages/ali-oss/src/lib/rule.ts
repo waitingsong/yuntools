@@ -14,6 +14,7 @@ export const regxStat = new Map<DataKey, RegExp>([
   [DataKey.xOssObjectType, new RegExp(`${DataKey.xOssObjectType}\\s+:\\s+(\\w+)`, 'u')],
   [DataKey.xOssStorageClass, new RegExp(`${DataKey.xOssStorageClass}\\s+:\\s+(\\w+)`, 'u')],
 
+  [DataKey.link, new RegExp('https://[^?\\s\\n]+', 'u')],
   [DataKey.httpUrl, new RegExp('https://[^?\\s\\n]+', 'u')],
   [DataKey.httpShareUrl, new RegExp('https?://\\S+', 'u')],
 ])
@@ -45,6 +46,7 @@ export const pickFuncMap = new Map<DataKey, PickFunc>([
   [DataKey.xOssObjectType, pickString],
   [DataKey.xOssStorageClass, pickString],
 
+  [DataKey.link, pickString],
   [DataKey.httpUrl, pickString],
   [DataKey.httpShareUrl, pickString],
 ])

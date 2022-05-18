@@ -69,6 +69,7 @@ export enum DataKey {
   xOssObjectType = 'X-Oss-Object-Type',
   xOssStorageClass = 'X-Oss-Storage-Class',
 
+  link = 'link',
   httpUrl = 'httpUrl',
   httpShareUrl = 'httpShareUrl',
 }
@@ -100,7 +101,11 @@ export interface DataStat extends DataBase {
 }
 
 export interface DataSign extends DataBase {
+  /** 不带有 token 认证信息的文件路径 */
+  [DataKey.link]: string | undefined
+  /** 不带有 token 认证信息的链接 */
   [DataKey.httpUrl]: string | undefined
+  /** 带有 token 认证信息的链接 */
   [DataKey.httpShareUrl]: string | undefined
 }
 
