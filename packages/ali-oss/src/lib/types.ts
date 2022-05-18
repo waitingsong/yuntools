@@ -68,6 +68,9 @@ export enum DataKey {
   xOssHashCrc64ecma = 'X-Oss-Hash-Crc64ecma',
   xOssObjectType = 'X-Oss-Object-Type',
   xOssStorageClass = 'X-Oss-Storage-Class',
+
+  httpUrl = 'httpUrl',
+  httpShareUrl = 'httpShareUrl',
 }
 
 export interface DataBase {
@@ -94,6 +97,11 @@ export interface DataStat extends DataBase {
   [DataKey.xOssHashCrc64ecma]: string | undefined
   [DataKey.xOssObjectType]: string | undefined
   [DataKey.xOssStorageClass]: string | undefined
+}
+
+export interface DataSign extends DataBase {
+  [DataKey.httpUrl]: string | undefined
+  [DataKey.httpShareUrl]: string | undefined
 }
 
 export type PickFunc = (input: string, rule: RegExp, debug: boolean) => string | number | undefined
@@ -132,6 +140,11 @@ export enum MKey {
   readTimeoutSec = 'read-timeout',
   /** 客户端连接超时的时间，单位为秒，默认值为120 */
   connectTimeoutSec = 'connect-timeout',
+  /** 超时秒 */
+  timeoutSec = 'timeout',
+  traficLimit = 'trafic-limit',
+  /* 不对cloud_url中携带的正斜线（/）进行编码 */
+  disableEncodeSlash = 'disable-encode-slash',
 }
 
 /**
@@ -290,6 +303,26 @@ export interface RmOptions extends BaseOptions {
 export interface MvOptions extends BaseOptions {
   /** 强制操作，不进行询问提示 */
   force?: boolean
+}
+
+export interface SignOptions extends BaseOptions {
+  /**
+   * 签名 URL 过期时间，单位秒
+   * @default 60
+   */
+  [MKey.timeoutSec]?: number
+  /** Object 的指定版本ID。仅适用于已开启或暂停版本控制状态 Bucket下的 Object */
+  [MKey.versionId]?: string
+  /**
+   * 限定HTTP的访问速度，单位为bit/s。缺省值为0，表示不受限制。
+   * 取值范围为 819200~838860800
+   */
+  [MKey.traficLimit]?: number
+  /**
+   * 不对cloud_url中携带的正斜线（/）进行编码
+   * @default false
+   */
+  [MKey.disableEncodeSlash]?: boolean
 }
 
 export enum Msg {

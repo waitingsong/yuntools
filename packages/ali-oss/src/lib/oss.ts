@@ -16,11 +16,13 @@ import {
   DataBase,
   DataCp,
   DataKey,
+  DataSign,
   DataStat,
   Msg,
   MvOptions,
   ProcessRet,
   RmOptions,
+  SignOptions,
 } from './types'
 
 
@@ -264,6 +266,34 @@ export class OssClient {
 
     const stat = await this.stat(dst)
     return stat
+  }
+
+
+  /**
+   * sign（生成签名URL）
+   * @link https://help.aliyun.com/document_detail/120064.html
+   */
+  async sign(
+    src: string,
+    options?: SignOptions,
+  ): Promise<ProcessRet<DataSign>> {
+
+    assert(src, 'src is required')
+
+    const opts: SignOptions = {
+      timeout: 60,
+      'disable-encode-slash': false,
+      ...options,
+    }
+
+    const ps = genParams(this.config, opts)
+    const resp$ = run(`${this.cmd} sign ${ps.join(' ')} ${src} `)
+    const res = await processResp(resp$, this.debug)
+
+    const keys = [DataKey.elapsed, DataKey.httpUrl, DataKey.httpShareUrl]
+    const data = parseRespStdout<DataSign>(res, keys, this.debug)
+    const ret = combineProcessRet(res, data)
+    return ret
   }
 
 

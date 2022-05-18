@@ -13,6 +13,9 @@ export const regxStat = new Map<DataKey, RegExp>([
   [DataKey.xOssHashCrc64ecma, new RegExp(`${DataKey.xOssHashCrc64ecma}\\s+:\\s+(\\S+)`, 'u')],
   [DataKey.xOssObjectType, new RegExp(`${DataKey.xOssObjectType}\\s+:\\s+(\\w+)`, 'u')],
   [DataKey.xOssStorageClass, new RegExp(`${DataKey.xOssStorageClass}\\s+:\\s+(\\w+)`, 'u')],
+
+  [DataKey.httpUrl, new RegExp('https://[^?\\s\\n]+', 'u')],
+  [DataKey.httpShareUrl, new RegExp('https?://\\S+', 'u')],
 ])
 
 export const regxCommon = new Map<DataKey, RegExp>([
@@ -41,6 +44,9 @@ export const pickFuncMap = new Map<DataKey, PickFunc>([
   [DataKey.xOssHashCrc64ecma, pickString],
   [DataKey.xOssObjectType, pickString],
   [DataKey.xOssStorageClass, pickString],
+
+  [DataKey.httpUrl, pickString],
+  [DataKey.httpShareUrl, pickString],
 ])
 
 
@@ -54,8 +60,16 @@ function pickNumber(input: string, rule: RegExp, debug = false): number | undefi
 function pick(input: string, rule: RegExp, debug = false): string | undefined {
   debug && console.log({ pickInput: input })
   const found = input.match(rule)
-  if (found && found.length >= 1) {
-    debug && console.log({ pickFound: found })
+  if (! found) {
+    return
+  }
+
+  debug && console.log({ pickFound: found })
+
+  if (found.length === 1) {
+    return found[0]
+  }
+  else if (found.length >= 1) {
     return found[1]
   }
 }
