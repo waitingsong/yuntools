@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 8.0.0 (2022-05-18)
+
+
+
+## 7.0.1 (2022-05-16)
+
+**Note:** Version bump only for package @yuntools/ali-alb
+
+
+
+
+
 ## [7.0.1](https://github.com/waitingsong/yuntools/compare/v7.0.0...v7.0.1) (2022-05-16)
 
 
