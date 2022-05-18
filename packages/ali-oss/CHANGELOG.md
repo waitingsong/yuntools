@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.2.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@8.1.0...@yuntools/ali-oss@8.2.0) (2022-05-18)
+
+
+### Features
+
+* **ali-oss:** type DataSign add property link ([374ceea](https://github.com/waitingsong/yuntools/commit/374ceeafc42fef291a2ab061facbe93ebbee0e0d))
+
+
+
+
+
 # [8.1.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@8.0.0...@yuntools/ali-oss@8.1.0) (2022-05-18)
 
 
