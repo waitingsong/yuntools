@@ -36,7 +36,7 @@ import {
 
 
 /** 阿里云 ALB 负载均衡服务接口 */
-export class ALBService {
+export class AlbClient {
 
   /**
    * 是否输出日志
