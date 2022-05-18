@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.1.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@8.0.0...@yuntools/ali-oss@8.1.0) (2022-05-18)
+
+
+### Features
+
+* **ali-oss:** sign() ([ceeef02](https://github.com/waitingsong/yuntools/commit/ceeef0216dc8b2c29890ea4cb7fb7ad9564da524))
+* **ali-oss:** update BaseOptions ([c888b3d](https://github.com/waitingsong/yuntools/commit/c888b3d8c729a476961f16212933232522dbf808))
+
+
+
+
+
 # 8.0.0 (2022-05-18)
 
 
