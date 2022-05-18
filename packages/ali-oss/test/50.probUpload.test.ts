@@ -2,7 +2,7 @@ import assert from 'assert/strict'
 import { relative } from 'path'
 
 import {
-  service,
+  client,
   bucket,
   CI,
 } from '@/root.config'
@@ -14,7 +14,7 @@ describe(filename, () => {
 
   describe('probeUpload should work', () => {
     it('normal', async () => {
-      const ret = await service.probeUpload(bucket)
+      const ret = await client.probeUpload(bucket)
       CI || console.log(ret)
       assert(ret.exitCode === 0)
       assert(ret.data)

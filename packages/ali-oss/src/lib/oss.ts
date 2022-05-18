@@ -28,7 +28,7 @@ import {
  * 阿里云 OSS 服务接口，
  * 基于命令行工具 ossutil 封装
  */
-export class OSSService {
+export class OssClient {
 
   debug = false
   configHash: string

@@ -3,7 +3,7 @@ import { relative } from 'path'
 
 import {
   cloudUrlPrefix,
-  service,
+  client,
   CI,
 } from '@/root.config'
 
@@ -15,13 +15,13 @@ describe(filename, () => {
   describe('mkdir should work', () => {
     it('normal', async () => {
       const dir = `${cloudUrlPrefix}/${Math.random().toString()}`
-      const ret = await service.mkdir(dir)
+      const ret = await client.mkdir(dir)
       CI || console.log(ret)
       assert(! ret.exitCode, `mkdir ${dir} failed, ${ret.stderr}`)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
 
-      await service.rm(dir)
+      await client.rm(dir)
     })
   })
 

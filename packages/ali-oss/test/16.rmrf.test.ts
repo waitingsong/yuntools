@@ -3,7 +3,7 @@ import { join, relative } from 'path'
 
 import {
   cloudUrlPrefix,
-  service,
+  client,
   CI,
 } from '@/root.config'
 
@@ -18,19 +18,19 @@ describe(filename, () => {
       const dir = `${cloudUrlPrefix}/bbb/${Date.now().toString()}`
       const dst = `${dir}/${Date.now().toString()}-tsconfig.json`
 
-      const cpRes = await service.cp(src, dst)
+      const cpRes = await client.cp(src, dst)
       assert(cpRes.exitCode === 0)
 
-      const stat0 = await service.stat(dst)
+      const stat0 = await client.stat(dst)
       assert(stat0.data)
       assert(stat0.data['Content-Length'])
 
       // file should be unlinked
-      const rmRes1 = await service.rmrf(dir)
+      const rmRes1 = await client.rmrf(dir)
       CI || console.log({ rmRes1 })
       assert(rmRes1.exitCode === 0)
 
-      const statRes = await service.stat(dst)
+      const statRes = await client.stat(dst)
       console.log({ statRes })
       assert(statRes.exitCode, 'file not exists after recursive rm')
       assert(statRes.stderr.includes('NoSuchKey'))

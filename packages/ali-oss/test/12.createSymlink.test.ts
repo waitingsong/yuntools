@@ -3,7 +3,7 @@ import { join, relative } from 'path'
 
 import {
   cloudUrlPrefix,
-  service,
+  client,
   CI,
 } from '@/root.config'
 
@@ -16,16 +16,16 @@ describe(filename, () => {
     it('normal', async () => {
       const src = join(__dirname, 'tsconfig.json')
       const dst = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
-      await service.cp(src, dst)
+      await client.cp(src, dst)
 
       const link = `${dst}-link`
-      const ret = await service.createSymlink(dst, link)
+      const ret = await client.createSymlink(dst, link)
       CI || console.log(ret)
       assert(ret.exitCode === 0)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
 
-      await service.rm(dst)
+      await client.rm(dst)
     })
   })
 

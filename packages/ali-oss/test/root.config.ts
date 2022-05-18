@@ -1,6 +1,6 @@
 import assert from 'assert/strict'
 
-import { Config, OSSService } from '~/index'
+import { Config, OssClient } from '~/index'
 
 
 export const endpoint = process.env.ALI_OSS_ENDPOINT ?? ''
@@ -25,5 +25,5 @@ if (CI) {
   }
 }
 
-export const service = new OSSService(config)
+export const client = new OssClient(config)
 

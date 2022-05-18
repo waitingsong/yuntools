@@ -3,7 +3,7 @@ import { join, relative } from 'path'
 
 import {
   cloudUrlPrefix,
-  service,
+  client,
   CI,
 } from '@/root.config'
 
@@ -16,9 +16,9 @@ describe(filename, () => {
     it('normal', async () => {
       const src = join(__dirname, 'tsconfig.json')
       const dst = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
-      await service.cp(src, dst)
+      await client.cp(src, dst)
 
-      const ret = await service.stat(dst)
+      const ret = await client.stat(dst)
       CI || console.log(ret)
       assert(ret.exitCode === 0)
       assert(ret.data)
@@ -32,7 +32,7 @@ describe(filename, () => {
       assert(data['Content-Md5'].length === 24, data['Content-Md5'])
       assert(data['Content-Type']?.includes('json'))
 
-      await service.rm(dst)
+      await client.rm(dst)
     })
   })
 
