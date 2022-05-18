@@ -127,13 +127,34 @@ export enum MKey {
    * 且同一个删除示例中仅允许选择--version-id或--all-versions其中一个选项
    */
   allVersions = 'all-versions',
+
+  /** 客户端读超时的时间，单位为秒，默认值为1200 */
+  readTimeoutSec = 'read-timeout',
+  /** 客户端连接超时的时间，单位为秒，默认值为120 */
+  connectTimeoutSec = 'connect-timeout',
 }
 
+/**
+ * ossutil 的通用选项，可以在大部分命令中使用
+ * @link https://help.aliyun.com/document_detail/50455.htm
+ */
 export interface BaseOptions {
   endpoint?: string
   accessKeyId?: string
   accessKeySecret?: string
   stsToken?: string
+  /** 在当前工作目录下输出ossutil日志文件ossutil.log。该选项默认为空，表示不输出日志文件 */
+  loglevel?: 'info' | 'debug'
+  /**
+   * 客户端读超时的时间，单位为秒，
+   * @default 1200
+   */
+  [MKey.readTimeoutSec]?: number
+  /**
+   * 客户端连接超时的时间，单位为秒，
+   * @default 120
+   */
+  [MKey.connectTimeoutSec]?: number
 }
 
 /**
