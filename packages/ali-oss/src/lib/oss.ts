@@ -286,6 +286,13 @@ export class OssClient {
       ...options,
     }
 
+    if (typeof opts['trafic-limit'] === 'number'
+      && opts['trafic-limit'] > 0
+      && opts['trafic-limit'] < 245760) {
+
+      opts['trafic-limit'] = 245760
+    }
+
     const ps = genParams(this.config, opts)
     const resp$ = run(`${this.cmd} sign ${ps.join(' ')} ${src} `)
     const res = await processResp(resp$, this.debug)

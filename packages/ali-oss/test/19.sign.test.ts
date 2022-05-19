@@ -46,7 +46,7 @@ describe(filename, () => {
       await client.rm(dst)
     })
 
-    it.only('normal', async () => {
+    it('param trafic-limit (typo)', async () => {
       const src = join(__dirname, '../rollup.config.js')
       const dst = `${cloudUrlPrefix}/${Date.now().toString()}-config.js`
       const ret = await client.cp(src, dst)
@@ -54,17 +54,12 @@ describe(filename, () => {
       assert(! ret.exitCode, `cp ${src} ${dst} failed, ${ret.stderr}`)
       assert(ret.data)
 
-      const sign = await client.sign(dst, { 'traffic-limit': 245760, timeout: 360 })
+      const sign = await client.sign(dst, { 'trafic-limit': 245760, timeout: 360 })
       assert(! sign.exitCode, `sign ${dst} failed, ${sign.stderr}`)
       assert(sign.data)
 
       const { data } = sign
       assert(data.httpShareUrl)
-
-      const tmpFile = join(__dirname, 'tmp.js')
-      const down = await client.cp(dst, tmpFile)
-      assert(! down.exitCode)
-      console.log(down.data)
 
       await client.rm(dst)
     })
