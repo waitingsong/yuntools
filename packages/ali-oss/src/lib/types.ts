@@ -147,7 +147,8 @@ export enum MKey {
   connectTimeoutSec = 'connect-timeout',
   /** 超时秒 */
   timeoutSec = 'timeout',
-  traficLimit = 'trafic-limit',
+  /** 参数名typo */
+  trafficLimit = 'trafic-limit',
   /* 不对cloud_url中携带的正斜线（/）进行编码 */
   disableEncodeSlash = 'disable-encode-slash',
 }
@@ -320,9 +321,9 @@ export interface SignOptions extends BaseOptions {
   [MKey.versionId]?: string
   /**
    * 限定HTTP的访问速度，单位为bit/s。缺省值为0，表示不受限制。
-   * 取值范围为 819200~838860800
+   * 取值范围为 245760~838860800
    */
-  [MKey.traficLimit]?: number
+  [MKey.trafficLimit]?: number
   /**
    * 不对cloud_url中携带的正斜线（/）进行编码
    * @default false
