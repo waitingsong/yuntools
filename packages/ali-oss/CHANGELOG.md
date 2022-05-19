@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.3.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@8.2.0...@yuntools/ali-oss@8.3.0) (2022-05-19)
+
+
+### Features
+
+* **ali-oss:** sign() set default minimum value of trafic-limit ([4a0a074](https://github.com/waitingsong/yuntools/commit/4a0a074da7dd712b572bb03fe758a31acfd10eec))
+
+
+
+
+
 # [8.2.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@8.1.0...@yuntools/ali-oss@8.2.0) (2022-05-18)
 
 
