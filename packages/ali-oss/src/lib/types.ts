@@ -114,6 +114,10 @@ export type PickFunc = (input: string, rule: RegExp, debug: boolean) => string |
 
 /** 扁担参数名映射 */
 export enum MKey {
+  accessKeyId = 'access-key-id',
+  accessKeySecret = 'access-key-secret',
+  stsToken = 'sts-token',
+
   /** 设置分片大小，单位为字节 */
   partSize = 'part-size',
   /** 文件名称的编码方式。取值为url。如果不指定该选项，则表示文件名称未经过编码 */
@@ -159,9 +163,9 @@ export enum MKey {
  */
 export interface BaseOptions {
   endpoint?: string
-  accessKeyId?: string
-  accessKeySecret?: string
-  stsToken?: string
+  [MKey.accessKeyId]?: string
+  [MKey.accessKeySecret]?: string
+  [MKey.stsToken]?: string
   /** 在当前工作目录下输出ossutil日志文件ossutil.log。该选项默认为空，表示不输出日志文件 */
   loglevel?: 'info' | 'debug'
   /**
