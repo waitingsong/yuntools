@@ -32,7 +32,7 @@ export class OssClient {
 
   debug = false
   configHash: string
-  config: string
+  configPath: string
 
   constructor(
     /**
@@ -45,13 +45,13 @@ export class OssClient {
 
     this.validateConfig(_config)
     if (typeof _config === 'string') {
-      this.config = _config
+      this.configPath = _config
     }
     else {
       const { path, hash } = this.init(_config)
       this.configHash = hash
-      this.config = path
-      this.validateConfig(this.config)
+      this.configPath = path
+      this.validateConfig(this.configPath)
     }
   }
 
@@ -59,7 +59,7 @@ export class OssClient {
    * 删除OSS配置文件
    */
   async destroy(): Promise<void> {
-    const { config } = this
+    const { configPath: config } = this
     if (config && typeof config === 'string') {
       await rm(config)
     }
@@ -77,11 +77,11 @@ export class OssClient {
     dir: string,
   ): Promise<ProcessRet> {
 
-    assert(typeof this.config === 'string')
+    assert(typeof this.configPath === 'string')
 
     // const ps = this.genCliParams(config)
     const ps: string[] = []
-    const resp$ = run(`${this.cmd} mkdir -c ${this.config} ${ps.join(' ')} ${dir}`)
+    const resp$ = run(`${this.cmd} mkdir -c ${this.configPath} ${ps.join(' ')} ${dir}`)
     const res = await processResp(resp$, this.debug)
 
     const keys: DataKey[] = [DataKey.elapsed]
@@ -104,7 +104,7 @@ export class OssClient {
     assert(src, 'src is required')
     assert(dst, 'dst is required')
 
-    const ps = genParams(this.config, initCpOptions, options)
+    const ps = genParams(this.configPath, initCpOptions, options)
 
     if (! options || ! options.force) {
       const stat = await this.stat(dst, options as StatOptions)
@@ -161,7 +161,7 @@ export class OssClient {
 
     assert(path, 'src is required')
 
-    const ps = genParams(this.config, initRmOptions, options)
+    const ps = genParams(this.configPath, initRmOptions, options)
     const resp$ = run(`${this.cmd} rm -f ${ps.join(' ')} ${path} `)
     const res = await processResp(resp$, this.debug)
 
@@ -214,7 +214,7 @@ export class OssClient {
 
     assert(path, 'path is required')
 
-    const ps = genParams(this.config, initStatOptions, options)
+    const ps = genParams(this.configPath, initStatOptions, options)
     const resp$ = run(`${this.cmd} stat ${ps.join(' ')} ${path} `)
     const res = await processResp(resp$, this.debug)
 
@@ -280,7 +280,7 @@ export class OssClient {
 
     assert(src, 'src is required')
 
-    const ps = genParams(this.config, initSignOptions, options)
+    const ps = genParams(this.configPath, initSignOptions, options)
     const resp$ = run(`${this.cmd} sign ${ps.join(' ')} ${src} `)
     const res = await processResp(resp$, this.debug)
 
@@ -319,7 +319,7 @@ export class OssClient {
 
 
   genCliParams(config?: Config | ConfigPath): string[] {
-    const conf = config ?? this.config
+    const conf = config ?? this.configPath
     this.validateConfig(conf)
 
     if (typeof conf === 'string') {
