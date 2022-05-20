@@ -7,22 +7,20 @@ import { join } from 'path'
 
 import { run } from 'rxrunscript'
 
+import { DataCp, CpOptions, initCpOptions } from './cp'
 import { combineProcessRet, genParams, parseRespStdout, processResp } from './helper'
+import { MvOptions } from './mv'
+import { RmOptions, initRmOptions } from './rm'
 import { regxStat } from './rule'
+import { DataSign, SignOptions, initSignOptions } from './sign'
+import { DataStat, StatOptions, initStatOptions } from './stat'
 import {
   Config,
   ConfigPath,
-  CpOptions,
   DataBase,
-  DataCp,
   DataKey,
-  DataSign,
-  DataStat,
   Msg,
-  MvOptions,
   ProcessRet,
-  RmOptions,
-  SignOptions,
 } from './types'
 
 
@@ -106,10 +104,10 @@ export class OssClient {
     assert(src, 'src is required')
     assert(dst, 'dst is required')
 
-    const ps = genParams(this.config, options)
+    const ps = genParams(this.config, initCpOptions, options)
 
     if (! options || ! options.force) {
-      const stat = await this.stat(dst)
+      const stat = await this.stat(dst, options as StatOptions)
       if (! stat.exitCode) {
         const ret: ProcessRet<DataCp> = {
           exitCode: 1,
@@ -163,7 +161,7 @@ export class OssClient {
 
     assert(path, 'src is required')
 
-    const ps = genParams(this.config, options)
+    const ps = genParams(this.config, initRmOptions, options)
     const resp$ = run(`${this.cmd} rm -f ${ps.join(' ')} ${path} `)
     const res = await processResp(resp$, this.debug)
 
@@ -195,6 +193,7 @@ export class OssClient {
 
     assert(bucket, 'bucket is required')
     const ps = this.genCliParams()
+
     // const resp = await firstValueFrom(run(`${this.cmd} probe ${ps.join(' ')} --upload --bucketname ${bucket}`))
     const resp$ = run(`${this.cmd} probe ${ps.join(' ')} --upload --bucketname ${bucket}`)
     const res = await processResp(resp$, this.debug)
@@ -210,11 +209,12 @@ export class OssClient {
    */
   async stat(
     path: string,
+    options?: StatOptions,
   ): Promise<ProcessRet<DataStat>> {
 
     assert(path, 'path is required')
 
-    const ps = this.genCliParams()
+    const ps = genParams(this.config, initStatOptions, options)
     const resp$ = run(`${this.cmd} stat ${ps.join(' ')} ${path} `)
     const res = await processResp(resp$, this.debug)
 
@@ -241,7 +241,7 @@ export class OssClient {
 
 
   /**
-   * 移动 OSS 对象
+   * 移动云端的 OSS 对象
    * 流程为先 `cp()` 然后 `rm()`
    */
   async mv(
@@ -264,7 +264,7 @@ export class OssClient {
       return remove
     }
 
-    const stat = await this.stat(dst)
+    const stat = await this.stat(dst, options)
     return stat
   }
 
@@ -280,27 +280,15 @@ export class OssClient {
 
     assert(src, 'src is required')
 
-    const opts: SignOptions = {
-      timeout: 60,
-      'disable-encode-slash': false,
-      ...options,
-    }
-
-    if (typeof opts['trafic-limit'] === 'number'
-      && opts['trafic-limit'] > 0
-      && opts['trafic-limit'] < 245760) {
-
-      opts['trafic-limit'] = 245760
-    }
-
-    const ps = genParams(this.config, opts)
+    const ps = genParams(this.config, initSignOptions, options)
     const resp$ = run(`${this.cmd} sign ${ps.join(' ')} ${src} `)
     const res = await processResp(resp$, this.debug)
 
     const keys = [DataKey.elapsed, DataKey.httpUrl, DataKey.httpShareUrl]
     const data = parseRespStdout<DataSign>(res, keys, this.debug)
+
     if (data?.httpUrl) {
-      data.link = opts['disable-encode-slash']
+      data.link = options?.['disable-encode-slash']
         ? data.httpUrl
         : decodeURIComponent(data.httpUrl)
     }

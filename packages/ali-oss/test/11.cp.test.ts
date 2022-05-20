@@ -118,6 +118,29 @@ describe(filename, () => {
 
       await client.rm(dst)
     })
+
+    it('failed with invalid bucket', async () => {
+      const bucket = 'fake' + Date.now().toString()
+
+      const src = join(__dirname, 'tsconfig.json')
+      const dst = `oss://${bucket}/${Date.now().toString()}-tsconfig.json`
+      const ret = await client.cp(src, dst)
+      CI || console.log(ret)
+      assert(ret.exitCode, `should cp ${src} ${dst} failed, ${ret.stdout}`)
+      assert(ret.stderr.includes(Msg.noSuchBucket))
+    })
+
+    it('failed with invaild endpoint', async () => {
+      const endpoint = 'https://oss-cn-beijing.aliyuncs.com'
+
+      const src = join(__dirname, 'tsconfig.json')
+      const dst = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
+      const ret = await client.cp(src, dst, { endpoint })
+      CI || console.log(ret)
+      assert(ret.exitCode, `should cp ${src} ${dst} failed, ${ret.stdout}`)
+      assert(ret.stderr.includes(Msg.accessDenied))
+    })
+
   })
 })
 

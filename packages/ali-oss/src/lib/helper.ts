@@ -108,16 +108,17 @@ export function combineProcessRet<T extends DataBase = DataBase>(
 
 export function genParams<T extends BaseOptions>(
   config: string,
-  options?: T,
+  initOptions: T,
+  options: T | undefined,
 ): string[] {
 
   const ps: string[] = ['-c', config]
 
-  if (typeof options === 'undefined') {
-    return ps
-  }
+  Object.entries(initOptions).forEach(([key, val]) => {
+    // @ts-ignore
+    const inputValue = (options ? options[key] : void 0) as string | number | boolean | undefined
+    const value = inputValue ?? val as string | number | boolean | undefined
 
-  Object.entries(options).forEach(([key, value]) => {
     switch (typeof value) {
       case 'undefined':
         return
