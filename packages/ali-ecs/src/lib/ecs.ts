@@ -59,10 +59,7 @@ export class EcsClient {
         })
       })
 
-      if (! Object.keys(info).length) {
-        return
-      }
-
+      assert(Object.keys(info).length, 'info is empty')
       ret.set(ip, info)
     })
 
@@ -89,10 +86,7 @@ export class EcsClient {
         })
       })
 
-      if (! Object.keys(info).length) {
-        return
-      }
-
+      assert(Object.keys(info).length, 'info is empty')
       ret.set(ip, info)
     })
 
@@ -175,6 +169,7 @@ export class EcsClient {
     this.debug && console.info({ req })
 
     const resp = await this.client.describeInstances(req)
+    /* c8 ignore next 3 */
     if (resp.body.nextToken) {
       this.nextToken = resp.body.nextToken
     }
