@@ -156,6 +156,10 @@ jobs:
           ALI_OSS_ID: ${{ secrets.ALI_OSS_ID }}
           ALI_OSS_SECRET: ${{ secrets.ALI_OSS_SECRET }}
           ALI_OSS_BUCKET: ${{ secrets.ALI_OSS_BUCKET }}
+          ALI_ECS_AID: ${{ secrets.ALI_ECS_AID }}
+          ALI_ECS_ASECRET: ${{ secrets.ALI_ECS_ASECRET }}
+          ALI_ECS_IPS: ${{ secrets.ALI_ECS_IPS }}
+          ALI_ECS_IDS: ${{ secrets.ALI_ECS_IDS }}
 
       - name: NPM Publish
         run: |

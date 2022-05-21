@@ -1,9 +1,9 @@
-import assert from 'assert'
+import assert from 'node:assert'
 
 import Ecs, { DescribeInstancesRequest } from '@alicloud/ecs20140526'
 import { Config as ApiConfig } from '@alicloud/openapi-client'
 
-import { _Client } from './client'
+import { _Client } from './client.js'
 import {
   Action,
   EcsStatusKey,
@@ -11,7 +11,7 @@ import {
   EcsNodeStatus,
   EcsNodeInfo,
   EcsInfoKey,
-} from './types'
+} from './types.js'
 
 
 /**
@@ -25,16 +25,17 @@ export class EcsClient {
   nextToken = ''
   /** ip -> instanceId */
   nodeIp2IdCache = new Map<string, string>()
-  instancesCache: EcsNodeDetail[] = []
+  /** instanceId -> node */
+  id2NodeCache = new Map<string, EcsNodeDetail>()
   cacheTime: number
   cacheTTLSec: 30
 
   constructor(
-    protected id: string,
-    protected key: string,
+    protected readonly id: string,
+    protected readonly secret: string,
     public endpoint = 'ecs-cn-hangzhou.aliyuncs.com',
   ) {
-    this.client = this.createClient(id, key)
+    this.client = this.createClient(id, secret)
   }
 
 
@@ -50,13 +51,14 @@ export class EcsClient {
       if (typeof row === 'undefined') { return }
       const info = {} as EcsNodeStatus
       Object.values(EcsStatusKey).forEach((key) => {
-        const val = row[key]
-        if (typeof val === 'undefined') {
-          return
-        }
-        // @ts-expect-error
-        info[key] = val
+        const value = row[key]
+        if (typeof value === 'undefined') { return }
+        Object.defineProperty(info, key, {
+          enumerable: true,
+          value,
+        })
       })
+
       if (! Object.keys(info).length) {
         return
       }
@@ -79,13 +81,14 @@ export class EcsClient {
       if (typeof row === 'undefined') { return }
       const info = {} as EcsNodeInfo
       Object.values(EcsInfoKey).forEach((key) => {
-        const val = row[key]
-        if (typeof val === 'undefined') {
-          return
-        }
-        // @ts-expect-error
-        info[key] = val
+        const value = row[key]
+        if (typeof value === 'undefined') { return }
+        Object.defineProperty(info, key, {
+          enumerable: true,
+          value,
+        })
       })
+
       if (! Object.keys(info).length) {
         return
       }
@@ -198,13 +201,13 @@ export class EcsClient {
     if (this.cacheTime && (now - this.cacheTime > this.cacheTTLSec * 1000)) {
       console.log('cache expired')
       this.nodeIp2IdCache.clear()
-      this.instancesCache = []
+      this.id2NodeCache.clear()
       this.cacheTime = 0
     }
   }
 
   updateInstancedCache(instances: EcsNodeDetail[]): void {
-    this.instancesCache = instances
+    this.saveNodesToCache(instances)
     this.cacheTime = Date.now()
   }
 
@@ -217,17 +220,11 @@ export class EcsClient {
       return
     }
 
-    const instances = this.instancesCache
-    if (! instances.length) {
-      return
-    }
+    const id = this.nodeIp2IdCache.get(ip)
+    if (! id) { return }
 
-    for (const inst of instances) {
-      const ips = inst.publicIpAddress?.ipAddress
-      if (ips?.includes(ip)) {
-        return inst
-      }
-    }
+    const node = this.id2NodeCache.get(id)
+    return node
   }
 
   private createClient(accessKeyId: string, accessKeySecret: string): Ecs {
@@ -236,6 +233,23 @@ export class EcsClient {
     const client = new _Client(config)
     this.debug && console.info({ client })
     return client
+  }
+
+  private saveNodesToCache(nodes: EcsNodeDetail[]): void {
+    nodes.forEach((node) => {
+      const { instanceId } = node
+      if (! instanceId) { return }
+
+      if (node.eipAddress?.ipAddress) {
+        this.nodeIp2IdCache.set(node.eipAddress.ipAddress, instanceId)
+      }
+
+      node.publicIpAddress?.ipAddress?.forEach((ip) => {
+        ip && this.nodeIp2IdCache.set(ip, instanceId)
+      })
+
+      this.id2NodeCache.set(instanceId, node)
+    })
   }
 
 }

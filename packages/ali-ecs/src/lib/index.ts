@@ -1,4 +1,4 @@
 
-export * from './ecs'
-export * from './types'
+export * from './ecs.js'
+export * from './types.js'
 
