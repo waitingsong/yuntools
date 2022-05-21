@@ -81,11 +81,14 @@ export function parseRespStdout<T extends DataBase = DataBase>(
   const keys = [...new Set(dataKeys)]
   keys.forEach((key) => {
     const rule = pickRegxMap.get(key)
+
+    /* c8 ignore next 3 */
     if (! rule) {
       console.warn(`rule not found for ${key}`)
       return
     }
 
+    /* c8 ignore next 3 */
     const func = pickFuncMap.get(key)
     if (! func) {
       console.warn(`func not found for ${key}`)
@@ -152,6 +155,7 @@ export function genParams<T extends BaseOptions>(
 
   opts.forEach((value, key) => {
     switch (typeof value) {
+      /* c8 ignore next 2 */
       case 'undefined':
         return
 
@@ -170,6 +174,7 @@ export function genParams<T extends BaseOptions>(
         ps.push(`--${key} ${value}`)
         break
 
+      /* c8 ignore next 3 */
       default:
         throw new TypeError(`unexpected typeof ${key}: ${typeof value}`)
     }
