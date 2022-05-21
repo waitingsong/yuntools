@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.0.1](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-alb@10.0.0...@yuntools/ali-alb@10.0.1) (2022-05-21)
+
+
+### Bug Fixes
+
+* **ali-alb:** updateServerWeightByPublicIp() ([6730c29](https://github.com/waitingsong/yuntools/commit/6730c29cff456127256ce807c9ef201a88eef337))
+
+
+
+
+
 # [10.0.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-alb@9.0.0...@yuntools/ali-alb@10.0.0) (2022-05-21)
 
 **Note:** Version bump only for package @yuntools/ali-alb
