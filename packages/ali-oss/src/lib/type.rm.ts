@@ -1,5 +1,5 @@
 import { undefined } from './config.js'
-import { initMvOptions, MvOptions } from './mv.js'
+import { initMvOptions, MvOptions } from './type.mv.js'
 
 
 export const initRmOptions: RmOptions = {
