@@ -8,6 +8,7 @@ import { ACLKey, CpOptions, Msg } from '../src/index.js'
 import {
   cloudUrlPrefix,
   client,
+  client2,
   CI,
 } from './root.config.js'
 
@@ -144,6 +145,18 @@ describe(fileShortPath(import.meta.url), () => {
       assert(ret.stderr.includes(Msg.accessDenied))
     })
 
+    it('pass config file', async () => {
+      const src = join(__dirname, 'tsconfig.json')
+      const dst = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
+      const ret = await client2.cp(src, dst)
+      CI || console.log(ret)
+      assert(! ret.exitCode, `cp ${src} ${dst} failed, ${ret.stderr}`)
+      assert(ret.data)
+      assert(typeof ret.data.elapsed === 'string')
+      assert(typeof ret.data.averageSpeed === 'number')
+
+      await client2.rm(dst)
+    })
   })
 })
 

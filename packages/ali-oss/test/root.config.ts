@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict'
+import { homedir } from 'node:os'
+import { join } from 'node:path'
 
 import { Config, OssClient } from '../src/index.js'
 
@@ -26,4 +28,5 @@ if (CI) {
 }
 
 export const client = new OssClient(config)
+export const client2 = new OssClient(join(homedir(), '.ossutilconfig'))
 
