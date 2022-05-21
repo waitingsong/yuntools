@@ -41,7 +41,11 @@ describe(fileShortPath(import.meta.url), () => {
 
         const server2 = await client.getGroupServerByPublicIp(groupId, ip)
         assert(server2, 'server2 should be defined')
-        assert(server2.weight === newWeight, `server2.weight !== newWeight, ip: ${ip}`)
+        assert(server2.weight, 'server2.weight should be defined')
+        assert(
+          server2.weight === newWeight,
+          `server2.weight !== newWeight, ip: ${ip}, server2.weight: ${server2.weight}, newWeight: ${newWeight}`,
+        )
 
         const newWeight2 = server2.weight + 10
         const opts2: UpdateServerWeightOptions = {
@@ -53,7 +57,11 @@ describe(fileShortPath(import.meta.url), () => {
 
         const server3 = await client.getGroupServerByPublicIp(groupId, ip)
         assert(server3, 'server3 should be defined')
-        assert(server3.weight === newWeight2, `server3.weight !== newWeight, ip: ${ip}`)
+        assert(server3.weight, 'server2.weight should be defined')
+        assert(
+          server3.weight === newWeight2,
+          `server3.weight !== newWeight, ip: ${ip}, server3.weight: ${server3.weight}, newWeight: ${newWeight2}`,
+        )
 
         const newWeight3 = 1000
         const opts3: UpdateServerWeightOptions = {
@@ -65,7 +73,8 @@ describe(fileShortPath(import.meta.url), () => {
 
         const server4 = await client.getGroupServerByPublicIp(groupId, ip)
         assert(server4, 'server4 should be defined')
-        assert(server4.weight === 100, `server4.weight !== 100, ip: ${ip}`)
+        assert(server4.weight, 'server2.weight should be defined')
+        assert(server4.weight === 100, `server4.weight !== 100, ip: ${ip}, server4.weight: ${server4.weight}`)
       }
 
     })
