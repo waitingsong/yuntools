@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 8.0.0 (2022-05-21)
+
+**Note:** Version bump only for package demo
+
+
+
+
+
 # [7.0.0](https://github.com/waitingsong/npm-mono-base/compare/v6.4.0...v7.0.0) (2022-05-12)
 
 **Note:** Version bump only for package demo
