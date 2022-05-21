@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { rm, stat } from 'node:fs/promises'
+import { rm } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 
@@ -292,14 +292,6 @@ export class OssClient {
     const ret = combineProcessRet(res, data)
     return ret
   }
-
-
-  async validateConfigPath(config: ConfigPath): Promise<void> {
-    assert(config, 'config file path is empty')
-    const exists = (await stat(config)).isFile()
-    assert(exists, `config file ${config} not exists`)
-  }
-
 
 
   private genCliParams<T extends BaseOptions>(

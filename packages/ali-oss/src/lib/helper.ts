@@ -1,4 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
+import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
@@ -203,3 +204,10 @@ export async function writeConfigFile(config: Config): Promise<{ path: ConfigPat
   await writeFile(path, arr.join('\n'))
   return { path, hash }
 }
+
+export async function validateConfigPath(config: ConfigPath): Promise<void> {
+  assert(config, 'config file path is empty')
+  const exists = (await stat(config)).isFile()
+  assert(exists, `config file ${config} not exists`)
+}
+

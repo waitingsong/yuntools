@@ -5,6 +5,7 @@ import { join } from 'node:path'
 import {
   Config,
   OssClient,
+  validateConfigPath,
   writeConfigFile,
 } from '../src/index.js'
 
@@ -35,6 +36,7 @@ if (CI) {
   }
   const { path } = await writeConfigFile(config)
   assert(path, 'writeConfigFile failed')
+  await validateConfigPath(path)
   client2 = new OssClient(path)
 }
 
