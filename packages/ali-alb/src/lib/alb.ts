@@ -263,9 +263,7 @@ export class AlbClient {
 
     if (typeof options.currentWeight === 'undefined') {
       const server = await this.getGroupServer(serverGroupId, ecsId)
-      if (! server) {
-        throw new Error(`No server found by ecsId ${ecsId} and serverGroupId ${serverGroupId}`)
-      }
+      assert(server, `No server found by ecsId ${ecsId} and serverGroupId ${serverGroupId}`)
 
       if (typeof server.weight === 'number') {
         options.currentWeight = server.weight
@@ -301,9 +299,7 @@ export class AlbClient {
     //   throw new TypeError(`weight must be >= 0, but got ${weight}`)
     // }
     const value = +weight
-    if (Number.isNaN(value)) {
-      throw new TypeError(`weight must be a number, but got ${weight}`)
-    }
+    assert(! Number.isNaN(value), `weight must be a number, but got ${weight}`)
     // if (value > 100) {
     //   value = 100
     // }
@@ -321,9 +317,7 @@ export class AlbClient {
     })
     this.debug && console.info({ servers })
 
-    if (servers.length === 0) {
-      throw new Error(`no server found in group ${serverGroupId}`)
-    }
+    assert(servers.length !== 0, `no server found in group ${serverGroupId}`)
 
     const opts = {
       Action: Action.UpdateServerGroupServersAttribute,
@@ -389,9 +383,7 @@ export class AlbClient {
 
     // this.cleanCache(true)
     const groupServer = await this.getGroupServer(serverGroupId, ecsId)
-    if (! groupServer) {
-      throw new Error(`no server found in group ${serverGroupId} by ecs ${ecsId}`)
-    }
+    assert(groupServer, `No server found by ecsId ${ecsId} and serverGroupId ${serverGroupId}`)
     const startStep = typeof options.startStep === 'undefined' ? 10 : options.startStep
     const step = typeof options.step === 'undefined' ? 30 : options.step
 
