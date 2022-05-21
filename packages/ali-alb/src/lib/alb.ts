@@ -217,14 +217,15 @@ export class AlbClient {
    * 并返回异步任务信息和服务器信息
    */
   async updateServerWeightByPublicIp(options: UpdateServerWeightOptions): Promise<ActionRet | undefined> {
-    const { ip: publicIp } = options
-    assert(publicIp, 'publicIp is required')
-
-    const ecsId = await this.ecsClient.getInstanceIdByIp(publicIp)
+    let { ecsId } = options
 
     if (! ecsId) {
-      throw new Error(`no ecs found by ip ${publicIp}`)
+      const { ip: publicIp } = options
+      assert(publicIp, 'publicIp is required')
+      ecsId = await this.ecsClient.getInstanceIdByIp(publicIp)
     }
+    assert(ecsId, 'ecsId is required or publicIp is invalid')
+
     const opts = {
       ...options,
       ecsId,
