@@ -54,6 +54,7 @@ export class AlbClient {
   nextToken = ''
   ecsClient: EcsClient
   groupServersCache = new Map<ServerGroupId, GroupServer[]>()
+  // serversCache = new Map<ServerGroupId, ServersCache>()
   cacheTime: number
   cacheTTLSec: 5
 
@@ -101,14 +102,26 @@ export class AlbClient {
   async getGroupServer(
     serverGroupId: string,
     serverId: string,
+    withoutCache = false,
   ): Promise<GroupServer | undefined> {
 
     assert(serverId, 'serverId is required')
 
+    if (withoutCache === true) {
+      this.cleanCache(true)
+    }
+
+    let ret: GroupServer | undefined
+
     const servers = await this.listGroupServers(serverGroupId)
     if (servers) {
-      return servers.find(server => server.serverId === serverId.trim())
+      ret = servers.find(server => server.serverId === serverId.trim())
     }
+
+    if (! ret && ! withoutCache) {
+      ret = await this.getGroupServer(serverGroupId, serverId, true)
+    }
+    return ret
   }
 
   /**
@@ -246,7 +259,6 @@ export class AlbClient {
     assert(ecsId, 'ecsId is required')
 
     if (typeof options.currentWeight === 'undefined') {
-      this.cleanCache(true)
       const server = await this.getGroupServer(serverGroupId, ecsId)
       if (! server) {
         throw new Error(`No server found by ecsId ${ecsId} and serverGroupId ${serverGroupId}`)
@@ -282,19 +294,19 @@ export class AlbClient {
     weight: number,
   ): Promise<UpdateServerGroupServersAttributeResponseBody> {
 
-    if (weight < 0) {
-      throw new TypeError(`weight must be >= 0, but got ${weight}`)
-    }
-    let value = +weight
+    // if (weight < 0) {
+    //   throw new TypeError(`weight must be >= 0, but got ${weight}`)
+    // }
+    const value = +weight
     if (Number.isNaN(value)) {
       throw new TypeError(`weight must be a number, but got ${weight}`)
     }
-    if (value > 100) {
-      value = 100
-    }
-    else {
-      value = Math.round(value)
-    }
+    // if (value > 100) {
+    //   value = 100
+    // }
+    // else {
+    //   value = Math.round(value)
+    // }
 
     const servers: unknown[] = []
     const rows = await this.listGroupServers(serverGroupId)
@@ -372,7 +384,7 @@ export class AlbClient {
     const { serverGroupId, ecsId } = options
     assert(ecsId, 'ecsId is required')
 
-    this.cleanCache(true)
+    // this.cleanCache(true)
     const groupServer = await this.getGroupServer(serverGroupId, ecsId)
     if (! groupServer) {
       throw new Error(`no server found in group ${serverGroupId} by ecs ${ecsId}`)
@@ -452,22 +464,25 @@ export function caculateWeights(options: CalcuWeightOptions): number[] {
 
   assert(typeof currentWeight === 'number', 'currentWeight must be a number')
 
-  const dstWeight2 = Math.min(100, dstWeight)
+  const w2 = Math.min(100, Math.max(0, dstWeight))
   const startStep2 = typeof startStep === 'number' ? startStep : 10
   const step2 = typeof step === 'number' ? step : 20
 
   const range: number[] = []
-  if (currentWeight > dstWeight2) { // 当前权重大于目标权重, down
-    for (let i = currentWeight - startStep2; i > dstWeight2; i -= step2) {
-      range.push(i)
-    }
-    range.push(dstWeight2)
+  if (currentWeight === w2) {
+    return range
   }
-  else if (currentWeight < dstWeight2) { // 当前权重小于目标权重, up
-    for (let i = currentWeight + startStep2; i < dstWeight2; i += step2) {
+  else if (currentWeight > w2) { // 当前权重大于目标权重, down
+    for (let i = currentWeight - startStep2; i > w2; i -= step2) {
       range.push(i)
     }
-    range.push(dstWeight2)
+    range.push(w2)
+  }
+  else if (currentWeight < w2) { // 当前权重小于目标权重, up
+    for (let i = currentWeight + startStep2; i < w2; i += step2) {
+      range.push(i)
+    }
+    range.push(w2)
   }
 
   return range
@@ -506,3 +521,7 @@ export function caculateWeights(options: CalcuWeightOptions): number[] {
 // },
 
 
+
+// type GroupServersCache = Map<ServerGroupId, string>
+/** serverId ->  GroupServer */
+// type ServersCache = Map<string, GroupServer>

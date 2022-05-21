@@ -28,6 +28,11 @@ describe(fileShortPath(import.meta.url), () => {
         assert(server.weight, 'server.weight should be defined')
       })
     })
+
+    it('fake', async () => {
+      const servers = await client.getGroupServerByPublicIps(groupId, ['127.0.0.1'])
+      assert(servers.size === 0, `servers.size !== 0, servers.size: ${servers.size}`)
+    })
   })
 
 })
