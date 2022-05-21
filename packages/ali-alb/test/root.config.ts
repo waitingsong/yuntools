@@ -24,4 +24,5 @@ assert(ips.length > 0, 'ALI_ECS_IPS should be set')
 
 export const ecsClient = new EcsClient(aid, secret, endpointEcs)
 export const client = new AlbClient(aid, secret, endpoint, ecsClient)
+export const clientWoEcs = new AlbClient(aid, secret, endpoint)
 
