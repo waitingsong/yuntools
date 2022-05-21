@@ -1,5 +1,5 @@
-import { initBaseOptions } from './config'
-import { BaseOptions } from './types'
+import { initBaseOptions } from './config.js'
+import { BaseOptions } from './types.js'
 
 
 export const initMvOptions: MvOptions = {

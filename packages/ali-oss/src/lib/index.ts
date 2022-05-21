@@ -1,9 +1,9 @@
 
-export * from './oss'
-export * from './types'
-export * from './cp'
-export * from './mv'
-export * from './rm'
-export * from './sign'
-export * from './stat'
+export * from './oss.js'
+export * from './types.js'
+export * from './cp.js'
+export * from './mv.js'
+export * from './rm.js'
+export * from './sign.js'
+export * from './stat.js'
 

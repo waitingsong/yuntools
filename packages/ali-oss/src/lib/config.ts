@@ -1,4 +1,4 @@
-import { BaseOptions } from './types'
+import { BaseOptions } from './types.js'
 
 // eslint-disable-next-line no-shadow-restricted-names
 export const undefined = void 0

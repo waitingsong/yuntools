@@ -1,6 +1,6 @@
-import assert from 'assert/strict'
+import assert from 'node:assert/strict'
 
-import { Config, OssClient } from '~/index'
+import { Config, OssClient } from '../src/index.js'
 
 
 export const endpoint = process.env.ALI_OSS_ENDPOINT ?? ''

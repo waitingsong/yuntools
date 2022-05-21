@@ -2,7 +2,7 @@
 import { firstValueFrom, Observable, reduce, map } from 'rxjs'
 import { OutputRow } from 'rxrunscript'
 
-import { pickFuncMap, pickRegxMap } from './rule'
+import { pickFuncMap, pickRegxMap } from './rule.js'
 import {
   BaseOptions,
   Config,
@@ -11,7 +11,7 @@ import {
   MKey,
   ProcessResp,
   ProcessRet,
-} from './types'
+} from './types.js'
 
 
 export async function processResp(

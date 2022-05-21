@@ -1,17 +1,18 @@
-import assert from 'assert/strict'
-import { join, relative } from 'path'
+import assert from 'node:assert/strict'
+import { join } from 'node:path'
+
+import { fileShortPath, genCurrentDirname } from '@waiting/shared-core'
 
 import {
   cloudUrlPrefix,
   client,
   CI,
-} from '@/root.config'
-import { ACLKey, CpOptions } from '~/lib'
+} from './root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
+const __dirname = genCurrentDirname(import.meta.url)
 
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), () => {
 
   describe('pathExists should work', () => {
     it('file', async () => {

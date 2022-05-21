@@ -1,16 +1,15 @@
 import assert from 'assert/strict'
-import { relative } from 'path'
+
+import { fileShortPath } from '@waiting/shared-core'
 
 import {
   client,
   bucket,
   CI,
-} from '@/root.config'
+} from './root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), () => {
 
   describe('probeUpload should work', () => {
     it('normal', async () => {

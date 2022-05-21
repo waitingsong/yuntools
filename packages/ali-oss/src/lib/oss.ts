@@ -1,18 +1,18 @@
-import assert from 'assert/strict'
-import { createHash } from 'crypto'
-import { rm, stat, writeFile } from 'fs/promises'
-import { tmpdir, homedir } from 'os'
-import { join } from 'path'
+import assert from 'node:assert/strict'
+import { createHash } from 'node:crypto'
+import { rm, stat, writeFile } from 'node:fs/promises'
+import { tmpdir, homedir } from 'node:os'
+import { join } from 'node:path'
 
 import { run } from 'rxrunscript'
 
-import { DataCp, CpOptions, initCpOptions } from './cp'
-import { combineProcessRet, genParams, parseRespStdout, processResp } from './helper'
-import { MvOptions } from './mv'
-import { RmOptions, initRmOptions } from './rm'
-import { regxStat } from './rule'
-import { DataSign, SignOptions, initSignOptions } from './sign'
-import { DataStat, StatOptions, initStatOptions } from './stat'
+import { DataCp, CpOptions, initCpOptions } from './cp.js'
+import { combineProcessRet, genParams, parseRespStdout, processResp } from './helper.js'
+import { MvOptions } from './mv.js'
+import { RmOptions, initRmOptions } from './rm.js'
+import { regxStat } from './rule.js'
+import { DataSign, SignOptions, initSignOptions } from './sign.js'
+import { DataStat, StatOptions, initStatOptions } from './stat.js'
 import {
   BaseOptions,
   Config,
@@ -21,7 +21,7 @@ import {
   DataKey,
   Msg,
   ProcessRet,
-} from './types'
+} from './types.js'
 
 
 /**

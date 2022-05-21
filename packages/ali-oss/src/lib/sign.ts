@@ -1,9 +1,9 @@
-import { initBaseOptions, undefined } from './config'
+import { initBaseOptions, undefined } from './config.js'
 import {
   BaseOptions,
   DataBase,
   DataKey,
-} from './types'
+} from './types.js'
 
 
 export const initSignOptions: SignOptions = {

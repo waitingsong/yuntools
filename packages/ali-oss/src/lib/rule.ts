@@ -1,4 +1,4 @@
-import { DataKey, PickFunc } from './types'
+import { DataKey, PickFunc } from './types.js'
 
 
 export const regxStat = new Map<DataKey, RegExp>([
