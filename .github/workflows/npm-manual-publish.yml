@@ -160,6 +160,8 @@ jobs:
           ALI_ECS_ASECRET: ${{ secrets.ALI_ECS_ASECRET }}
           ALI_ECS_IPS: ${{ secrets.ALI_ECS_IPS }}
           ALI_ECS_IDS: ${{ secrets.ALI_ECS_IDS }}
+          ALI_ALB_IPS: ${{ secrets.ALI_ALB_IPS }}
+          ALI_ALB_GROUPID: ${{ secrets.ALI_ALB_GROUPID }}
 
       - name: NPM Publish
         run: |

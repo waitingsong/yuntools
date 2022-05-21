@@ -1,4 +1,4 @@
-import assert from 'assert/strict'
+import assert from 'node:assert/strict'
 
 import Alb, {
   ListAsynJobsRequest,
@@ -21,7 +21,7 @@ import {
   take,
 } from 'rxjs'
 
-import { _Client } from './client'
+import { _Client } from './client.js'
 import {
   Action,
   ActionRet,
@@ -32,7 +32,7 @@ import {
   ServerGroupId,
   UpdateServerWeightOptions,
   UpdateServerWeightOptionsInner,
-} from './types'
+} from './types.js'
 
 
 /** 阿里云 ALB 负载均衡服务接口 */
@@ -52,7 +52,7 @@ export class AlbClient {
 
   client: Alb
   nextToken = ''
-  ecsService: EcsClient
+  ecsClient: EcsClient
   groupServersCache = new Map<ServerGroupId, GroupServer[]>()
   cacheTime: number
   cacheTTLSec: 5
@@ -61,15 +61,15 @@ export class AlbClient {
     protected id: string,
     protected secret: string,
     public endpoint = 'alb.cn-hangzhou.aliyuncs.com',
-    public ecsServiceInstance?: EcsClient,
+    public ecsClientInstance?: EcsClient,
   ) {
 
     this.client = this.createClient(id, secret)
-    if (ecsServiceInstance) {
-      this.ecsService = ecsServiceInstance
+    if (ecsClientInstance) {
+      this.ecsClient = ecsClientInstance
     }
     else {
-      this.ecsService = new EcsClient(id, secret)
+      this.ecsClient = new EcsClient(id, secret)
     }
   }
 
@@ -137,7 +137,7 @@ export class AlbClient {
     ip: string,
   ): Promise<GroupServer | undefined> {
 
-    const ecsId = await this.ecsService.getInstanceIdByIp(ip)
+    const ecsId = await this.ecsClient.getInstanceIdByIp(ip)
     if (! ecsId) {
       console.error(`getGroupServerByPublicIp: ECS 服务器 ${ip} 未找到`)
       return
@@ -220,7 +220,7 @@ export class AlbClient {
     const { ip: publicIp } = options
     assert(publicIp, 'publicIp is required')
 
-    const ecsId = await this.ecsService.getInstanceIdByIp(publicIp)
+    const ecsId = await this.ecsClient.getInstanceIdByIp(publicIp)
 
     if (! ecsId) {
       throw new Error(`no ecs found by ip ${publicIp}`)
