@@ -87,6 +87,7 @@ export class AlbClient {
     this.debug && console.info({ req })
 
     const resp = await this.client.listServerGroups(req)
+    /* c8 ignore next 3 */
     if (resp.body.nextToken) {
       this.nextToken = resp.body.nextToken
     }
@@ -188,6 +189,7 @@ export class AlbClient {
     this.debug && console.info({ req })
 
     const resp = await this.client.listServerGroupServers(req)
+    /* c8 ignore next 3 */
     if (resp.body.nextToken) {
       this.nextToken = resp.body.nextToken
     }
@@ -213,6 +215,7 @@ export class AlbClient {
     this.debug && console.info({ req })
 
     const resp = await this.client.listAsynJobs(req)
+    /* c8 ignore next 3 */
     if (resp.body.nextToken) {
       this.nextToken = resp.body.nextToken
     }
