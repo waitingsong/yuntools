@@ -1,4 +1,10 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
+import { createHash } from 'node:crypto'
+import { stat, writeFile } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { firstValueFrom, Observable, reduce, map } from 'rxjs'
 import { OutputRow } from 'rxrunscript'
 
@@ -6,6 +12,7 @@ import { pickFuncMap, pickRegxMap } from './rule.js'
 import {
   BaseOptions,
   Config,
+  ConfigPath,
   DataBase,
   DataKey,
   MKey,
@@ -171,3 +178,28 @@ export function genParams<T extends BaseOptions>(
   return ps
 }
 
+
+export async function writeConfigFile(config: Config): Promise<{ path: ConfigPath, hash: string }> {
+  const sha1 = createHash('sha1')
+  const hash = sha1.update(JSON.stringify(config)).digest('hex')
+  const path = join(tmpdir(), `${hash}.tmp`)
+  try {
+    const exists = (await stat(path)).isFile()
+    if (exists) {
+      return { path, hash }
+    }
+  }
+  catch (ex) {
+    void ex
+  }
+
+  const arr: string[] = ['[Credentials]']
+  const { endpoint, accessKeyId, accessKeySecret, stsToken } = config
+  endpoint && arr.push(`endpoint = ${endpoint}`)
+  accessKeyId && arr.push(`accessKeyID = ${accessKeyId}`)
+  accessKeySecret && arr.push(`accessKeySecret = ${accessKeySecret}`)
+  stsToken && arr.push(`stsToken = ${stsToken}`)
+
+  await writeFile(path, arr.join('\n'))
+  return { path, hash }
+}

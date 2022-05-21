@@ -146,6 +146,8 @@ describe(fileShortPath(import.meta.url), () => {
     })
 
     it('pass config file', async () => {
+      assert(client2, 'client2 should be defined')
+
       const src = join(__dirname, 'tsconfig.json')
       const dst = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
       const ret = await client2.cp(src, dst)

@@ -2,7 +2,11 @@ import assert from 'node:assert/strict'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 
-import { Config, OssClient } from '../src/index.js'
+import {
+  Config,
+  OssClient,
+  writeConfigFile,
+} from '../src/index.js'
 
 
 export const endpoint = process.env.ALI_OSS_ENDPOINT ?? ''
@@ -14,6 +18,10 @@ export const CI = process.env.CI
 assert(bucket, 'ALI_OSS_BUCKET is required')
 export const cloudUrlPrefix = `oss://${bucket}/mobileFile/debug`
 
+const configPath = join(homedir(), '.ossutilconfig')
+
+// eslint-disable-next-line import/no-mutable-exports
+let client2: OssClient | undefined
 let config: Config | undefined = void 0
 if (CI) {
   assert(endpoint, 'ALI_OSS_ENDPOINT is required')
@@ -25,8 +33,11 @@ if (CI) {
     accessKeyId,
     accessKeySecret,
   }
+  const { path } = await writeConfigFile(config)
+  assert(path, 'writeConfigFile failed')
+  client2 = new OssClient(path)
 }
 
 export const client = new OssClient(config)
-export const client2 = new OssClient(join(homedir(), '.ossutilconfig'))
+export { client2 }
 
