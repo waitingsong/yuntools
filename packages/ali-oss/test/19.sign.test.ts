@@ -22,7 +22,7 @@ describe(filename, () => {
       assert(! ret.exitCode, `cp ${src} ${dst} failed, ${ret.stderr}`)
       assert(ret.data)
 
-      const sign = await client.sign(dst, { 'disable-encode-slash': true })
+      const sign = await client.sign(dst, { disableEncodeSlash: true })
       assert(! sign.exitCode, `sign ${dst} failed, ${sign.stderr}`)
       assert(sign.data)
 
@@ -54,7 +54,7 @@ describe(filename, () => {
       assert(! ret.exitCode, `cp ${src} ${dst} failed, ${ret.stderr}`)
       assert(ret.data)
 
-      const sign = await client.sign(dst, { 'trafic-limit': 245760, timeout: 360 })
+      const sign = await client.sign(dst, { trafficLimit: 245760, timeoutSec: 360 })
       assert(! sign.exitCode, `sign ${dst} failed, ${sign.stderr}`)
       assert(sign.data)
 

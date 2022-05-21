@@ -5,8 +5,10 @@ import { OutputRow } from 'rxrunscript'
 import { pickFuncMap, pickRegxMap } from './rule'
 import {
   BaseOptions,
+  Config,
   DataBase,
   DataKey,
+  MKey,
   ProcessResp,
   ProcessRet,
 } from './types'
@@ -107,18 +109,40 @@ export function combineProcessRet<T extends DataBase = DataBase>(
 
 
 export function genParams<T extends BaseOptions>(
-  config: string,
-  initOptions: T,
+  configPath: string,
+  config: Config | undefined,
   options: T | undefined,
+  initOptions?: T,
 ): string[] {
 
-  const ps: string[] = ['-c', config]
+  const ps: string[] = configPath
+    ? ['-c', configPath]
+    : []
 
-  Object.entries(initOptions).forEach(([key, val]) => {
-    // @ts-ignore
-    const inputValue = (options ? options[key] : void 0) as string | number | boolean | undefined
-    const value = inputValue ?? val as string | number | boolean | undefined
+  const opts = new Map<string, unknown>();
 
+  [config, initOptions, options].forEach((obj) => {
+    obj && Object.entries(obj).forEach(([key, value]) => {
+      let kk = key
+      if (Object.hasOwn(MKey, key)) {
+        // @ts-ignore
+        const mkey = MKey[key] as unknown
+        if (typeof mkey === 'string' && mkey) {
+          kk = mkey
+        }
+      }
+
+      if (['number', 'string'].includes(typeof value)) {
+        opts.set(kk, value)
+      }
+      else if (value === true) {
+        opts.set(kk, value)
+      }
+      // void else
+    })
+  })
+
+  opts.forEach((value, key) => {
     switch (typeof value) {
       case 'undefined':
         return
@@ -141,7 +165,9 @@ export function genParams<T extends BaseOptions>(
       default:
         throw new TypeError(`unexpected typeof ${key}: ${typeof value}`)
     }
+
   })
 
   return ps
 }
+

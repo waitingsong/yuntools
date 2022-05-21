@@ -1,7 +1,6 @@
 import assert from 'assert/strict'
 import { createHash } from 'crypto'
-import { statSync, writeFileSync } from 'fs'
-import { rm } from 'fs/promises'
+import { rm, stat, writeFile } from 'fs/promises'
 import { tmpdir, homedir } from 'os'
 import { join } from 'path'
 
@@ -15,6 +14,7 @@ import { regxStat } from './rule'
 import { DataSign, SignOptions, initSignOptions } from './sign'
 import { DataStat, StatOptions, initStatOptions } from './stat'
 import {
+  BaseOptions,
   Config,
   ConfigPath,
   DataBase,
@@ -31,27 +31,27 @@ import {
 export class OssClient {
 
   debug = false
-  configHash: string
-  configPath: string
+  configPath = ''
+
+  private readonly config: Config | undefined = void 0
 
   constructor(
     /**
      * 配置参数或者配置文件路径
      * @default ~/.ossutilconfig
      */
-    protected readonly _config: Config | ConfigPath = join(homedir(), '.ossutilconfig'),
+    protected readonly configInput?: Config | ConfigPath,
     public cmd = 'ossutil',
   ) {
 
-    this.validateConfig(_config)
-    if (typeof _config === 'string') {
-      this.configPath = _config
+    if (typeof configInput === 'string') {
+      this.configPath = configInput
+    }
+    else if (typeof configInput === 'object') {
+      this.config = configInput
     }
     else {
-      const { path, hash } = this.init(_config)
-      this.configHash = hash
-      this.configPath = path
-      this.validateConfig(this.configPath)
+      this.configPath = join(homedir(), '.ossutilconfig')
     }
   }
 
@@ -79,9 +79,8 @@ export class OssClient {
 
     assert(typeof this.configPath === 'string')
 
-    // const ps = this.genCliParams(config)
-    const ps: string[] = []
-    const resp$ = run(`${this.cmd} mkdir -c ${this.configPath} ${ps.join(' ')} ${dir}`)
+    const ps = this.genCliParams()
+    const resp$ = run(`${this.cmd} mkdir ${ps.join(' ')} ${dir}`)
     const res = await processResp(resp$, this.debug)
 
     const keys: DataKey[] = [DataKey.elapsed]
@@ -104,11 +103,11 @@ export class OssClient {
     assert(src, 'src is required')
     assert(dst, 'dst is required')
 
-    const ps = genParams(this.configPath, initCpOptions, options)
+    const ps = this.genCliParams(options, initCpOptions)
 
     if (! options || ! options.force) {
-      const stat = await this.stat(dst, options as StatOptions)
-      if (! stat.exitCode) {
+      const statRet = await this.stat(dst, options as StatOptions)
+      if (! statRet.exitCode) {
         const ret: ProcessRet<DataCp> = {
           exitCode: 1,
           exitSignal: '',
@@ -150,6 +149,7 @@ export class OssClient {
     return ret
   }
 
+
   /**
    * 删除
    * @link https://help.aliyun.com/document_detail/120053.html
@@ -161,7 +161,7 @@ export class OssClient {
 
     assert(path, 'src is required')
 
-    const ps = genParams(this.configPath, initRmOptions, options)
+    const ps = this.genCliParams(options, initRmOptions)
     const resp$ = run(`${this.cmd} rm -f ${ps.join(' ')} ${path} `)
     const res = await processResp(resp$, this.debug)
 
@@ -193,8 +193,6 @@ export class OssClient {
 
     assert(bucket, 'bucket is required')
     const ps = this.genCliParams()
-
-    // const resp = await firstValueFrom(run(`${this.cmd} probe ${ps.join(' ')} --upload --bucketname ${bucket}`))
     const resp$ = run(`${this.cmd} probe ${ps.join(' ')} --upload --bucketname ${bucket}`)
     const res = await processResp(resp$, this.debug)
 
@@ -214,7 +212,7 @@ export class OssClient {
 
     assert(path, 'path is required')
 
-    const ps = genParams(this.configPath, initStatOptions, options)
+    const ps = this.genCliParams(options, initStatOptions)
     const resp$ = run(`${this.cmd} stat ${ps.join(' ')} ${path} `)
     const res = await processResp(resp$, this.debug)
 
@@ -234,8 +232,8 @@ export class OssClient {
 
     assert(path, 'path is required')
 
-    const stat = await this.stat(path)
-    const exists = !! (stat.exitCode === 0 && stat.data)
+    const statRet = await this.stat(path)
+    const exists = !! (statRet.exitCode === 0 && statRet.data)
     return exists
   }
 
@@ -264,8 +262,8 @@ export class OssClient {
       return remove
     }
 
-    const stat = await this.stat(dst, options)
-    return stat
+    const statRet = await this.stat(dst, options)
+    return statRet
   }
 
 
@@ -280,7 +278,7 @@ export class OssClient {
 
     assert(src, 'src is required')
 
-    const ps = genParams(this.configPath, initSignOptions, options)
+    const ps = this.genCliParams(options, initSignOptions)
     const resp$ = run(`${this.cmd} sign ${ps.join(' ')} ${src} `)
     const res = await processResp(resp$, this.debug)
 
@@ -288,7 +286,7 @@ export class OssClient {
     const data = parseRespStdout<DataSign>(res, keys, this.debug)
 
     if (data?.httpUrl) {
-      data.link = options?.['disable-encode-slash']
+      data.link = options?.disableEncodeSlash
         ? data.httpUrl
         : decodeURIComponent(data.httpUrl)
     }
@@ -297,57 +295,19 @@ export class OssClient {
   }
 
 
-  validateConfig(config: Config | ConfigPath): void {
-    if (typeof config === 'string') {
-      assert(config, 'config file path is empty')
-      // assert(fs.pathExistsSync(config), `config file ${config} not exists`)
-      const exists = statSync(config).isFile()
-      assert(exists, `config file ${config} not exists`)
-      return
-    }
-
-    const { language, endpoint, accessKeyId, accessKeySecret } = config
-
-    if (typeof language !== 'undefined') {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      assert(language === 'CH' || language === 'EN', 'language must be CH or EN')
-    }
-    assert(endpoint, 'endpoint is required')
-    assert(accessKeyId, 'accessKeyID is required')
-    assert(accessKeySecret, 'accessKeySecret is required')
+  async validateConfigPath(config: ConfigPath): Promise<void> {
+    assert(config, 'config file path is empty')
+    const exists = (await stat(config)).isFile()
+    assert(exists, `config file ${config} not exists`)
   }
 
 
-  genCliParams(config?: Config | ConfigPath): string[] {
-    const conf = config ?? this.configPath
-    this.validateConfig(conf)
-
-    if (typeof conf === 'string') {
-      return ['-c', conf]
-    }
-
-    const { language, endpoint, accessKeyId, accessKeySecret, stsToken } = conf
-    const ps: string[] = []
-
-    language && ps.push('-L', language)
-    accessKeyId && ps.push('-i', accessKeyId)
-    accessKeySecret && ps.push('-k', accessKeySecret)
-    endpoint && ps.push('-e', endpoint)
-    stsToken && ps.push('-t', stsToken)
-
-    return ps
-  }
-
-
-  private init(config: Config): { path: ConfigPath, hash: string } {
-    this.validateConfig(config)
-
+  async writeConfigFile(config: Config): Promise<{ path: ConfigPath, hash: string }> {
     const sha1 = createHash('sha1')
     const hash = sha1.update(JSON.stringify(config)).digest('hex')
     const path = join(tmpdir(), `${hash}.tmp`)
-    // console.info({ hash, path })
     try {
-      const exists = statSync(path).isFile()
+      const exists = (await stat(path)).isFile()
       if (exists) {
         return { path, hash }
       }
@@ -357,15 +317,29 @@ export class OssClient {
     }
 
     const arr: string[] = ['[Credentials]']
-    const { language, endpoint, accessKeyId, accessKeySecret, stsToken } = config
-    arr.push(`language = ${language ?? 'EN'}`)
-    arr.push(`endpoint = ${endpoint}`)
-    arr.push(`accessKeyID = ${accessKeyId}`)
-    arr.push(`accessKeySecret = ${accessKeySecret}`)
+    const { endpoint, accessKeyId, accessKeySecret, stsToken } = config
+    endpoint && arr.push(`endpoint = ${endpoint}`)
+    accessKeyId && arr.push(`accessKeyID = ${accessKeyId}`)
+    accessKeySecret && arr.push(`accessKeySecret = ${accessKeySecret}`)
     stsToken && arr.push(`stsToken = ${stsToken}`)
 
-    writeFileSync(path, arr.join('\n'))
+    await writeFile(path, arr.join('\n'))
     return { path, hash }
+  }
+
+
+  private genCliParams<T extends BaseOptions>(
+    options?: T | undefined,
+    initOptions?: T,
+  ): string[] {
+
+    const ps = genParams(
+      this.configPath,
+      this.config,
+      options,
+      initOptions,
+    )
+    return ps
   }
 
 }

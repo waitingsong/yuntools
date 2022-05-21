@@ -1,17 +1,6 @@
 
 export type ConfigPath = string
 
-export interface Config {
-  /**
-   * @default CH
-   */
-  language?: 'CH' | 'EN'
-  endpoint: string
-  accessKeyId: string
-  accessKeySecret: string
-  stsToken?: string
-}
-
 export enum ACLKey {
   /** 继承Bucket的读写权限 */
   default = 'default',
@@ -130,27 +119,29 @@ export enum MKey {
   disableEncodeSlash = 'disable-encode-slash',
 }
 
+export interface Config {
+  endpoint?: string
+  accessKeyId?: string
+  accessKeySecret?: string
+  stsToken?: string
+}
 /**
  * ossutil 的通用选项，可以在大部分命令中使用
  * @link https://help.aliyun.com/document_detail/50455.htm
  */
-export interface BaseOptions {
-  endpoint?: string
-  [MKey.accessKeyId]?: string
-  [MKey.accessKeySecret]?: string
-  [MKey.stsToken]?: string
-  /** 在当前工作目录下输出ossutil日志文件ossutil.log。该选项默认为空，表示不输出日志文件 */
-  loglevel?: 'info' | 'debug'
-  /**
-   * 客户端读超时的时间，单位为秒，
-   * @default 1200
-   */
-  [MKey.readTimeoutSec]?: number
+export interface BaseOptions extends Config {
   /**
    * 客户端连接超时的时间，单位为秒，
    * @default 120
    */
-  [MKey.connectTimeoutSec]?: number
+  connectTimeoutSec?: number
+  /**
+   * 客户端读超时的时间，单位为秒，
+   * @default 1200
+   */
+  readTimeoutSec?: number
+  /** 在当前工作目录下输出ossutil日志文件ossutil.log。该选项默认为空，表示不输出日志文件 */
+  loglevel?: 'info' | 'debug'
 }
 
 

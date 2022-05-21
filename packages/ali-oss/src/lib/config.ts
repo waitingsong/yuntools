@@ -1,14 +1,14 @@
-import { BaseOptions, MKey } from './types'
+import { BaseOptions } from './types'
 
 // eslint-disable-next-line no-shadow-restricted-names
 export const undefined = void 0
 
 export const initBaseOptions: BaseOptions = {
-  [MKey.accessKeyId]: undefined,
-  [MKey.accessKeySecret]: undefined,
-  [MKey.connectTimeoutSec]: undefined,
-  [MKey.readTimeoutSec]: undefined,
-  [MKey.stsToken]: undefined,
+  accessKeyId: undefined,
+  accessKeySecret: undefined,
+  connectTimeoutSec: undefined,
+  readTimeoutSec: undefined,
+  stsToken: undefined,
   endpoint: undefined,
   loglevel: undefined,
 }

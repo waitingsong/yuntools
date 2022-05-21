@@ -3,21 +3,20 @@ import {
   BaseOptions,
   DataBase,
   DataKey,
-  MKey,
 } from './types'
 
 
 export const initStatOptions: StatOptions = {
   ...initBaseOptions,
-  'encoding-type': undefined,
-  'version-id': undefined,
+  encodingType: undefined,
+  versionId: undefined,
   payer: undefined,
 }
 
 
 export interface StatOptions extends BaseOptions {
-  [MKey.encodingType]?: 'url' | undefined
-  [MKey.versionId]?: string | undefined
+  encodingType?: 'url' | undefined
+  versionId?: string | undefined
   payer?: string | undefined
 }
 
