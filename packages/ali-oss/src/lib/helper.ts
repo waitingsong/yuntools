@@ -1,13 +1,15 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
+import https from 'https'
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
+import { createWriteStream } from 'node:fs'
 import { stat, writeFile } from 'node:fs/promises'
-import { tmpdir } from 'node:os'
+import { homedir, platform, tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { firstValueFrom, Observable, reduce, map } from 'rxjs'
-import { OutputRow } from 'rxrunscript'
+import { OutputRow, run } from 'rxrunscript'
 
 import { pickFuncMap, pickRegxMap } from './rule.js'
 import {
@@ -220,3 +222,39 @@ export async function validateConfigPath(config: ConfigPath): Promise<void> {
   assert(exists, `config file ${config} not exists`)
 }
 
+export async function downloadOssutil(
+  srcLink: string,
+  targetPath = join(homedir(), 'ossutil'),
+): Promise<string> {
+
+  assert(srcLink, 'srcLink is empty')
+
+  const file = createWriteStream(targetPath)
+  await new Promise<void>((done, reject) => {
+    https.get(srcLink, (resp) => {
+      resp.pipe(file)
+      file.on('finish', () => {
+        file.close()
+        console.log('Download Completed')
+        done()
+      })
+    })
+      .on('error', (err: Error) => {
+        reject(err)
+      })
+  })
+
+  if (platform() !== 'win32') {
+    await setBinExecutable(targetPath)
+  }
+
+  return targetPath
+}
+
+export async function setBinExecutable(
+  file: string,
+): Promise<OutputRow> {
+
+  const ret = await firstValueFrom(run(`chmod +x ${file}`))
+  return ret
+}

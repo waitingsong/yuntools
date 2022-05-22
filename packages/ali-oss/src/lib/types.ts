@@ -153,3 +153,7 @@ export enum Msg {
   noSuchBucket = 'NoSuchBucket',
 }
 
+
+export type DownLinks = {
+  [key in NodeJS.Platform]?: string
+}

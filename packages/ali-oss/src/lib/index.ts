@@ -7,7 +7,10 @@ export * from './type.rm.js'
 export * from './type.sign.js'
 export * from './type.stat.js'
 export {
+  downloadOssutil,
+  setBinExecutable,
   validateConfigPath,
   writeConfigFile,
 } from './helper.js'
+export { configDownLinks } from './config.js'
 
