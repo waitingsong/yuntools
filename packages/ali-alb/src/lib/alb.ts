@@ -264,14 +264,11 @@ export class AlbClient {
     if (typeof options.currentWeight === 'undefined') {
       const server = await this.getGroupServer(serverGroupId, ecsId)
       assert(server, `No server found by ecsId ${ecsId} and serverGroupId ${serverGroupId}`)
-
-      if (typeof server.weight === 'number') {
-        options.currentWeight = server.weight
-      }
-      else {
-        console.warn('updateServerWeight:', { serverGroupId, server })
-        throw new Error(`No weight found by ecsId ${ecsId} and serverGroupId ${serverGroupId}`)
-      }
+      assert(
+        typeof server.weight === 'number',
+        `No weight found by ecsId ${ecsId} and serverGroupId ${serverGroupId}`,
+      )
+      options.currentWeight = server.weight
     }
 
     const jobId = await this.loopServerUntilWeight(options as UpdateServerWeightOptionsInner)
