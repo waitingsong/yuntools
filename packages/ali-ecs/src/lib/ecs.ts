@@ -187,20 +187,35 @@ export class EcsClient {
   }
 
 
-  cleanCache(): void {
+  cleanCache(force = false): void {
     const now = Date.now()
-    if (this.cacheTime && (now - this.cacheTime > this.cacheTTLSec * 1000)) {
-      console.log('cache expired')
-      this.nodeIp2IdCache.clear()
-      this.id2NodeCache.clear()
-      this.cacheTime = 0
+    if (force) {
+      this._cleanCache()
+      return
     }
+
+    const { cacheTime, cacheTTLSec } = this
+    assert(typeof cacheTime === 'number' || typeof cacheTime === 'undefined')
+    assert(typeof cacheTTLSec === 'number', 'cacheTTLSec must be a number')
+    if (cacheTime && ((now - cacheTime) > cacheTTLSec * 1000)) {
+      console.log('cache expired')
+      this._cleanCache()
+    }
+    // void else
   }
 
   updateInstancedCache(instances: EcsNodeDetail[]): void {
     this.saveNodesToCache(instances)
     this.cacheTime = Date.now()
   }
+
+
+  private _cleanCache(): void {
+    this.nodeIp2IdCache.clear()
+    this.id2NodeCache.clear()
+    this.cacheTime = 0
+  }
+
 
   private _getInstanceByIpFromCache(
     ip: string,
