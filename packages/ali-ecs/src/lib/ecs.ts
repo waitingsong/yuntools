@@ -29,7 +29,7 @@ export class EcsClient {
   /** instanceId -> node */
   id2NodeCache = new Map<string, EcsNodeDetail>()
   cacheTime: number
-  cacheTTLSec: 30
+  cacheTTLSec = 30
 
   constructor(
     protected readonly id: string,
