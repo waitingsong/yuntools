@@ -107,11 +107,7 @@ export class EcsClient {
     }
 
     const inst = await this.getInstanceByIp(ip)
-    const id = inst?.instanceId
-    if (id?.length) {
-      this.nodeIp2IdCache.set(ip, id)
-      return id
-    }
+    return inst?.instanceId
   }
 
   /** 根据公网 IP 数组获取 Ecs 实例信息 */
@@ -126,9 +122,8 @@ export class EcsClient {
 
     const ret = new Map<string, EcsNodeDetail>()
     for await (const ip of ips) {
-      if (! ip || typeof ip !== 'string') {
-        continue
-      }
+      assert(ip, 'ip is required')
+      assert(typeof ip === 'string', 'ip must be a string')
       const inst = await this.getInstanceByIp(ip, regionId)
       if (! inst) {
         continue
@@ -148,7 +143,7 @@ export class EcsClient {
     assert(typeof ip === 'string', 'ip must be a string')
 
     this.cleanCache()
-    const node = this._getInstanceByIpFromCache(ip)
+    const node = this._getInstanceByIpFromCache(ip.trim())
     if (node) {
       this.debug && console.log(`getInstanceByIp from cache: ${ip}`)
       return node
