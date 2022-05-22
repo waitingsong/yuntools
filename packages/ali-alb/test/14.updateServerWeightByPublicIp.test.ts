@@ -115,6 +115,17 @@ describe(fileShortPath(import.meta.url), () => {
         server.weight === 100,
         `server.weight !== newWeight, ip: ${ip}, server.weight: ${server.weight}, newWeight: ${newWeight}`,
       )
+
+      await client.updateServerWeightByPublicIp(opts)
+
+      servers = await client.getGroupServerByPublicIps(groupId, [ip])
+      server = servers.get(ip)
+      assert(server, 'server should be defined')
+      assert(typeof server.weight === 'number', 'server.weight should be defined')
+      assert(
+        server.weight === 100,
+        `server.weight !== newWeight, ip: ${ip}, server.weight: ${server.weight}, newWeight: ${newWeight}`,
+      )
     })
   })
 
