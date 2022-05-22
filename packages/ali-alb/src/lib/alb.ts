@@ -56,7 +56,7 @@ export class AlbClient {
   groupServersCache = new Map<ServerGroupId, GroupServer[]>()
   // serversCache = new Map<ServerGroupId, ServersCache>()
   cacheTime: number
-  cacheTTLSec: 5
+  cacheTTLSec = 10
 
   constructor(
     protected id: string,
