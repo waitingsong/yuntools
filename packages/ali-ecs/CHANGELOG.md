@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.1.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-ecs@9.0.2...@yuntools/ali-ecs@9.1.0) (2022-05-22)
+
+
+### Bug Fixes
+
+* **ali-ecs:** cacheTTLSec default value syntax ([faee829](https://github.com/waitingsong/yuntools/commit/faee829270d50bb7fd2a300aa50cfd19b9edb6ca))
+
+
+### Features
+
+* **ali-ecs:** clean() add param force, default false ([cfab458](https://github.com/waitingsong/yuntools/commit/cfab458a3c5630c318daa3a168fba8485831dc8f))
+
+
+
+
+
 ## 9.0.2 (2022-05-22)
 
 **Note:** Version bump only for package @yuntools/ali-ecs
