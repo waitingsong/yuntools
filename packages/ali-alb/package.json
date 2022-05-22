@@ -1,7 +1,7 @@
 {
   "name": "@yuntools/ali-alb",
   "author": "waiting",
-  "version": "10.1.5",
+  "version": "10.1.6",
   "description": "阿里云 ALB 负载均衡模块封装，支持 ESM，CJS 导入，提供 TypeScript 类型定义",
   "keywords": [
     "ali",
@@ -36,7 +36,7 @@
   "dependencies": {
     "@alicloud/alb20200616": "^1.0.1",
     "@alicloud/openapi-client": "^0.4.1",
-    "@yuntools/ali-ecs": "^9.1.0",
+    "@yuntools/ali-ecs": "^9.1.1",
     "rxjs": "^7.5.0"
   },
   "devDependencies": {

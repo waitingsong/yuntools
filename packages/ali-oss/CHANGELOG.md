@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 11.1.0 (2022-05-22)
+
+
+### Features
+
+* **ali-alb:** validate config file exits when initialization ([96d5706](https://github.com/waitingsong/yuntools/commit/96d57064449aea1f1c2ed6d5a14a18fb5c009256))
+* **ali-oss:** writeConfigFile() accept 2nd parame file path ([6027b73](https://github.com/waitingsong/yuntools/commit/6027b7371c073484aae7fa3453d939eae2b09a8f))
+
+
+
+
+
 ## [11.0.1](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@11.0.0...@yuntools/ali-oss@11.0.1) (2022-05-22)
 
 **Note:** Version bump only for package @yuntools/ali-oss
