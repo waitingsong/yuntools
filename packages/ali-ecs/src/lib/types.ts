@@ -1,6 +1,8 @@
 import { DescribeInstancesResponseBodyInstancesInstance } from '@alicloud/ecs20140526'
 
 
+export type GetNodeMap<T> = Map<string, T>
+
 export type EcsNodeDetail = DescribeInstancesResponseBodyInstancesInstance
 
 export enum Action {

@@ -11,6 +11,7 @@ import {
   EcsNodeStatus,
   EcsNodeInfo,
   EcsInfoKey,
+  GetNodeMap,
 } from './types.js'
 
 
@@ -43,9 +44,9 @@ export class EcsClient {
   async getNodeStatusByIps(
     ips: string[],
     regionId = 'cn-hangzhou',
-  ): Promise<Map<string, EcsNodeStatus>> {
+  ): Promise<GetNodeMap<EcsNodeStatus>> {
 
-    const ret = new Map<string, EcsNodeStatus>()
+    const ret: GetNodeMap<EcsNodeStatus> = new Map()
     const nodes = await this.getInstancesByIps(ips, regionId)
     nodes.forEach((row, ip) => {
       if (typeof row === 'undefined') { return }
@@ -70,9 +71,9 @@ export class EcsClient {
   async getNodeInfoByIps(
     ips: string[],
     regionId = 'cn-hangzhou',
-  ): Promise<Map<string, EcsNodeInfo>> {
+  ): Promise<GetNodeMap<EcsNodeInfo>> {
 
-    const ret = new Map<string, EcsNodeInfo>()
+    const ret: GetNodeMap<EcsNodeInfo> = new Map()
     const nodes = await this.getInstancesByIps(ips, regionId)
     nodes.forEach((row, ip) => {
       if (typeof row === 'undefined') { return }
@@ -114,13 +115,13 @@ export class EcsClient {
   async getInstancesByIps(
     ips: string[],
     regionId = 'cn-hangzhou',
-  ): Promise<Map<string, EcsNodeDetail>> {
+  ): Promise<GetNodeMap<EcsNodeDetail>> {
 
     assert(Array.isArray(ips), 'ips must be an array')
 
     this.cleanCache()
 
-    const ret = new Map<string, EcsNodeDetail>()
+    const ret: GetNodeMap<EcsNodeDetail> = new Map()
     for await (const ip of ips) {
       assert(ip, 'ip is required')
       assert(typeof ip === 'string', 'ip must be a string')
