@@ -240,6 +240,7 @@ export async function downloadOssutil(
       })
     })
       .on('error', (err: Error) => {
+        /* c8 ignore next */
         reject(err)
       })
   })
