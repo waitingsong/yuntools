@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.2.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@11.1.0...@yuntools/ali-oss@11.2.0) (2022-05-22)
+
+
+### Features
+
+* **ali-oss:** downloadOssutil() ([b7f2e10](https://github.com/waitingsong/yuntools/commit/b7f2e10f1c026264bab76b8ac84c93e7059c814e))
+
+
+
+
+
 # 11.1.0 (2022-05-22)
 
 
