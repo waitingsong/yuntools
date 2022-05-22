@@ -356,13 +356,17 @@ export class AlbClient {
   cleanCache(force = false): void {
     const now = Date.now()
     if (force) {
-      this.groupServersCache.clear()
-      this.cacheTime = 0
+      this._cleanCache()
+      return
     }
-    else if (this.cacheTime && (now - this.cacheTime > this.cacheTTLSec * 1000)) {
+
+    const { cacheTime, cacheTTLSec } = this
+    assert(typeof cacheTime === 'number' || typeof cacheTime === 'undefined')
+    assert(typeof cacheTTLSec === 'number', 'cacheTTLSec must be a number')
+
+    if (cacheTime && ((now - cacheTime) > cacheTTLSec * 1000)) {
       console.log('cache expired')
-      this.groupServersCache.clear()
-      this.cacheTime = 0
+      this._cleanCache()
     }
   }
 
@@ -376,6 +380,11 @@ export class AlbClient {
     this.cacheTime = Date.now()
   }
 
+
+  private _cleanCache(): void {
+    this.groupServersCache.clear()
+    this.cacheTime = 0
+  }
 
   private async loopServerUntilWeight(options: UpdateServerWeightOptionsInner): Promise<JobId | undefined> {
     const { serverGroupId, ecsId } = options
