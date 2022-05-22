@@ -23,6 +23,8 @@ const configPath = join(homedir(), '.ossutilconfig')
 
 // eslint-disable-next-line import/no-mutable-exports
 let client2: OssClient | undefined
+// eslint-disable-next-line import/no-mutable-exports
+let client3: OssClient | undefined
 let config: Config | undefined = void 0
 if (CI) {
   assert(endpoint, 'ALI_OSS_ENDPOINT is required')
@@ -38,8 +40,12 @@ if (CI) {
   assert(path, 'writeConfigFile failed')
   await validateConfigPath(path)
   client2 = new OssClient(path)
+  client3 = new OssClient()
 }
 
 export const client = new OssClient(config)
-export { client2 }
+export {
+  client2,
+  client3,
+}
 
