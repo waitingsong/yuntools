@@ -164,6 +164,7 @@ export class AlbClient {
         return flag
       })
     }
+    /* c8 ignore next 3 */
     else {
       console.error(`getGroupServerByPublicIp: 服务器组 ${serverGroupId} 未找到`)
     }
