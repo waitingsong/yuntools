@@ -345,8 +345,9 @@ export class AlbClient {
           return status
         }
       }
+      /* c8 ignore next */
     }
-    /* c8 ignore next */
+    /* c8 ignore next 2 */
     return false
   }
 
