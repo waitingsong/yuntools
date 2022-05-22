@@ -27,6 +27,23 @@ describe(fileShortPath(import.meta.url), () => {
         assert.deepEqual(server, server2, `server should be equal, ip: ${ip}`)
       }
     })
+
+    it('withoutCache: true', async () => {
+      const ip = ips[0]
+      assert(ip)
+
+      const id = await ecsClient.getInstanceIdByIp(ip)
+      assert(id, `id should be defined, ip: ${ip}`)
+
+      let server = await client.getGroupServer(groupId, id)
+      assert(server, `server should be defined, ip: ${ip}`)
+
+      const size = client.groupServersCache.size
+      assert(size > 0, `size should be greater than 0, size: ${size}`)
+
+      server = await client.getGroupServer(groupId, id, true)
+      assert(client.groupServersCache.size === size)
+    })
   })
 
 })
