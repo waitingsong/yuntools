@@ -372,9 +372,6 @@ export class AlbClient {
     if (servers) {
       this.groupServersCache.set(groupId, servers)
     }
-    else {
-      this.groupServersCache.delete(groupId)
-    }
     this.cacheTime = Date.now()
   }
 
