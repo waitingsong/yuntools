@@ -138,7 +138,8 @@ jobs:
           . .scripts/ci/ci-env.sh
           .scripts/ci/ci-prepare.sh
           .scripts/init.mjs
-          npm run ci
+          # npm run ci
+          npm run test
         env:
           CI: true
           # use `localhost` if running the job on the VM
