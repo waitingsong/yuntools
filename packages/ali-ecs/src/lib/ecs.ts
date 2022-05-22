@@ -154,8 +154,8 @@ export class EcsClient {
       action: Action.DescribeInstances,
       nextToken: this.nextToken,
       regionId,
-      publicIpAddresses: [ip],
-      eipAddresses: [ip],
+      publicIpAddresses: [ip], // no effect
+      eipAddresses: [ip], // no effect
       // pageNumber: 0,
       pageSize: 100,
       totalCount: 100,
