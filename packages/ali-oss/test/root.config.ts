@@ -39,6 +39,9 @@ if (CI) {
   await validateConfigPath(path)
   client2 = new OssClient(path)
 }
+else {
+  client2 = new OssClient(configPath)
+}
 
 export const client = CI ? new OssClient(config) : new OssClient(configPath)
 export { client2 }
