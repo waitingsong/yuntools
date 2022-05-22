@@ -171,9 +171,7 @@ export class EcsClient {
     }
 
     const insts = resp.body.instances?.instance
-    if (! insts) {
-      return
-    }
+    assert(insts && Array.isArray(insts), 'insts is empty')
     this.debug && console.log(`${ip} found ${insts.length}`)
     this.updateInstancedCache(insts)
     this.debug && console.info({ insts })
