@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.1.4](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-alb@10.1.3...@yuntools/ali-alb@10.1.4) (2022-05-22)
+
+
+### Bug Fixes
+
+* **ali-alb:** cacheTTLSec default value ([61a212d](https://github.com/waitingsong/yuntools/commit/61a212d7ce031a70b61121066e76fbbb4058c46a))
+
+
+
+
+
 ## [10.1.3](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-alb@10.1.2...@yuntools/ali-alb@10.1.3) (2022-05-22)
 
 **Note:** Version bump only for package @yuntools/ali-alb
