@@ -185,7 +185,10 @@ export function genParams<T extends BaseOptions>(
 }
 
 
-export async function writeConfigFile(config: Config): Promise<{ path: ConfigPath, hash: string }> {
+export async function writeConfigFile(
+  config: Config,
+): Promise<{ path: ConfigPath, hash: string }> {
+
   const sha1 = createHash('sha1')
   const hash = sha1.update(JSON.stringify(config)).digest('hex')
   const path = join(tmpdir(), `${hash}.tmp`)
