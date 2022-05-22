@@ -60,13 +60,11 @@ export class OssClient {
   }
 
   /**
-   * 删除OSS配置文件
+   * 删除 OSS 配置文件
    */
   async destroy(): Promise<void> {
     const { configPath: config } = this
-    if (config && typeof config === 'string') {
-      await rm(config)
-    }
+    await rm(config)
   }
 
   /**

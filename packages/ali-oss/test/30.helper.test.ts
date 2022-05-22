@@ -54,14 +54,14 @@ describe(fileShortPath(import.meta.url), () => {
       assert(link, 'link is required')
 
       const path = await downloadOssutil(link, binPath)
-      assert(path, 'writeConfigFile failed')
-      await validateConfigPath(path)
+      assert(path, 'downloadOssutil failed')
       if (plat === 'win32') {
         console.info(`You should unzip ${binPath} manually.`)
         return
       }
 
       client.cmd = path
+      console.log({ cmdpath: path })
       const dir = `${cloudUrlPrefix}/${Math.random().toString()}`
       const ret = await client.mkdir(dir)
       CI || console.log(ret)
