@@ -19,33 +19,27 @@ export const CI = process.env.CI
 assert(bucket, 'ALI_OSS_BUCKET is required')
 export const cloudUrlPrefix = `oss://${bucket}/mobileFile/debug`
 
-const configPath = join(homedir(), '.ossutilconfig')
+export const configPath = join(homedir(), '.ossutilconfig')
 
 // eslint-disable-next-line import/no-mutable-exports
 let client2: OssClient | undefined
-// eslint-disable-next-line import/no-mutable-exports
-let client3: OssClient | undefined
-let config: Config | undefined = void 0
+
+export const config: Config = {
+  // language: 'EN',
+  endpoint,
+  accessKeyId,
+  accessKeySecret,
+}
 if (CI) {
   assert(endpoint, 'ALI_OSS_ENDPOINT is required')
   assert(accessKeyId, 'ALI_OSS_ID is required')
   assert(accessKeySecret, 'ALI_OSS_SECRET is required')
-  config = {
-    // language: 'EN',
-    endpoint,
-    accessKeyId,
-    accessKeySecret,
-  }
   const { path } = await writeConfigFile(config)
   assert(path, 'writeConfigFile failed')
   await validateConfigPath(path)
   client2 = new OssClient(path)
-  client3 = new OssClient()
 }
 
-export const client = new OssClient(config)
-export {
-  client2,
-  client3,
-}
+export const client = CI ? new OssClient(config) : new OssClient(configPath)
+export { client2 }
 

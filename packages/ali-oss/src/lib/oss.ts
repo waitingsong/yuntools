@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { statSync } from 'node:fs'
 import { rm } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
@@ -45,12 +46,16 @@ export class OssClient {
 
     if (typeof configInput === 'string') {
       this.configPath = configInput
+      const pathExists = statSync(this.configPath).isFile()
+      assert(pathExists, `${Msg.cloudConfigFileNotExists}: ${this.configPath}`)
     }
     else if (typeof configInput === 'object') {
       this.config = configInput
     }
     else {
       this.configPath = join(homedir(), '.ossutilconfig')
+      const pathExists = statSync(this.configPath).isFile()
+      assert(pathExists, `${Msg.cloudConfigFileNotExists}: ${this.configPath}`)
     }
   }
 

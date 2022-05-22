@@ -149,6 +149,7 @@ export interface BaseOptions extends Config {
 export enum Msg {
   accessDenied = 'AccessDenied',
   cloudFileAlreadyExists = 'Cloud file already exists',
+  cloudConfigFileNotExists = 'Cloud config file not exists',
   noSuchBucket = 'NoSuchBucket',
 }
 
