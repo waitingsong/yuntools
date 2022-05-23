@@ -132,7 +132,7 @@ export function genParams<T extends BaseOptions>(
     ? ['-c', configPath]
     : []
 
-  const opts = mergeParams(config, options, initOptions)
+  const opts = mergeParams(options, initOptions, config)
 
   opts.forEach((value, key) => {
     switch (typeof value) {
@@ -167,14 +167,14 @@ export function genParams<T extends BaseOptions>(
 
 
 export function mergeParams<T extends BaseOptions>(
+  inputOptions: T | undefined,
+  initOptions: T | undefined,
   config: Config | undefined,
-  options: T | undefined,
-  initOptions?: T,
 ): Map<string, string | number | boolean> {
 
   const ret = new Map<string, string | number | boolean>();
 
-  [config, initOptions, options].forEach((obj) => {
+  [config, initOptions, inputOptions].forEach((obj) => {
     obj && Object.entries(obj).forEach(([key, value]) => {
       let kk = key
       if (Object.hasOwn(MKey, key)) {
