@@ -62,7 +62,7 @@ describe(fileShortPath(import.meta.url), () => {
 
       client.cmd = path
       console.log({ cmdpath: path })
-      const dir = `${cloudUrlPrefix}/${Math.random().toString()}`
+      const dir = `${cloudUrlPrefix}/4${Math.random().toString()}`
       const ret = await client.mkdir(dir)
       CI || console.log(ret)
       assert(! ret.exitCode, `mkdir ${dir} failed, ${ret.stderr}`)

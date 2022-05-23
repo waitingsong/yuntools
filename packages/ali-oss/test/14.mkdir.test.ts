@@ -13,7 +13,7 @@ describe(fileShortPath(import.meta.url), () => {
 
   describe('mkdir should work', () => {
     it('normal', async () => {
-      const dir = `${cloudUrlPrefix}/${Math.random().toString()}`
+      const dir = `${cloudUrlPrefix}/1${Math.random().toString()}`
       const ret = await client.mkdir(dir)
       CI || console.log(ret)
       assert(! ret.exitCode, `mkdir ${dir} failed, ${ret.stderr}`)
@@ -77,7 +77,5 @@ describe(fileShortPath(import.meta.url), () => {
     })
 
   })
-
 })
-
 

@@ -30,7 +30,7 @@ describe(fileShortPath(import.meta.url), () => {
 
       const client = new OssClient(configPath)
 
-      const dir = `${cloudUrlPrefix}/${Math.random().toString()}`
+      const dir = `${cloudUrlPrefix}/2${Math.random().toString()}`
       const ret = await client.mkdir(dir)
       CI || console.log(ret)
       assert(! ret.exitCode, `mkdir ${dir} failed, ${ret.stderr}`)
@@ -54,7 +54,7 @@ describe(fileShortPath(import.meta.url), () => {
 
       const client = new OssClient(void 0)
 
-      const dir = `${cloudUrlPrefix}/${Math.random().toString()}`
+      const dir = `${cloudUrlPrefix}/3${Math.random().toString()}`
       const ret = await client.mkdir(dir)
       CI || console.log(ret)
       assert(! ret.exitCode, `mkdir ${dir} failed, ${ret.stderr}`)
