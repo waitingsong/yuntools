@@ -28,6 +28,7 @@ describe(fileShortPath(import.meta.url), () => {
       assert(typeof ret.data.elapsed === 'string')
 
       await client.rm(dst)
+      await client.rm(link)
     })
   })
 

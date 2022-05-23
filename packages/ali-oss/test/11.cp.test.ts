@@ -101,6 +101,8 @@ describe(fileShortPath(import.meta.url), () => {
       const { data } = statRet
       assert(data)
       assert(data.ACL === 'public', data.ACL)
+
+      await client.rm(dst)
     })
 
     it('acl:public-read-write', async () => {
@@ -158,6 +160,23 @@ describe(fileShortPath(import.meta.url), () => {
       assert(typeof ret.data.averageSpeed === 'number')
 
       await client2.rm(dst)
+    })
+
+
+    it('param:encodingType encodeURIComponent work', async () => {
+      const src = join(__dirname, 'tsconfig.json')
+      const file = `联通€-&a'b"c<d>e?f*-${Date.now().toString()}-tsconfig.json`
+      const enc = encodeURIComponent(file).replace(/'/ug, '%27')
+      const dst = `${cloudUrlPrefix}/${enc}`
+
+      const ret = await client.cp(src, dst, { encodingType: 'url' })
+      CI || console.log(ret)
+      assert(! ret.exitCode, `cp ${src} ${dst} failed, ${ret.stderr}`)
+      assert(ret.data)
+      assert(typeof ret.data.elapsed === 'string')
+      assert(typeof ret.data.averageSpeed === 'number')
+
+      await client.rm(dst, { encodingType: 'url' })
     })
   })
 })

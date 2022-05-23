@@ -41,7 +41,6 @@ describe(fileShortPath(import.meta.url), () => {
       }
       catch (ex) {
         assert(ex instanceof Error, 'ex is Error')
-        assert(ex.message.includes('syntax'))
         return
       }
       assert(false, `mkdir ${dir} should not work`)
@@ -49,7 +48,7 @@ describe(fileShortPath(import.meta.url), () => {
 
     it('param:encodingType encodeURIComponent work', async () => {
       const dir = `联通€-&a'b"c<d>e?f*-${Math.random().toString()}/v1/v2`
-      const foo = encodeURIComponent(dir)
+      const foo = encodeURIComponent(dir).replace(/'/ug, '%27')
       const dest = `${cloudUrlPrefix}/${foo}`
       const ret = await client.mkdir(dest, { encodingType: 'url' })
       CI || console.log(ret)
@@ -57,7 +56,7 @@ describe(fileShortPath(import.meta.url), () => {
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
 
-      await client.rm(dest)
+      await client.rm(dest, { encodingType: 'url' })
     })
 
     it('param:encodingType encodeURI now work', async () => {
