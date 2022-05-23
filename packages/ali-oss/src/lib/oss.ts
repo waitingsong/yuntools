@@ -9,6 +9,7 @@ import { run } from 'rxrunscript'
 import { combineProcessRet, genParams, parseRespStdout, processResp } from './helper.js'
 import { regxStat } from './rule.js'
 import { DataCp, CpOptions, initCpOptions } from './type.cp.js'
+import { initMkdirOptions, MkdirOptions } from './type.mkdir.js'
 import { MvOptions } from './type.mv.js'
 import { RmOptions, initRmOptions } from './type.rm.js'
 import { DataSign, SignOptions, initSignOptions } from './type.sign.js'
@@ -73,16 +74,18 @@ export class OssClient {
    */
   async mkdir(
     /**
-     * 包含 bucket 和 object 的路径
-     * @example oss://bucket/foo
+     * 创建的目录名称。目录名称须包含 bucketname 且以正斜线（/）结尾。
+     * 若未添加正斜线（/），ossutil会在目录末尾自动添加
+     * @example oss://bucket/foo/bar
      */
-    dir: string,
+    cloudUrl: string,
+    options?: MkdirOptions,
   ): Promise<ProcessRet> {
 
     assert(typeof this.configPath === 'string')
 
-    const ps = this.genCliParams()
-    const resp$ = run(`${this.cmd} mkdir ${ps.join(' ')} ${dir}`)
+    const ps = this.genCliParams(options, initMkdirOptions)
+    const resp$ = run(`${this.cmd} mkdir ${ps.join(' ')} ${cloudUrl}`)
     const res = await processResp(resp$, this.debug)
 
     const keys: DataKey[] = [DataKey.elapsed]
