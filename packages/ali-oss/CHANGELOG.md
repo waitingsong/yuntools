@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.3.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@11.2.0...@yuntools/ali-oss@11.3.0) (2022-05-23)
+
+
+### Features
+
+* **ali-oss:** mkdir() accept 2nd options ([a284362](https://github.com/waitingsong/yuntools/commit/a2843627a623a9a61e6ff697c14c090719ab2b61))
+
+
+
+
+
 # [11.2.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@11.1.0...@yuntools/ali-oss@11.2.0) (2022-05-22)
 
 
