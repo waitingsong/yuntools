@@ -132,28 +132,7 @@ export function genParams<T extends BaseOptions>(
     ? ['-c', configPath]
     : []
 
-  const opts = new Map<string, unknown>();
-
-  [config, initOptions, options].forEach((obj) => {
-    obj && Object.entries(obj).forEach(([key, value]) => {
-      let kk = key
-      if (Object.hasOwn(MKey, key)) {
-        // @ts-ignore
-        const mkey = MKey[key] as unknown
-        if (typeof mkey === 'string' && mkey) {
-          kk = mkey
-        }
-      }
-
-      if (['number', 'string'].includes(typeof value)) {
-        opts.set(kk, value)
-      }
-      else if (value === true) {
-        opts.set(kk, value)
-      }
-      // void else
-    })
-  })
+  const opts = mergeParams(config, options, initOptions)
 
   opts.forEach((value, key) => {
     switch (typeof value) {
@@ -184,6 +163,44 @@ export function genParams<T extends BaseOptions>(
   })
 
   return ps
+}
+
+
+export function mergeParams<T extends BaseOptions>(
+  config: Config | undefined,
+  options: T | undefined,
+  initOptions?: T,
+): Map<string, string | number | boolean> {
+
+  const ret = new Map<string, string | number | boolean>();
+
+  [config, initOptions, options].forEach((obj) => {
+    obj && Object.entries(obj).forEach(([key, value]) => {
+      let kk = key
+      if (Object.hasOwn(MKey, key)) {
+        // @ts-ignore
+        const mkey = MKey[key] as unknown
+        if (typeof mkey === 'string' && mkey) {
+          kk = mkey
+        }
+      }
+
+      const vv = value as unknown as string | number | boolean | undefined
+      if (typeof vv === 'undefined') {
+        return
+      }
+
+      if (['number', 'string'].includes(typeof vv)) {
+        ret.set(kk, vv)
+      }
+      else if (vv === true) {
+        ret.set(kk, vv)
+      }
+      // void else
+    })
+  })
+
+  return ret
 }
 
 
