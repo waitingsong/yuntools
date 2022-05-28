@@ -1,16 +1,13 @@
 
 export * from './oss.js'
 export * from './types.js'
-export * from './type.cp.js'
-export * from './type.mv.js'
-export * from './type.rm.js'
-export * from './type.sign.js'
-export * from './type.stat.js'
+export * from './method/index.js'
+
+export { configDownLinks } from './config.js'
 export {
+  encodeInputPath,
   downloadOssutil,
   setBinExecutable,
   validateConfigPath,
   writeConfigFile,
 } from './helper.js'
-export { configDownLinks } from './config.js'
-

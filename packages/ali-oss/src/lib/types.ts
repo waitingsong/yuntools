@@ -1,6 +1,23 @@
 
 export type ConfigPath = string
 
+export enum PlaceholderKey {
+  src = '__src__',
+  dest = '__dest__',
+  target = '__target__',
+  bucket = 'bucket',
+  bucketName = 'bucketname',
+  /**
+   * 对于远程目录进行编码，并且添加 `oss://` 前缀
+   * 不适用于本地目录
+   */
+  encodeSource = 'encodeSource',
+  /**
+   * 对于远程目录进行编码，并且添加 `oss://` 前缀
+   */
+  encodeTarget = 'encodeTarget',
+}
+
 export enum ACLKey {
   /** 继承Bucket的读写权限 */
   default = 'default',
@@ -31,17 +48,6 @@ export interface ProcessResp {
   readonly stderr: string
 }
 
-export interface ProcessRet<T extends DataBase = DataBase> {
-  readonly data: T | undefined
-  readonly stdout: string
-  readonly stderr: string
-  /**
-   * 0: success, others: error
-   */
-  readonly exitCode: number
-  readonly exitSignal: string
-}
-
 export enum DataKey {
   elapsed = 'elapsed',
   averageSpeed = 'averageSpeed',
@@ -63,15 +69,36 @@ export enum DataKey {
   httpShareUrl = 'httpShareUrl',
 }
 
-export interface DataBase {
-  /**
-   * @example 0.303190
-   */
-  [DataKey.elapsed]: string | undefined
-}
-
 
 export type PickFunc = (input: string, rule: RegExp, debug: boolean) => string | number | undefined
+
+export enum FnKey {
+  cp = 'cp',
+  link = 'createSymlink',
+  mkdir = 'mkdir',
+  mv = 'mv',
+  pathExists = 'pathExists',
+  probeUpload = 'probeUpload',
+  rm = 'rm',
+  rmrf = 'rmrf',
+  sign = 'sign',
+  stat = 'stat',
+  upload = 'upload',
+}
+
+export enum CmdKey {
+  cp = 'cp',
+  link = 'create-symlink',
+  createSymlink = 'create-symlink',
+  mkdir = 'mkdir',
+  mv = 'mv',
+  probeUpload = 'probe',
+  rm = 'rm',
+  rmrf = 'rm',
+  sign = 'sign',
+  stat = 'stat',
+  upload = 'cp',
+}
 
 
 /** 扁担参数名映射 */
@@ -120,16 +147,46 @@ export enum MKey {
 }
 
 export interface Config {
-  endpoint?: string
   accessKeyId?: string
   accessKeySecret?: string
   stsToken?: string
+  endpoint?: string
 }
+
+export enum Msg {
+  accessDenied = 'AccessDenied',
+  cloudFileAlreadyExists = 'Cloud file already exists',
+  cloudConfigFileNotExists = 'Cloud config file not exists',
+  noSuchBucket = 'NoSuchBucket',
+}
+
+
+export type DownLinks = {
+  [key in NodeJS.Platform]?: string
+}
+
+
 /**
  * ossutil 的通用选项，可以在大部分命令中使用
  * @link https://help.aliyun.com/document_detail/50455.htm
  */
 export interface BaseOptions extends Config {
+  /**
+   * 是否对 `oss://bucket_name` 后面的key（目录名称）进行编码。
+   * - 若输入参数已经被编码（比如从操作结果中获取），则需要显示设置为 false
+   * - 若为本地目录，则不能设置为 true
+   * @default false
+   */
+  [PlaceholderKey.encodeSource]?: boolean
+  /**
+   * 是否对 `oss://bucket_name` 后面的key（目录名称）进行编码。
+   * 若输入参数已经被编码（比如从操作结果中获取），则需要显示设置为 false
+   * @default true
+   */
+  [PlaceholderKey.encodeTarget]?: boolean
+  /** `oss://bucket_name` */
+  [PlaceholderKey.bucket]?: string
+
   /**
    * 客户端连接超时的时间，单位为秒，
    * @default 120
@@ -145,15 +202,28 @@ export interface BaseOptions extends Config {
 }
 
 
-
-export enum Msg {
-  accessDenied = 'AccessDenied',
-  cloudFileAlreadyExists = 'Cloud file already exists',
-  cloudConfigFileNotExists = 'Cloud config file not exists',
-  noSuchBucket = 'NoSuchBucket',
+export interface DataBase {
+  /**
+   * @example 0.303190
+   */
+  [DataKey.elapsed]: string | undefined
 }
 
-
-export type DownLinks = {
-  [key in NodeJS.Platform]?: string
+export interface ProcessRet<T extends DataBase = DataBase> {
+  readonly data: T | undefined
+  readonly stdout: string
+  readonly stderr: string
+  /**
+   * 0: success, others: error
+   */
+  readonly exitCode: number
+  readonly exitSignal: string
 }
+
+export type ParamMap = Map<string, string | number | boolean>
+
+export type ProcessInputFn = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  input: any | undefined,
+  globalConfig: Config | undefined,
+) => Promise<ParamMap>

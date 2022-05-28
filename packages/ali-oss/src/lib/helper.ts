@@ -19,6 +19,8 @@ import {
   DataBase,
   DataKey,
   MKey,
+  ParamMap,
+  PlaceholderKey,
   ProcessResp,
   ProcessRet,
 } from './types.js'
@@ -120,21 +122,28 @@ export function combineProcessRet<T extends DataBase = DataBase>(
   return ret
 }
 
-
-export function genParams<T extends BaseOptions>(
+export function genParams(
   configPath: string,
-  config: Config | undefined,
-  options: T | undefined,
-  initOptions?: T,
+  paramMap: ParamMap,
 ): string[] {
 
   const ps: string[] = configPath
     ? ['-c', configPath]
     : []
 
-  const opts = mergeParams(options, initOptions, config)
+  if (! paramMap.size) {
+    return ps
+  }
 
-  opts.forEach((value, key) => {
+  const pp = preGenParams(paramMap)
+  pp.forEach((value, key) => {
+    if (key === PlaceholderKey.src) {
+      return
+    }
+    else if (key === PlaceholderKey.dest) {
+      return
+    }
+
     switch (typeof value) {
       /* c8 ignore next 2 */
       case 'undefined':
@@ -159,10 +168,38 @@ export function genParams<T extends BaseOptions>(
       default:
         throw new TypeError(`unexpected typeof ${key}: ${typeof value}`)
     }
-
   })
 
+  const src = pp.get(PlaceholderKey.src)
+  const dest = pp.get(PlaceholderKey.dest)
+  if (src && typeof src === 'string') {
+    ps.push(src)
+  }
+  if (dest && typeof dest === 'string') {
+    ps.push(dest)
+  }
+
   return ps
+}
+
+export function preGenParams(
+  paramMap: ParamMap,
+): ParamMap {
+
+  paramMap.delete(PlaceholderKey.encodeSource)
+
+  const encode = paramMap.get(PlaceholderKey.encodeTarget)
+  paramMap.delete(PlaceholderKey.encodeTarget)
+  if (encode) {
+    paramMap.set(MKey.encodingType, 'url')
+  }
+
+  paramMap.delete(PlaceholderKey.bucket) // ensure bucket is not in the params
+  paramMap.delete('src')
+  paramMap.delete('dest')
+  paramMap.delete('target')
+
+  return paramMap
 }
 
 
@@ -172,11 +209,20 @@ export function mergeParams<T extends BaseOptions>(
   config: Config | undefined,
 ): Map<string, string | number | boolean> {
 
-  const ret = new Map<string, string | number | boolean>();
+  const ret = new Map<string, string | number | boolean>()
 
-  [config, initOptions, inputOptions].forEach((obj) => {
-    obj && Object.entries(obj).forEach(([key, value]) => {
+  const ps1 = inputOptions ?? {} as T
+  const ps2 = initOptions ?? {} as T
+  const ps3 = config ?? {} as Config;
+
+  [ps3, ps2, ps1].forEach((obj) => {
+    Object.entries(obj).forEach(([key, value]) => {
+      if (! Object.hasOwn(ps2, key) && ! Object.hasOwn(ps3, key)) {
+        return
+      }
+
       let kk = key
+      // 参数名转换
       if (Object.hasOwn(MKey, key)) {
         // @ts-ignore
         const mkey = MKey[key] as unknown
@@ -190,10 +236,13 @@ export function mergeParams<T extends BaseOptions>(
         return
       }
 
-      if (['number', 'string'].includes(typeof vv)) {
+      if (typeof vv === 'number') {
         ret.set(kk, vv)
       }
-      else if (vv === true) {
+      else if (typeof vv === 'string') {
+        vv && ret.set(kk, vv)
+      }
+      else if (typeof vv === 'boolean') {
         ret.set(kk, vv)
       }
       // void else
@@ -274,5 +323,55 @@ export async function setBinExecutable(
 ): Promise<OutputRow> {
 
   const ret = await firstValueFrom(run(`chmod +x ${file}`))
+  return ret
+}
+
+export function encodeInputPath(input: string, encode = false): string {
+  const ret = encode === true ? encodeURIComponent(input).replace(/'/ug, '%27') : input
+  return ret
+}
+
+
+export function commonProcessInputMap<T extends BaseOptions>(
+  input: T & { src?: string, target?: string},
+  initOptions: T & { src?: string, target?: string},
+  globalConfig: Config | undefined,
+): ParamMap {
+
+  assert(input, 'input is required')
+
+  const ret = mergeParams(input, initOptions, globalConfig)
+
+  const encodeSrc = ret.get(PlaceholderKey.encodeSource) as boolean
+  const encodeTarget = ret.get(PlaceholderKey.encodeTarget) as boolean
+
+  const src = processInputAsEncodedCloudUrl(input.src, input.bucket, encodeSrc)
+  const dest = processInputAsEncodedCloudUrl(input.target, input.bucket, encodeTarget)
+
+  ret.set(PlaceholderKey.src, src)
+  ret.set(PlaceholderKey.dest, dest)
+
+  return ret
+}
+
+export function processInputAsEncodedCloudUrl(
+  input: string | undefined,
+  bucket: string | undefined,
+  needEncode: boolean,
+): string {
+
+  if (! input) {
+    return ''
+  }
+
+  assert(bucket, 'bucket is required')
+
+  const ossPrefix = 'oss://'
+
+  let ret = encodeInputPath(input, needEncode)
+  if (needEncode && ret && ! ret.startsWith(ossPrefix)) {
+    const str = ret.replace(/^\/+/ug, '')
+    ret = `${ossPrefix}${bucket}/${str}`
+  }
   return ret
 }

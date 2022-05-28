@@ -33,7 +33,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "rxrunscript": "10"
+    "rxrunscript": "11"
   },
   "devDependencies": {
     "@waiting/shared-core": "^18.0.0",

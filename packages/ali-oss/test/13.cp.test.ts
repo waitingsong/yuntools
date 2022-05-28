@@ -3,51 +3,42 @@ import { join } from 'node:path'
 
 import { fileShortPath, genCurrentDirname } from '@waiting/shared-core'
 
+import { CpOptions } from '../src/index.js'
+
 import {
   cloudUrlPrefix,
   client,
+  client2,
   CI,
   bucket,
 } from './root.config.js'
-
-import type { CpOptions, StatOptions } from '~/index.js'
 
 
 const __dirname = genCurrentDirname(import.meta.url)
 
 describe(fileShortPath(import.meta.url), () => {
 
-  describe('stat should work', () => {
-    it('normal', async () => {
+  describe('cp should work', () => {
+    it('pass config file', async () => {
+      assert(client2, 'client2 should be defined')
+
       const src = join(__dirname, 'tsconfig.json')
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
+
       const opts: CpOptions = {
         bucket,
         src,
         target,
       }
-      await client.cp(opts)
-
-      const opts2: StatOptions = {
-        bucket,
-        target,
-      }
-      const ret = await client.stat(opts2)
+      const ret = await client2.cp(opts)
       CI || console.log(ret)
-      assert(ret.exitCode === 0)
+      assert(! ret.exitCode, `cp ${src} ${target} failed, ${ret.stderr}`)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
-
-      const { data } = ret
-      assert(data.ACL === 'default')
-      assert(typeof data['Content-Length'] === 'number')
-      assert(data['Content-Length'] > 0)
-      assert(data['Content-Md5'])
-      assert(data['Content-Md5'].length === 24, data['Content-Md5'])
-      assert(data['Content-Type']?.includes('json'))
+      assert(typeof ret.data.averageSpeed === 'number')
     })
-  })
 
+  })
 })
 
 

@@ -1,3 +1,25 @@
+import assert from 'node:assert'
+
+import {
+  cloudUrlPrefix,
+  client,
+  CI,
+  bucket,
+} from './root.config.js'
+
+import type { MkdirOptions, RmOptions } from '~/index.js'
+
+
+const target = `${cloudUrlPrefix}/`
+const mkdirOpts: MkdirOptions = {
+  bucket,
+  target,
+}
+const rmOpts: RmOptions = {
+  bucket,
+  target,
+  recursive: true,
+}
 
 /**
  * @see https://mochajs.org/#root-hook-plugins
@@ -14,12 +36,17 @@ export const mochaHooks = async () => {
   }
 
   return {
-    beforeAll() {
-      void 0
+    beforeAll: async () => {
+      await client.rm(rmOpts)
+
+      const ret = await client.mkdir(mkdirOpts)
+      CI || console.log(ret)
+      assert(! ret.exitCode, `mkdir ${target} failed, ${ret.stderr}`)
+      assert(ret.data)
     },
 
-    afterAll() {
-      void 0
+    afterAll: async () => {
+      await client.rm(rmOpts)
     },
   }
 

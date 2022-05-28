@@ -7,12 +7,12 @@ import { fileShortPath, genCurrentDirname } from '@waiting/shared-core'
 import {
   configDownLinks,
   downloadOssutil,
-  setBinExecutable,
+  MkdirOptions,
   validateConfigPath,
   writeConfigFile,
 } from '../src/index.js'
 
-import { CI, client, cloudUrlPrefix } from './root.config.js'
+import { bucket, CI, client, cloudUrlPrefix } from './root.config.js'
 
 
 const __dirname = genCurrentDirname(import.meta.url)
@@ -63,14 +63,15 @@ describe(fileShortPath(import.meta.url), () => {
       client.cmd = path
       console.log({ cmdpath: path })
       const dir = `${cloudUrlPrefix}/4${Math.random().toString()}`
-      const ret = await client.mkdir(dir)
+      const opts: MkdirOptions = {
+        bucket,
+        target: dir,
+      }
+      const ret = await client.mkdir(opts)
       CI || console.log(ret)
       assert(! ret.exitCode, `mkdir ${dir} failed, ${ret.stderr}`)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
-
-      await client.rm(dir)
-
     })
   })
 })

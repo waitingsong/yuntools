@@ -1,42 +1,28 @@
-import { undefined } from './config.js'
-import { initMvOptions, MvOptions } from './type.mv.js'
+import assert from 'node:assert'
+
+import { undefined } from '../config.js'
+import { commonProcessInputMap } from '../helper.js'
 import {
   ACLKey,
+  Config,
   DataBase,
   DataKey,
-} from './types.js'
+  ParamMap,
+  PlaceholderKey,
+} from '../types.js'
 
-
-export const initCpOptions: CpOptions = {
-  ...initMvOptions,
-  bigfileThreshold: undefined,
-  checkpointDir: undefined,
-  disableCrc64: undefined,
-  disableIgnoreError: undefined,
-  enableSymlinkDir: undefined,
-  encodingType: undefined,
-  onlyCurrentDir: undefined,
-  partSize: undefined,
-  snapshotPath: undefined,
-  acl: undefined,
-  exclude: undefined,
-  force: false,
-  jobs: undefined,
-  include: undefined,
-  maxupspeed: 0,
-  meta: undefined,
-  parallel: undefined,
-  payer: undefined,
-  recursive: false,
-  tagging: undefined,
-  update: false,
-}
+import { initOptions as mvOptions, MvOptions } from './mv.js'
 
 
 /**
  * @link https://help.aliyun.com/document_detail/120057.html
  */
 export interface CpOptions extends MvOptions {
+  /** 目的 cloudurl 路径 */
+  target: string
+  /** 源路径，可以是本地文件或 cloudurl */
+  src: string
+
   /**
    * 设置断点续传文件的大小阈值，单位为字节
    * @default 100 * 1024 * 1024 (100MB)
@@ -45,9 +31,6 @@ export interface CpOptions extends MvOptions {
 
   /** 指定断点续传记录信息所在的目录 */
   checkpointDir?: string
-
-  /** 文件名称的编码方式。取值为url。如果不指定该选项，则表示文件名称未经过编码 */
-  encodingType?: 'url'
 
   /**
    * 上传链接子目录，默认不上传
@@ -114,7 +97,53 @@ export interface CpOptions extends MvOptions {
   update?: boolean
 }
 
+export const initOptions: CpOptions = {
+  ...mvOptions,
+
+  bigfileThreshold: undefined,
+  checkpointDir: undefined,
+  disableCrc64: undefined,
+  disableIgnoreError: undefined,
+  enableSymlinkDir: undefined,
+  onlyCurrentDir: undefined,
+  partSize: undefined,
+  snapshotPath: undefined,
+  acl: undefined,
+  exclude: undefined,
+  force: false,
+  jobs: undefined,
+  include: undefined,
+  maxupspeed: 0,
+  meta: undefined,
+  parallel: undefined,
+  payer: undefined,
+  recursive: false,
+  tagging: undefined,
+  update: false,
+}
+
 export interface DataCp extends DataBase {
   /** byte/s */
   [DataKey.averageSpeed]: number | undefined
 }
+
+
+export async function processInput(
+  input: CpOptions,
+  globalConfig: Config | undefined,
+): Promise<ParamMap> {
+
+  const map = commonProcessInputMap(input, initOptions, globalConfig)
+  assert(map.get(PlaceholderKey.dest), 'dest is required')
+
+  const bucket = map.get(PlaceholderKey.bucket)
+  assert(bucket, 'bucket is required')
+  assert(typeof bucket === 'string', 'bucket must be string')
+
+  const src = map.get(PlaceholderKey.src)
+  assert(src, 'src is required')
+  assert(typeof src === 'string')
+
+  return map
+}
+

@@ -7,7 +7,10 @@ import {
   cloudUrlPrefix,
   client,
   CI,
+  bucket,
 } from './root.config.js'
+
+import { CpOptions, SignOptions } from '~/index.js'
 
 
 const __dirname = genCurrentDirname(import.meta.url)
@@ -17,14 +20,25 @@ describe(fileShortPath(import.meta.url), () => {
   describe('sign should work', () => {
     it('normal', async () => {
       const src = join(__dirname, 'tsconfig.json')
-      const dst = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
-      const ret = await client.cp(src, dst)
+      const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
+
+      const opts: CpOptions = {
+        bucket,
+        src,
+        target,
+      }
+      const ret = await client.cp(opts)
       CI || console.log(ret)
-      assert(! ret.exitCode, `cp ${src} ${dst} failed, ${ret.stderr}`)
+      assert(! ret.exitCode, `cp ${src} ${target} failed, ${ret.stderr}`)
       assert(ret.data)
 
-      const sign = await client.sign(dst, { disableEncodeSlash: true })
-      assert(! sign.exitCode, `sign ${dst} failed, ${sign.stderr}`)
+      const opts2: SignOptions = {
+        bucket,
+        src: target,
+        disableEncodeSlash: true,
+      }
+      const sign = await client.sign(opts2)
+      assert(! sign.exitCode, `sign ${target} failed, ${sign.stderr}`)
       assert(sign.data)
 
       const { data } = sign
@@ -43,26 +57,33 @@ describe(fileShortPath(import.meta.url), () => {
       assert(! data.link.includes('?Expires='))
       assert(! data.link.includes('AccessKeyId='))
       assert(! data.link.includes('%2F'))
-
-      await client.rm(dst)
     })
 
     it('param trafic-limit (typo)', async () => {
       const src = join(__dirname, '../rollup.config.js')
-      const dst = `${cloudUrlPrefix}/${Date.now().toString()}-config.js`
-      const ret = await client.cp(src, dst)
+      const target = `${cloudUrlPrefix}/${Date.now().toString()}-config.js`
+      const opts: CpOptions = {
+        bucket,
+        src,
+        target,
+      }
+      const ret = await client.cp(opts)
       CI || console.log(ret)
-      assert(! ret.exitCode, `cp ${src} ${dst} failed, ${ret.stderr}`)
+      assert(! ret.exitCode, `cp ${src} ${target} failed, ${ret.stderr}`)
       assert(ret.data)
 
-      const sign = await client.sign(dst, { trafficLimit: 245760, timeoutSec: 360 })
-      assert(! sign.exitCode, `sign ${dst} failed, ${sign.stderr}`)
+      const opts2: SignOptions = {
+        bucket,
+        src: target,
+        trafficLimit: 245760,
+        timeoutSec: 360,
+      }
+      const sign = await client.sign(opts2)
+      assert(! sign.exitCode, `sign ${target} failed, ${sign.stderr}`)
       assert(sign.data)
 
       const { data } = sign
       assert(data.httpShareUrl)
-
-      await client.rm(dst)
     })
 
   })

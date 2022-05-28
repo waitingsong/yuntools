@@ -10,11 +10,6 @@
     "sourceMap": false,
     "target": "ESNEXT"
   },
-  "ts-node": {
-    "esm": true,
-    "preferTsExts": true,
-    "transpileOnly": false
-  },
   "include": [
     "**/*.ts"
   ],

@@ -7,7 +7,10 @@ import {
   cloudUrlPrefix,
   client,
   CI,
+  bucket,
 } from './root.config.js'
+
+import { CpOptions, LinkOptions } from '~/index.js'
 
 
 const __dirname = genCurrentDirname(import.meta.url)
@@ -17,18 +20,26 @@ describe(fileShortPath(import.meta.url), () => {
   describe('createSymlink should work', () => {
     it('normal', async () => {
       const src = join(__dirname, 'tsconfig.json')
-      const dst = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
-      await client.cp(src, dst)
+      const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
 
-      const link = `${dst}-link`
-      const ret = await client.createSymlink(dst, link)
+      const opts: CpOptions = {
+        bucket,
+        src,
+        target,
+      }
+      await client.cp(opts)
+
+      const link = `${target}-link`
+      const opts2: LinkOptions = {
+        ...opts,
+        src: target,
+        target: link,
+      }
+      const ret = await client.createSymlink(opts2)
       CI || console.log(ret)
       assert(ret.exitCode === 0)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
-
-      await client.rm(dst)
-      await client.rm(link)
     })
   })
 

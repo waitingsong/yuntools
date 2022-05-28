@@ -8,12 +8,17 @@ import {
   CI,
 } from './root.config.js'
 
+import { ProbUpOptions } from '~/index.js'
+
 
 describe(fileShortPath(import.meta.url), () => {
 
   describe('probeUpload should work', () => {
     it('normal', async () => {
-      const ret = await client.probeUpload(bucket)
+      const opts: ProbUpOptions = {
+        bucket,
+      }
+      const ret = await client.probeUpload(opts)
       CI || console.log(ret)
       assert(ret.exitCode === 0)
       assert(ret.data)

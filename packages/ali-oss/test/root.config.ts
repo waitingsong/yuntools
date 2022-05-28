@@ -17,7 +17,7 @@ export const bucket = process.env.ALI_OSS_BUCKET ?? ''
 export const CI = process.env.CI
 
 assert(bucket, 'ALI_OSS_BUCKET is required')
-export const cloudUrlPrefix = `oss://${bucket}/mobileFile/debug`
+export const cloudUrlPrefix = 'mobileFile/debug'
 
 export const configPath = join(homedir(), '.ossutilconfig')
 
@@ -25,10 +25,9 @@ export const configPath = join(homedir(), '.ossutilconfig')
 let client2: OssClient | undefined
 
 export const config: Config = {
-  // language: 'EN',
-  endpoint,
   accessKeyId,
   accessKeySecret,
+  endpoint,
 }
 if (CI) {
   assert(endpoint, 'ALI_OSS_ENDPOINT is required')

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { homedir } from 'node:os'
+import { homedir, platform } from 'node:os'
 import { join } from 'node:path'
 
 import { fileShortPath } from '@waiting/shared-core'
@@ -15,28 +15,37 @@ import {
   config,
   configPath,
   CI,
+  bucket,
 } from './root.config.js'
+
+import type { MkdirOptions } from '~/index.js'
 
 
 describe(fileShortPath(import.meta.url), () => {
 
   describe('should work', () => {
     it('init with config file', async () => {
+      if (platform() === 'win32') {
+        return
+      }
       assert(config, 'config is required')
 
       const configPathRandom = join(homedir(), '.ossutilconfig-' + Math.random().toString())
-      const { path } = await writeConfigFile(config, configPath)
-      assert(path === configPath, 'writeConfigFile failed')
+      const { path } = await writeConfigFile(config, configPathRandom)
+      assert(path === configPathRandom, 'writeConfigFile failed')
 
-      const client = new OssClient(configPath)
+      const client = new OssClient(configPathRandom)
 
-      const dir = `${cloudUrlPrefix}/2${Math.random().toString()}`
-      const ret = await client.mkdir(dir)
+      const target = `${cloudUrlPrefix}/2${Math.random().toString()}`
+      const opts: MkdirOptions = {
+        bucket,
+        target,
+      }
+      const ret = await client.mkdir(opts)
       CI || console.log(ret)
-      assert(! ret.exitCode, `mkdir ${dir} failed, ${ret.stderr}`)
+      assert(! ret.exitCode, `mkdir ${target} failed, ${ret.stderr}`)
       assert(ret.data)
 
-      await client.rm(dir)
       await client.destroy()
       try {
         await validateConfigPath(path)
@@ -54,14 +63,16 @@ describe(fileShortPath(import.meta.url), () => {
 
       const client = new OssClient(void 0)
 
-      const dir = `${cloudUrlPrefix}/3${Math.random().toString()}`
-      const ret = await client.mkdir(dir)
+      const target = `${cloudUrlPrefix}/3${Math.random().toString()}`
+      const opts: MkdirOptions = {
+        bucket,
+        target,
+      }
+      const ret = await client.mkdir(opts)
       CI || console.log(ret)
-      assert(! ret.exitCode, `mkdir ${dir} failed, ${ret.stderr}`)
+      assert(! ret.exitCode, `mkdir ${target} failed, ${ret.stderr}`)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
-
-      await client.rm(dir)
     })
 
   })

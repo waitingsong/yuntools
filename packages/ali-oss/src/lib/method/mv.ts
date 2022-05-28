@@ -1,15 +1,11 @@
-import { initBaseOptions } from './config.js'
-import { BaseOptions } from './types.js'
+import { BaseOptions } from '../types.js'
 
-
-export const initMvOptions: MvOptions = {
-  ...initBaseOptions,
-  force: false,
-  recursive: false,
-}
+import { initBaseOptions } from './common.js'
 
 
 export interface MvOptions extends BaseOptions {
+  src: string
+  target: string
   /** 强制操作，不进行询问提示 */
   force?: boolean
   /** 递归操作。
@@ -17,4 +13,12 @@ export interface MvOptions extends BaseOptions {
    * 否则只对指定的单个 Object 进行操作
    */
   recursive?: boolean
+}
+
+export const initOptions: MvOptions = {
+  ...initBaseOptions,
+  force: false,
+  recursive: false,
+  target: '',
+  src: '',
 }

@@ -1,20 +1,23 @@
-import { initBaseOptions, undefined } from './config.js'
+import assert from 'node:assert'
+
+import { undefined } from '../config.js'
+import { commonProcessInputMap } from '../helper.js'
 import {
   BaseOptions,
+  Config,
   DataBase,
   DataKey,
-} from './types.js'
+  ParamMap,
+  PlaceholderKey,
+} from '../types.js'
 
+import { initBaseOptions } from './common.js'
 
-export const initSignOptions: SignOptions = {
-  ...initBaseOptions,
-  disableEncodeSlash: false,
-  timeoutSec: 60,
-  trafficLimit: undefined,
-  versionId: undefined,
-}
 
 export interface SignOptions extends BaseOptions {
+  /** cloudurl 源路径 */
+  src: string
+
   /**
    * 不对cloud_url中携带的正斜线（/）进行编码
    * @default false
@@ -44,4 +47,30 @@ export interface DataSign extends DataBase {
   [DataKey.httpUrl]: string | undefined
   /** 带有 token 认证信息的链接 */
   [DataKey.httpShareUrl]: string | undefined
+}
+
+export const initOptions: SignOptions = {
+  ...initBaseOptions,
+  src: '',
+  disableEncodeSlash: false,
+  timeoutSec: 60,
+  trafficLimit: undefined,
+  versionId: undefined,
+}
+
+export async function processInput(
+  input: SignOptions,
+  globalConfig: Config | undefined,
+): Promise<ParamMap> {
+
+  const opts: SignOptions = {
+    ...input,
+    encodeSource: true,
+  }
+
+  const map = commonProcessInputMap(opts, initOptions, globalConfig)
+  assert(map.get(PlaceholderKey.src), 'dest is required')
+  map.delete(PlaceholderKey.dest)
+
+  return map
 }

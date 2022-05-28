@@ -3,12 +3,19 @@ import { join } from 'node:path'
 
 import { fileShortPath, genCurrentDirname } from '@waiting/shared-core'
 
-import { Msg } from '../src/lib/index.js'
+import {
+  Msg,
+  CpOptions,
+  MvOptions,
+  PathExistsOptions,
+  LinkOptions,
+} from '../src/index.js'
 
 import {
   cloudUrlPrefix,
   client,
   CI,
+  bucket,
 } from './root.config.js'
 
 
@@ -19,68 +26,118 @@ describe(fileShortPath(import.meta.url), () => {
   describe('mv should work', () => {
     it('file', async () => {
       const src = join(__dirname, 'tsconfig.json')
-      const dst = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
-      const ret = await client.cp(src, dst)
+      const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
+
+      const opts: CpOptions = {
+        bucket,
+        src,
+        target,
+      }
+      const ret = await client.cp(opts)
       assert(! ret.exitCode)
 
-      const dst2 = `${dst}-${Date.now().toString()}`
-      const mv = await client.mv(dst, dst2)
-      assert(! mv.exitCode)
+      const newPath = `${target}-${Date.now().toString()}`
+      const opts2: MvOptions = {
+        bucket,
+        src: target,
+        target: newPath,
+      }
+      const mv = await client.mv(opts2)
+      assert(! mv.exitCode, ` ${mv.stderr}`)
 
-      const existsDst = await client.pathExists(dst2)
+      const opts3: PathExistsOptions = {
+        bucket,
+        target: newPath,
+      }
+      const existsDst = await client.pathExists(opts3)
       assert(existsDst === true)
 
-      const existsOri = await client.pathExists(dst)
+      const opts4: PathExistsOptions = {
+        ...opts3,
+        target,
+      }
+      const existsOri = await client.pathExists(opts4)
       assert(existsOri === false)
-
-      await client.rm(dst2)
     })
 
     it('cloud file dst already exists', async () => {
       const src = join(__dirname, 'tsconfig.json')
-      const dst = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
-      const ret = await client.cp(src, dst)
+      const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
+
+      const opts: CpOptions = {
+        bucket,
+        src,
+        target,
+      }
+      const ret = await client.cp(opts)
       assert(! ret.exitCode)
 
-      const dst2 = `${dst}-${Date.now().toString()}`
-      const cp = await client.cp(dst, dst2)
+      const dst2 = `${target}-${Date.now().toString()}`
+      const opts2: CpOptions = {
+        bucket,
+        src: target,
+        target: dst2,
+        encodeSource: true,
+      }
+      const cp = await client.cp(opts2)
       assert(! cp.exitCode, cp.stderr)
 
-      const mv = await client.mv(dst, dst2)
+      const mv = await client.mv(opts2)
       assert(mv.exitCode, mv.stderr)
       assert(mv.stderr.includes(Msg.cloudFileAlreadyExists))
-
-      await client.rm(dst)
-      await client.rm(dst2)
     })
 
     it('link', async () => {
       const src = join(__dirname, 'tsconfig.json')
-      const dst = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
-      await client.cp(src, dst)
+      const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
+      const opts: CpOptions = {
+        bucket,
+        src,
+        target,
+      }
+      await client.cp(opts)
 
-      const link = `${dst}-link`
-      const ret = await client.createSymlink(dst, link)
+      const link = `${target}-link`
+      const opts2: LinkOptions = {
+        bucket,
+        src: target,
+        target: link,
+      }
+      const ret = await client.createSymlink(opts2)
       CI || console.log(ret)
       assert(ret.exitCode === 0)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
 
-      const exists = await client.pathExists(dst)
+      const opts3: PathExistsOptions = {
+        bucket,
+        target: link,
+      }
+      const exists = await client.pathExists(opts3)
       assert(exists === true)
 
       const link2 = `${link}-${Date.now().toString()}`
-      const mv = await client.mv(link, link2)
+      const opts4: MvOptions = {
+        bucket,
+        src: link,
+        target: link2,
+      }
+      const mv = await client.mv(opts4)
       assert(! mv.exitCode)
 
-      const existsDst = await client.pathExists(link2)
+      const opts5: PathExistsOptions = {
+        bucket,
+        target: link2,
+      }
+      const existsDst = await client.pathExists(opts5)
       assert(existsDst === true)
 
-      const existsOri = await client.pathExists(link)
+      const opts6: PathExistsOptions = {
+        bucket,
+        target: link,
+      }
+      const existsOri = await client.pathExists(opts6)
       assert(existsOri === false)
-
-      await client.rm(dst)
-      await client.rm(link2)
     })
 
   })

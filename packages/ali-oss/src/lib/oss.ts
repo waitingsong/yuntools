@@ -6,20 +6,37 @@ import { join } from 'node:path'
 
 import { run } from 'rxrunscript'
 
-import { combineProcessRet, genParams, parseRespStdout, processResp } from './helper.js'
+import {
+  combineProcessRet,
+  genParams,
+  parseRespStdout,
+  processResp,
+} from './helper.js'
+import {
+  CpOptions,
+  DataCp,
+  DataSign,
+  DataStat,
+  LinkOptions,
+  MkdirOptions,
+  MvOptions,
+  ProbUpOptions,
+  RmOptions,
+  RmrfOptions,
+  SignOptions,
+  StatOptions,
+  UploadOptions,
+} from './method/index.js'
+import { processInputFnMap } from './process-input.js'
 import { regxStat } from './rule.js'
-import { DataCp, CpOptions, initCpOptions } from './type.cp.js'
-import { initMkdirOptions, MkdirOptions } from './type.mkdir.js'
-import { MvOptions } from './type.mv.js'
-import { RmOptions, initRmOptions } from './type.rm.js'
-import { DataSign, SignOptions, initSignOptions } from './type.sign.js'
-import { DataStat, StatOptions, initStatOptions } from './type.stat.js'
 import {
   BaseOptions,
+  CmdKey,
   Config,
   ConfigPath,
   DataBase,
   DataKey,
+  FnKey,
   Msg,
   ProcessRet,
 } from './types.js'
@@ -64,72 +81,67 @@ export class OssClient {
    * 删除 OSS 配置文件
    */
   async destroy(): Promise<void> {
-    const { configPath: config } = this
-    await rm(config)
+    const { configPath } = this
+    await rm(configPath)
   }
 
   /**
    * 创建目录
    * @link https://help.aliyun.com/document_detail/120062.html
    */
-  async mkdir(
-    /**
-     * 创建的目录名称。目录名称须包含 bucketname 且以正斜线（/）结尾。
-     * 若未添加正斜线（/），ossutil会在目录末尾自动添加
-     * @example oss://bucket/foo/bar
-     */
-    cloudUrl: string,
-    options?: MkdirOptions,
-  ): Promise<ProcessRet> {
-
-    assert(typeof this.configPath === 'string')
-
-    const ps = this.genCliParams(options, initMkdirOptions)
-    const resp$ = run(`${this.cmd} mkdir ${ps.join(' ')} ${cloudUrl}`)
-    const res = await processResp(resp$, this.debug)
-
+  async mkdir(options: MkdirOptions): Promise<ProcessRet> {
     const keys: DataKey[] = [DataKey.elapsed]
-    const data = parseRespStdout<DataStat>(res, keys, this.debug)
-    const ret = combineProcessRet(res, data)
-
+    const ret = await this.runner<MkdirOptions>(options, FnKey.mkdir, keys)
     return ret
   }
 
   /**
-   * 拷贝文件
+   * 在远程拷贝文件
+   * 若 force 为空或者 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
    * @link https://help.aliyun.com/document_detail/120057.html
    */
-  async cp(
-    src: string,
-    dst: string,
-    options?: CpOptions,
-  ): Promise<ProcessRet<DataCp>> {
-
-    assert(src, 'src is required')
-    assert(dst, 'dst is required')
-
-    const ps = this.genCliParams(options, initCpOptions)
-
-    if (! options || ! options.force) {
-      const statRet = await this.stat(dst, options as StatOptions)
+  async cp(options: CpOptions): Promise<ProcessRet<DataCp>> {
+    if (! options.force) {
+      const statRet = await this.stat(options as StatOptions)
       if (! statRet.exitCode) {
         const ret: ProcessRet<DataCp> = {
           exitCode: 1,
           exitSignal: '',
           stdout: '',
-          stderr: `${Msg.cloudFileAlreadyExists}: "${dst}"`,
+          stderr: `${Msg.cloudFileAlreadyExists}: "${options.target}"`,
           data: void 0,
         }
         return ret
       }
     }
 
-    const resp$ = run(`${this.cmd} cp ${src} ${dst} ${ps.join(' ')} `)
-    const res = await processResp(resp$, this.debug)
+    const keys = [DataKey.elapsed, DataKey.averageSpeed]
+    const ret = await this.runner<CpOptions, DataCp>(options, FnKey.cp, keys)
+    return ret
+  }
+
+  /**
+   * 上传本地文件到 OSS
+   * 若 force 为空或者 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
+   * @link https://help.aliyun.com/document_detail/120057.html
+   */
+  async upload(options: UploadOptions): Promise<ProcessRet<DataCp>> {
+    if (! options.force) {
+      const statRet = await this.stat(options as StatOptions)
+      if (! statRet.exitCode) {
+        const ret: ProcessRet<DataCp> = {
+          exitCode: 1,
+          exitSignal: '',
+          stdout: '',
+          stderr: `${Msg.cloudFileAlreadyExists}: "${options.target}"`,
+          data: void 0,
+        }
+        return ret
+      }
+    }
 
     const keys = [DataKey.elapsed, DataKey.averageSpeed]
-    const data = parseRespStdout<DataCp>(res, keys, this.debug)
-    const ret = combineProcessRet(res, data)
+    const ret = await this.runner<UploadOptions, DataCp>(options, FnKey.upload, keys)
     return ret
   }
 
@@ -137,41 +149,21 @@ export class OssClient {
    * 创建软链接
    * @link https://help.aliyun.com/document_detail/120059.html
    */
-  async createSymlink(
-    src: string,
-    dst: string,
-  ): Promise<ProcessRet> {
-
-    assert(src, 'src is required')
-    assert(dst, 'dst is required')
-
-    const ps = this.genCliParams()
-    const resp$ = run(`${this.cmd} create-symlink ${ps.join(' ')} ${dst} ${src}`)
-    const res = await processResp(resp$, this.debug)
-
-    const data = parseRespStdout(res, [DataKey.elapsed], this.debug)
-    const ret = combineProcessRet(res, data)
+  async createSymlink(options: LinkOptions): Promise<ProcessRet> {
+    const keys = [DataKey.elapsed]
+    const ret = await this.runner<CpOptions, DataCp>(options, FnKey.link, keys)
     return ret
   }
 
 
   /**
-   * 删除
+   * 删除云对象，不支持删除 bucket 本身
+   * 如果在 recusive 为 false 时删除目录，则目录参数值必须以 '/' 结尾，否则不会删除成功
    * @link https://help.aliyun.com/document_detail/120053.html
    */
-  async rm(
-    path: string,
-    options?: RmOptions,
-  ): Promise<ProcessRet> {
-
-    assert(path, 'src is required')
-
-    const ps = this.genCliParams(options, initRmOptions)
-    const resp$ = run(`${this.cmd} rm -f ${ps.join(' ')} ${path} `)
-    const res = await processResp(resp$, this.debug)
-
-    const data = parseRespStdout(res, [DataKey.elapsed], this.debug)
-    const ret = combineProcessRet(res, data)
+  async rm(options: RmOptions): Promise<ProcessRet> {
+    const keys = [DataKey.elapsed, DataKey.averageSpeed]
+    const ret = await this.runner<RmOptions>(options, FnKey.rm, keys)
     return ret
   }
 
@@ -179,30 +171,9 @@ export class OssClient {
    * 递归删除，相当于 `rm -rf`
    * @link https://help.aliyun.com/document_detail/120053.html
    */
-  async rmrf(
-    path: string,
-    options?: Omit<RmOptions, 'recursive'>,
-  ): Promise<ProcessRet> {
-
-    const ret = await this.rm(path, { ...options, recursive: true })
-    return ret
-  }
-
-  /**
-   * 探测上传状态
-   * @link https://help.aliyun.com/document_detail/120061.html
-   */
-  async probeUpload(
-    bucket: string,
-  ): Promise<ProcessRet> {
-
-    assert(bucket, 'bucket is required')
-    const ps = this.genCliParams()
-    const resp$ = run(`${this.cmd} probe ${ps.join(' ')} --upload --bucketname ${bucket}`)
-    const res = await processResp(resp$, this.debug)
-
-    const data = parseRespStdout(res, [DataKey.elapsed], this.debug)
-    const ret = combineProcessRet(res, data)
+  async rmrf(options: RmrfOptions): Promise<ProcessRet> {
+    const keys = [DataKey.elapsed, DataKey.averageSpeed]
+    const ret = await this.runner<RmrfOptions>(options, FnKey.rmrf, keys)
     return ret
   }
 
@@ -210,20 +181,9 @@ export class OssClient {
    * 查看Bucket和Object信息
    * @link https://help.aliyun.com/document_detail/120054.html
    */
-  async stat(
-    path: string,
-    options?: StatOptions,
-  ): Promise<ProcessRet<DataStat>> {
-
-    assert(path, 'path is required')
-
-    const ps = this.genCliParams(options, initStatOptions)
-    const resp$ = run(`${this.cmd} stat ${ps.join(' ')} ${path} `)
-    const res = await processResp(resp$, this.debug)
-
+  async stat(options: StatOptions): Promise<ProcessRet<DataStat>> {
     const keys: DataKey[] = [DataKey.elapsed].concat(Array.from(regxStat.keys()))
-    const data = parseRespStdout<DataStat>(res, keys, this.debug)
-    const ret = combineProcessRet(res, data)
+    const ret = await this.runner<StatOptions, DataStat>(options, FnKey.stat, keys)
     return ret
   }
 
@@ -231,13 +191,8 @@ export class OssClient {
   /**
    * OSS 远程路径是否存在
    */
-  async pathExists(
-    path: string,
-  ): Promise<boolean> {
-
-    assert(path, 'path is required')
-
-    const statRet = await this.stat(path)
+  async pathExists(options: StatOptions): Promise<boolean> {
+    const statRet = await this.stat(options)
     const exists = !! (statRet.exitCode === 0 && statRet.data)
     return exists
   }
@@ -247,27 +202,26 @@ export class OssClient {
    * 移动云端的 OSS 对象
    * 流程为先 `cp()` 然后 `rm()`
    */
-  async mv(
-    src: string,
-    dst: string,
-    options?: MvOptions,
-  ): Promise<ProcessRet<DataStat | DataBase>> {
-
-    assert(src, 'src is required')
-    assert(dst, 'dst is required')
-    assert(src !== dst, 'src and dst must not be the same')
-
-    const cp = await this.cp(src, dst, options)
+  async mv(options: MvOptions): Promise<ProcessRet<DataStat | DataBase>> {
+    const opts: MvOptions = {
+      ...options,
+      encodeSource: true,
+    }
+    const cp = await this.cp(opts)
     if (cp.exitCode) {
       return cp
     }
 
-    const remove = await this.rm(src, options)
+    const opts2: RmOptions = {
+      ...options,
+      target: options.src,
+    }
+    const remove = await this.rm(opts2)
     if (remove.exitCode) {
       return remove
     }
 
-    const statRet = await this.stat(dst, options)
+    const statRet = await this.stat(opts)
     return statRet
   }
 
@@ -276,42 +230,64 @@ export class OssClient {
    * sign（生成签名URL）
    * @link https://help.aliyun.com/document_detail/120064.html
    */
-  async sign(
-    src: string,
-    options?: SignOptions,
-  ): Promise<ProcessRet<DataSign>> {
-
-    assert(src, 'src is required')
-
-    const ps = this.genCliParams(options, initSignOptions)
-    const resp$ = run(`${this.cmd} sign ${ps.join(' ')} ${src} `)
-    const res = await processResp(resp$, this.debug)
-
+  async sign(options: SignOptions): Promise<ProcessRet<DataSign>> {
     const keys = [DataKey.elapsed, DataKey.httpUrl, DataKey.httpShareUrl]
-    const data = parseRespStdout<DataSign>(res, keys, this.debug)
+    const ret = await this.runner<SignOptions, DataSign>(options, FnKey.sign, keys)
 
-    if (data?.httpUrl) {
-      data.link = options?.disableEncodeSlash
-        ? data.httpUrl
-        : decodeURIComponent(data.httpUrl)
+    if (ret.data?.httpUrl) {
+      ret.data.link = options.disableEncodeSlash
+        ? ret.data.httpUrl
+        : decodeURIComponent(ret.data.httpUrl)
     }
-    const ret = combineProcessRet(res, data)
+    return ret
+  }
+
+  /**
+   * 探测上传状态
+   * @link https://help.aliyun.com/document_detail/120061.html
+   */
+  async probeUpload(options: ProbUpOptions): Promise<ProcessRet> {
+    const keys = [DataKey.elapsed]
+    const ret = await this.runner<ProbUpOptions>(options, FnKey.probeUpload, keys)
     return ret
   }
 
 
-  private genCliParams<T extends BaseOptions>(
-    options?: T | undefined,
-    initOptions?: T,
-  ): string[] {
+  private async runner<T extends BaseOptions, R extends DataBase = DataBase>(
+    options: T,
+    fnKey: FnKey,
+    retKeys: DataKey[],
+  ): Promise<ProcessRet<R>> {
 
-    const ps = genParams(
-      this.configPath,
-      this.config,
-      options,
-      initOptions,
-    )
-    return ps
+    assert(fnKey, 'fnKey is required')
+    assert(retKeys, 'retKeys is required')
+    assert(retKeys.length, 'retKeys must be an array')
+    // @ts-ignore
+    const cmdKey = CmdKey[fnKey] as CmdKey
+    assert(cmdKey, 'cmdKey is required')
+
+    const ps = await this.genCliParams(fnKey, options)
+    const resp$ = run(`${this.cmd} ${cmdKey} ${ps.join(' ')} `)
+    const res = await processResp(resp$, this.debug)
+
+    const data = parseRespStdout<R>(res, retKeys, this.debug)
+    const ret = combineProcessRet<R>(res, data)
+    return ret
+  }
+
+
+  private async genCliParams<T extends BaseOptions>(
+    fnKey: FnKey,
+    options: T,
+  ): Promise<string[]> {
+
+    const func = processInputFnMap.get(fnKey)
+    assert(typeof func === 'function', `${fnKey} is not a function`)
+
+    const map = await func(options, this.config)
+    assert(map)
+    const ret = genParams(this.configPath, map)
+    return ret
   }
 
 }

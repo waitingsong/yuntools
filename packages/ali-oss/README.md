@@ -36,16 +36,28 @@ const ossConfig: Config = {
 }
 const ossService = new OSSService(ossConfig)
 
+const bucket = 'my-bucket'
+
 // 创建目录
-const mkRet = await ossService.mkdir('oss://bucketfoo/barz')
-assert(! mkRet.exitCode, `mkdir ${dir} failed, ${mkRet.stderr}`)
+const target = 'foo/barz'
+const opts: UploadOptions = {
+  bucket,
+  target,
+}
+const mkRet = await ossService.mkdir(opts)
+assert(! mkRet.exitCode, `mkdir ${opts.target} failed, ${mkRet.stderr}`)
 
 
 // 上传本地文件
 const src = 'tsconfig.json'
-const dst = `oss://bucketfoo/tsconfig.json`
-const ret = await service.cp(src, dst)
-assert(! ret.exitCode, `cp ${src} ${dst} failed, ${ret.stderr}`)
+const target = `foo/tsconfig.json`
+const opts: UploadOptions = {
+  bucket,
+  src,
+  target,
+}
+const ret = await service.upload(opts)
+assert(! ret.exitCode, `upload ${src} ${dst} failed, ${ret.stderr}`)
 assert(ret.data)
 ```
 
@@ -71,15 +83,16 @@ cd example
 
 ### OSS 操作实例方法
 
-- cp()
-- createSymlink()
-- mkdir()
-- mv()
-- pathExists()
-- probeUpload()
-- rm()
-- rmrf()
-- stat()
+- cp() 在远程拷贝
+- createSymlink() 创建软连接
+- mkdir() 创建目录
+- mv() 在远程移动对象
+- pathExists() 检测远程文件是否存在
+- probeUpload() 上传探测
+- rm() 删除远程对象
+- rmrf() 删除远程对象及其下级所有对象
+- stat() 获取远程对象属性
+- upload() 上传本地文件到远程
 
 
 ## License
