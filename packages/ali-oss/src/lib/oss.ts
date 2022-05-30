@@ -178,7 +178,7 @@ export class OssClient {
   }
 
   /**
-   * 查看Bucket和Object信息
+   * 查看 Bucket 和 Object 信息
    * @link https://help.aliyun.com/document_detail/120054.html
    */
   async stat(options: StatOptions): Promise<ProcessRet<DataStat>> {
