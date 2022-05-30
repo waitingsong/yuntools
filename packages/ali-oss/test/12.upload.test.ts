@@ -23,7 +23,7 @@ const __dirname = genCurrentDirname(import.meta.url)
 
 describe(fileShortPath(import.meta.url), () => {
 
-  describe('cp should work', () => {
+  describe('upload should work', () => {
     it('normal', async () => {
       const src = join(__dirname, 'tsconfig.json')
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
@@ -34,7 +34,7 @@ describe(fileShortPath(import.meta.url), () => {
       }
       const ret = await client.upload(opts)
       CI || console.log(ret)
-      assert(! ret.exitCode, `cp ${src} ${target} failed, ${ret.stderr}`)
+      assert(! ret.exitCode, `upload ${src} ${target} failed, ${ret.stderr}`)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
       assert(typeof ret.data.averageSpeed === 'number')
@@ -52,7 +52,7 @@ describe(fileShortPath(import.meta.url), () => {
       }
       const ret = await client.upload(opts)
       CI || console.log(ret)
-      assert(! ret.exitCode, `cp ${src} ${target} failed, ${ret.stderr}`)
+      assert(! ret.exitCode, `upload ${src} ${target} failed, ${ret.stderr}`)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
       assert(typeof ret.data.averageSpeed === 'number')
@@ -72,7 +72,7 @@ describe(fileShortPath(import.meta.url), () => {
       }
       const ret = await client.upload(opts)
       CI || console.log(ret)
-      assert(! ret.exitCode, `cp ${src} ${target} failed, ${ret.stderr}`)
+      assert(! ret.exitCode, `upload ${src} ${target} failed, ${ret.stderr}`)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
       assert(typeof ret.data.averageSpeed === 'number')
@@ -236,7 +236,7 @@ describe(fileShortPath(import.meta.url), () => {
 
       const ret = await client.upload(opts)
       CI || console.log(ret)
-      assert(ret.exitCode, `should cp ${src} ${target} failed, ${ret.stdout}`)
+      assert(ret.exitCode, `should upload ${src} ${target} failed, ${ret.stdout}`)
       assert(ret.stderr.includes(Msg.accessDenied))
     })
 
@@ -253,7 +253,7 @@ describe(fileShortPath(import.meta.url), () => {
       }
       const ret = await client2.upload(opts)
       CI || console.log(ret)
-      assert(! ret.exitCode, `cp ${src} ${target} failed, ${ret.stderr}`)
+      assert(! ret.exitCode, `upload ${src} ${target} failed, ${ret.stderr}`)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
       assert(typeof ret.data.averageSpeed === 'number')
