@@ -7,7 +7,7 @@ import {
   bucket,
 } from './root.config.js'
 
-import type { MkdirOptions, RmOptions } from '~/index.js'
+import type { MkdirOptions, RmrfOptions } from '~/index.js'
 
 
 const target = `${cloudUrlPrefix}/`
@@ -15,10 +15,9 @@ const mkdirOpts: MkdirOptions = {
   bucket,
   target,
 }
-const rmOpts: RmOptions = {
+const rmOpts: RmrfOptions = {
   bucket,
   target,
-  recursive: true,
 }
 
 /**
@@ -37,7 +36,7 @@ export const mochaHooks = async () => {
 
   return {
     beforeAll: async () => {
-      await client.rm(rmOpts)
+      await client.rmrf(rmOpts)
 
       const ret = await client.mkdir(mkdirOpts)
       CI || console.log(ret)
@@ -46,7 +45,7 @@ export const mochaHooks = async () => {
     },
 
     afterAll: async () => {
-      await client.rm(rmOpts)
+      await client.rmrf(rmOpts)
     },
   }
 
