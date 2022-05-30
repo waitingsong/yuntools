@@ -10,9 +10,9 @@ import {
 } from '../src/index.js'
 
 
+export const accessKeyId = process.env.ALI_OSS_AID ?? ''
+export const accessKeySecret = process.env.ALI_OSS_ASECRET ?? ''
 export const endpoint = process.env.ALI_OSS_ENDPOINT ?? ''
-export const accessKeyId = process.env.ALI_OSS_ID ?? ''
-export const accessKeySecret = process.env.ALI_OSS_SECRET ?? ''
 export const bucket = process.env.ALI_OSS_BUCKET ?? ''
 export const CI = process.env.CI
 
