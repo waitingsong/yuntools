@@ -1,7 +1,7 @@
 #!/usr/bin/env zx
-import assert from 'assert/strict'
+import assert from 'node:assert/strict'
 
-const { OSSService, MkdirOptions } = require('@yuntools/ali-oss')
+const { OssClient, MkdirOptions } = require('@yuntools/ali-oss')
 
 const endpoint = process.env.ALI_OSS_ENDPOINT ?? ''
 const accessKeyId = process.env.ALI_OSS_ID ?? ''
@@ -15,20 +15,20 @@ const config = {
   accessKeyId,
   accessKeySecret,
 }
-const service = new OSSService(CI ? config : void 0)
+const service = new OssClient(CI ? config : void 0)
 
 const target = `${cloudUrlPrefix}/${Math.random().toString()}`
-const opts: MkdirOptions = {
+const opts = {
   bucket,
   target,
 }
 const res = await service.mkdir(opts)
 console.log({ res })
-assert(res, 'mkdir failed')
+assert(! res.exitCode)
 assert(res.data, 'mkdir failed')
 
-const rmRes = await service.rm(opts)
-assert(rmRes, 'rm failed')
+const rmRes = await service.rmrf(opts)
+assert(! rmRes.exitCode, 'rm failed')
 assert(rmRes.data, 'rm failed')
 console.log({ rmRes })
 

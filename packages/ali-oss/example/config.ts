@@ -1,6 +1,6 @@
-import assert from 'assert/strict'
+import assert from 'node:assert/strict'
 
-import { Config, OSSService } from '@yuntools/ali-oss'
+import { Config, OssClient } from '@yuntools/ali-oss'
 
 
 export const endpoint = process.env.ALI_OSS_ENDPOINT ?? ''
@@ -25,5 +25,5 @@ if (CI) {
 }
 // void else: using `~/.ossutilconfig`
 
-export const service = new OSSService(config)
+export const client = new OssClient(config)
 

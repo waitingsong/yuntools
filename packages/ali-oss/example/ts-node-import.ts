@@ -1,20 +1,28 @@
 #!/usr/bin/env ts-node-esm
-import assert from 'assert/strict'
+import assert from 'node:assert/strict'
+
+import { MkdirOptions, RmrfOptions } from '@yuntools/ali-oss'
 
 import {
   cloudUrlPrefix,
-  service,
+  client,
+  bucket,
 } from './config.js'
 
 
-const dir = `${cloudUrlPrefix}/${Math.random().toString()}`
-console.log(dir)
-
-const res = await service.mkdir(dir)
-assert(res)
-assert(res, 'resp is invalid')
+const target = `${cloudUrlPrefix}/${Math.random().toString()}`
+const opts: MkdirOptions = {
+  bucket,
+  target,
+}
+const res = await client.mkdir(opts)
+assert(! res.exitCode)
 assert(res.data, 'resp.data is invalid')
 console.log({ res })
 
-await service.rm(dir)
+const opts2: RmrfOptions = {
+  bucket,
+  target,
+}
+await client.rmrf(opts2)
 
