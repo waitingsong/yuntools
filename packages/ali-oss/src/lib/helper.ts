@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import https from 'https'
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
