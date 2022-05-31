@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
+    "@swc/core": "^1.2.196",
     "@yuntools/ali-oss": "*",
     "ts-node": "^10.8.0",
     "zx": "^6.1.0"

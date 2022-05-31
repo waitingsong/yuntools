@@ -21,7 +21,14 @@
     "target": "ES2022",
     "types" : ["mocha", "node"]
   },
+  "ts-node": {
+    "esm": true,
+    "experimentalResolver": true,
+    "experimentalSpecifierResolution": true,
+    "preferTsExts": true,
+    "swc": true
+  },
   "include": [
     "*.ts"
-  ],
+  ]
 }
