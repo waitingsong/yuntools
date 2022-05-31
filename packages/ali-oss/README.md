@@ -27,14 +27,14 @@ sudo chmod a+x /usr/bin/ossutil
 ```ts 
 // foo.ts
 import assert from 'node:assert'
-import { OSSService, Config } from '@yuntools/ali-oss'
+import { OssClient, Config } from '@yuntools/ali-oss'
 
 const ossConfig: Config = {
   endpoint: 'https://oss-cn-hangzhou.aliyuncs.com',
   accessKeyId: 'foo',
   accessKeySecret: 'bar',
 }
-const ossService = new OSSService(ossConfig)
+const client = new OssClient(ossConfig)
 
 const bucket = 'my-bucket'
 
@@ -44,7 +44,7 @@ const opts: UploadOptions = {
   bucket,
   target,
 }
-const mkRet = await ossService.mkdir(opts)
+const mkRet = await client.mkdir(opts)
 assert(! mkRet.exitCode, `mkdir ${opts.target} failed, ${mkRet.stderr}`)
 
 
