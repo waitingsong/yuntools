@@ -259,6 +259,24 @@ describe(fileShortPath(import.meta.url), () => {
       assert(typeof ret.data.averageSpeed === 'number')
     })
 
+    it('folder', async () => {
+      const src = join(__dirname, 'files')
+      const target = `${cloudUrlPrefix}/${Date.now().toString()}/`
+
+      const opts: UploadOptions = {
+        bucket,
+        src,
+        target,
+        recursive: true,
+      }
+      const ret = await client.upload(opts)
+      CI || console.log(ret)
+      assert(! ret.exitCode, `upload ${src} ${target} failed, ${ret.stderr}`)
+      assert(ret.data)
+      assert(typeof ret.data.elapsed === 'string')
+      assert(typeof ret.data.averageSpeed === 'number')
+    })
+
   })
 })
 
