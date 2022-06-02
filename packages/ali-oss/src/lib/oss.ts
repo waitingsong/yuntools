@@ -259,8 +259,7 @@ export class OssClient {
    * @link https://help.aliyun.com/document_detail/193394.html
    */
   async syncLocal2Cloud(options: SyncOptions): Promise<ProcessRet<DataCp>> {
-    const keys = [DataKey.elapsed, DataKey.averageSpeed]
-    const ret = await this.runner<SyncOptions, DataCp>(options, FnKey.syncLocal2Cloud, keys)
+    const ret = await this.runner<SyncOptions, DataCp>(options, FnKey.syncLocal2Cloud, cpKeys)
     return ret
   }
 

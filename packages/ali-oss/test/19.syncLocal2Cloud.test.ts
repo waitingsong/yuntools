@@ -31,7 +31,7 @@ describe(fileShortPath(import.meta.url), () => {
   ]
   const target = `${cloudUrlPrefix}/sync-${Date.now().toString()}`
 
-  describe('syncLocal2Cloud should work', () => {
+  describe.only('syncLocal2Cloud should work', () => {
     it('only txt', async () => {
       const opts: SyncOptions = {
         bucket,
@@ -42,6 +42,17 @@ describe(fileShortPath(import.meta.url), () => {
       const ret = await client.syncLocal2Cloud(opts)
       CI || console.log(ret)
       assert(! ret.exitCode, `upload ${srcDir} ${target} failed, ${ret.stderr}`)
+
+      const { data } = ret
+      assert(data)
+      assert(typeof data.elapsed === 'string', ret.stderr)
+      assert(typeof data.averageSpeed === 'number', ret.stderr)
+      assert(typeof data.succeedTotalNumber === 'number', ret.stderr)
+      assert(data.succeedTotalNumber === 5, ret.stderr)
+      assert(typeof data.succeedTotalSize === 'string', ret.stderr)
+      assert(data.succeedTotalSize.length, ret.stderr)
+      assert(data.uploadDirs === 1, ret.stderr)
+      assert(data.uploadFiles === 4)
 
       for await (const file of files) {
         const d2 = join(target, file)
@@ -70,6 +81,17 @@ describe(fileShortPath(import.meta.url), () => {
       const ret = await client.syncLocal2Cloud(opts)
       CI || console.log(ret)
       assert(! ret.exitCode, `upload ${srcDir} ${target} failed, ${ret.stderr}`)
+
+      const { data } = ret
+      assert(data)
+      assert(typeof data.elapsed === 'string', ret.stderr)
+      assert(typeof data.averageSpeed === 'number', ret.stderr)
+      assert(typeof data.succeedTotalNumber === 'number', ret.stderr)
+      assert(data.succeedTotalNumber === 10, ret.stderr)
+      assert(typeof data.succeedTotalSize === 'string', ret.stderr)
+      assert(data.succeedTotalSize.length, ret.stderr)
+      assert(data.uploadDirs === 1, ret.stderr)
+      assert(data.uploadFiles === 9)
 
       for await (const file of files) {
         const d2 = join(target, file)
