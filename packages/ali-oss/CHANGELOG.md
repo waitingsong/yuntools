@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.3.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@12.2.0...@yuntools/ali-oss@12.3.0) (2022-06-02)
+
+
+### Features
+
+* **ali-oss:** extend type DataCp ([472ddda](https://github.com/waitingsong/yuntools/commit/472ddda5e73658b824baee43a560f6058383ac43))
+
+
+
+
+
 # [12.2.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@12.1.0...@yuntools/ali-oss@12.2.0) (2022-06-02)
 
 
