@@ -1,14 +1,6 @@
-import assert from 'node:assert'
+import { BaseOptions, Config, ParamMap } from '../types.js'
 
-import { commonProcessInputMap } from '../helper.js'
-import {
-  BaseOptions,
-  Config,
-  ParamMap,
-  PlaceholderKey,
-} from '../types.js'
-
-import { initBaseOptions } from './common.js'
+import { initBaseOptions, processInputWoSrc } from './common.js'
 
 
 /**
@@ -28,9 +20,8 @@ export async function processInput(
   globalConfig: Config | undefined,
 ): Promise<ParamMap> {
 
-  const map = commonProcessInputMap(input, initOptions, globalConfig)
-  assert(map.get(PlaceholderKey.dest), 'dest is required')
-
+  const map = await processInputWoSrc(input, initOptions, globalConfig)
   return map
 }
+
 

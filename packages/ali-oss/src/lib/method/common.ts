@@ -28,12 +28,16 @@ export const initOptions: BaseOptions & { target: string } = {
   target: '',
 }
 
-export async function processInput(
-  input: BaseOptions & { target: string},
+/**
+ * src will be delete
+ */
+export async function processInputWoSrc<T extends BaseOptions & { target: string}>(
+  input: T,
+  initOptionsInput: T,
   globalConfig: Config | undefined,
 ): Promise<ParamMap> {
 
-  const map = commonProcessInputMap(input, initOptions, globalConfig)
+  const map = commonProcessInputMap(input, initOptionsInput, globalConfig)
   assert(map.get(PlaceholderKey.dest), 'dest is required')
   map.delete(PlaceholderKey.src)
 
