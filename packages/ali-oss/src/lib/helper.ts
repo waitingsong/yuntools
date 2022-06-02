@@ -147,6 +147,7 @@ export function genParams(
     ? ['-c', configPath]
     : []
 
+  /* c8 ignore next 3 */
   if (! paramMap.size) {
     return ps
   }
