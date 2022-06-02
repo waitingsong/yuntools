@@ -10,6 +10,7 @@ import {
   UploadOptions,
 } from '../src/index.js'
 
+import { assertFileExists } from './helper.js'
 import {
   cloudUrlPrefix,
   client,
@@ -22,6 +23,8 @@ import {
 const __dirname = genCurrentDirname(import.meta.url)
 
 describe(fileShortPath(import.meta.url), () => {
+
+  const nameLT = '联通€-&a\'b^c=.json'
 
   describe('upload should work', () => {
     it('normal', async () => {
@@ -41,10 +44,9 @@ describe(fileShortPath(import.meta.url), () => {
     })
 
     it('complex', async () => {
-      const name = '联通€-&a\'b^c=.json'
-      const src = join(__dirname, name)
+      const src = join(__dirname, 'files', nameLT)
 
-      const target = `${cloudUrlPrefix}/${name}-${Date.now().toString()}-tsconfig.json`
+      const target = `${cloudUrlPrefix}/${nameLT}-${Date.now().toString()}-tsconfig.json`
       const opts: UploadOptions = {
         bucket,
         src,
@@ -59,11 +61,10 @@ describe(fileShortPath(import.meta.url), () => {
     })
 
     it('complex encoded', async () => {
-      const name = '联通€-&a\'b^c=.json'
-      const src0 = join(__dirname, name)
+      const src0 = join(__dirname, 'files', nameLT)
       const src = encodeInputPath(src0, true)
 
-      const target = `${cloudUrlPrefix}/${name}-${Date.now().toString()}-tsconfig.json`
+      const target = `${cloudUrlPrefix}/${nameLT}-${Date.now().toString()}-tsconfig.json`
       const opts: UploadOptions = {
         bucket,
         src,
@@ -273,8 +274,22 @@ describe(fileShortPath(import.meta.url), () => {
       CI || console.log(ret)
       assert(! ret.exitCode, `upload ${src} ${target} failed, ${ret.stderr}`)
       assert(ret.data)
-      assert(typeof ret.data.elapsed === 'string')
-      assert(typeof ret.data.averageSpeed === 'number')
+
+      const files: string[] = [
+        nameLT,
+        '1.txt',
+        '2.txt',
+        '.nycrc.json',
+        'tsconfig.json',
+        'subdir/1.txt',
+        'subdir/2.txt',
+        'subdir/.nycrc.json',
+        'subdir/tsconfig.json',
+      ]
+      for await (const file of files) {
+        await assertFileExists(client, bucket, target + file)
+      }
+      return
     })
 
   })
