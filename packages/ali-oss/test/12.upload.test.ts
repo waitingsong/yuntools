@@ -25,6 +25,17 @@ const __dirname = genCurrentDirname(import.meta.url)
 describe(fileShortPath(import.meta.url), () => {
 
   const nameLT = '联通€-&a\'b^c=.json'
+  const files: string[] = [
+    nameLT,
+    '1.txt',
+    '2.txt',
+    '.nycrc.json',
+    'tsconfig.json',
+    'subdir/1.txt',
+    'subdir/2.txt',
+    'subdir/.nycrc.json',
+    'subdir/tsconfig.json',
+  ]
 
   describe('upload should work', () => {
     it('normal', async () => {
@@ -275,23 +286,44 @@ describe(fileShortPath(import.meta.url), () => {
       assert(! ret.exitCode, `upload ${src} ${target} failed, ${ret.stderr}`)
       assert(ret.data)
 
-      const files: string[] = [
-        nameLT,
-        '1.txt',
-        '2.txt',
-        '.nycrc.json',
-        'tsconfig.json',
-        'subdir/1.txt',
-        'subdir/2.txt',
-        'subdir/.nycrc.json',
-        'subdir/tsconfig.json',
-      ]
       for await (const file of files) {
         await assertFileExists(client, bucket, target + file)
       }
       return
     })
 
+    it('param:include', async () => {
+      const src = join(__dirname, 'files')
+      const target = `${cloudUrlPrefix}/${Date.now().toString()}/`
+
+      const opts: UploadOptions = {
+        bucket,
+        src,
+        target,
+        recursive: true,
+        include: '*.txt',
+      }
+      const ret = await client.upload(opts)
+      CI || console.log(ret)
+      assert(! ret.exitCode, `upload ${src} ${target} failed, ${ret.stderr}`)
+      assert(ret.data)
+
+      for await (const file of files) {
+        if (file.endsWith('.txt')) {
+          await assertFileExists(client, bucket, target + file)
+        }
+        else {
+          try {
+            await assertFileExists(client, bucket, target + file)
+          }
+          catch {
+            continue
+          }
+          assert(false, `${file} should not exists`)
+        }
+      }
+      return
+    })
   })
 })
 
