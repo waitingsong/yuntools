@@ -31,7 +31,7 @@ describe(fileShortPath(import.meta.url), () => {
   ]
   const target = `${cloudUrlPrefix}/sync-${Date.now().toString()}`
 
-  describe.only('syncLocal2Cloud should work', () => {
+  describe('syncLocal2Cloud should work', () => {
     it('only txt', async () => {
       const opts: SyncOptions = {
         bucket,

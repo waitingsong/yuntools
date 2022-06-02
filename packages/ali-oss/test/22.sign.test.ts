@@ -9,6 +9,7 @@ import {
   CI,
   bucket,
   src,
+  testDir,
 } from './root.config.js'
 
 import { CpOptions, SignOptions } from '~/index.js'
@@ -57,7 +58,7 @@ describe(fileShortPath(import.meta.url), () => {
     })
 
     it('param trafic-limit (typo)', async () => {
-      const src2 = join(__dirname, '../rollup.config.js')
+      const src2 = join(testDir, '..', 'rollup.config.js')
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-config.js`
       const opts: CpOptions = {
         bucket,
@@ -85,5 +86,4 @@ describe(fileShortPath(import.meta.url), () => {
 
   })
 })
-
 
