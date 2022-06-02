@@ -67,6 +67,11 @@ export enum DataKey {
   link = 'link',
   httpUrl = 'httpUrl',
   httpShareUrl = 'httpShareUrl',
+
+  succeedTotalNumber = 'succeedTotalNumber',
+  succeedTotalSize = 'succeedTotalSize',
+  uploadDirs = 'uploadDirs',
+  uploadFiles = 'uploadFiles',
 }
 
 

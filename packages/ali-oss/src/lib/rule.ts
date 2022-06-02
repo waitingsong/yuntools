@@ -23,6 +23,12 @@ export const regxCommon = new Map<DataKey, RegExp>([
   [DataKey.elapsed, /(\d+\.\d+)\(s\)\s+elapsed(?=\s|\n|\r\n|$)/u],
   /** average speed 1628000(byte/s)' */
   [DataKey.averageSpeed, /average\s+speed\s+(\d+)/u],
+
+  // Succeed: Total num: 10, size: 2,125. OK num: 10(upload 9 files, 1 directories).
+  [DataKey.succeedTotalNumber, new RegExp('Succeed: Total num:\\s+(\\d+)', 'u')],
+  [DataKey.succeedTotalSize, new RegExp('Succeed: Total.+? size:\\s+([\\d,]+)', 'u')],
+  [DataKey.uploadDirs, new RegExp('OK num:.+?upload.+?(\\d+)\\s+directories', 'u')],
+  [DataKey.uploadFiles, new RegExp('OK num:.+?upload.+?(\\d+)\\s+files', 'u')],
 ])
 
 export const pickRegxMap = new Map<DataKey, RegExp>([
@@ -49,6 +55,11 @@ export const pickFuncMap = new Map<DataKey, PickFunc>([
   [DataKey.link, pickString],
   [DataKey.httpUrl, pickString],
   [DataKey.httpShareUrl, pickString],
+
+  [DataKey.succeedTotalNumber, pickNumber],
+  [DataKey.succeedTotalSize, pickNumberStr],
+  [DataKey.uploadDirs, pickNumber],
+  [DataKey.uploadFiles, pickNumber],
 ])
 
 
@@ -59,6 +70,11 @@ function pickNumber(input: string, rule: RegExp, debug = false): number | undefi
   const found = pick(input, rule, debug)
   return found ? parseInt(found, 10) : void 0
 }
+function pickNumberStr(input: string, rule: RegExp, debug = false): string | undefined {
+  const found = pick(input, rule, debug)
+  return found ? found.replace(/,/ug, '').trim() : void 0
+}
+
 function pick(input: string, rule: RegExp, debug = false): string | undefined {
   debug && console.log({ pickInput: input })
   const found = input.match(rule)

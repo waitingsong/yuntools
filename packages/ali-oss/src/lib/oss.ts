@@ -6,6 +6,7 @@ import { join } from 'node:path'
 
 import { run } from 'rxrunscript'
 
+import { cpKeys } from './config.js'
 import {
   combineProcessRet,
   genParams,
@@ -116,8 +117,7 @@ export class OssClient {
       }
     }
 
-    const keys = [DataKey.elapsed, DataKey.averageSpeed]
-    const ret = await this.runner<CpOptions, DataCp>(options, FnKey.cp, keys)
+    const ret = await this.runner<CpOptions, DataCp>(options, FnKey.cp, cpKeys)
     return ret
   }
 
@@ -141,8 +141,7 @@ export class OssClient {
       }
     }
 
-    const keys = [DataKey.elapsed, DataKey.averageSpeed]
-    const ret = await this.runner<UploadOptions, DataCp>(options, FnKey.upload, keys)
+    const ret = await this.runner<UploadOptions, DataCp>(options, FnKey.upload, cpKeys)
     return ret
   }
 

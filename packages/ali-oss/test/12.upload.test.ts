@@ -49,9 +49,17 @@ describe(fileShortPath(import.meta.url), () => {
       const ret = await client.upload(opts)
       CI || console.log(ret)
       assert(! ret.exitCode, `upload ${src} ${target} failed, ${ret.stderr}`)
-      assert(ret.data)
-      assert(typeof ret.data.elapsed === 'string')
-      assert(typeof ret.data.averageSpeed === 'number')
+
+      const { data } = ret
+      assert(data)
+      assert(typeof data.elapsed === 'string', ret.stderr)
+      assert(typeof data.averageSpeed === 'number', ret.stderr)
+      assert(typeof data.succeedTotalNumber === 'number', ret.stderr)
+      assert(data.succeedTotalNumber === 1, ret.stderr)
+      assert(typeof data.succeedTotalSize === 'string', ret.stderr)
+      assert(data.succeedTotalSize.length, ret.stderr)
+      assert(typeof data.uploadDirs === 'undefined', ret.stderr)
+      assert(data.uploadFiles === 1)
     })
 
     it('complex', async () => {
@@ -284,11 +292,22 @@ describe(fileShortPath(import.meta.url), () => {
       const ret = await client.upload(opts)
       CI || console.log(ret)
       assert(! ret.exitCode, `upload ${src} ${target} failed, ${ret.stderr}`)
-      assert(ret.data)
+
+      const { data } = ret
+      assert(data)
+      assert(typeof data.elapsed === 'string', ret.stderr)
+      assert(typeof data.averageSpeed === 'number', ret.stderr)
+      assert(typeof data.succeedTotalNumber === 'number', ret.stderr)
+      assert(data.succeedTotalNumber === 10, ret.stderr)
+      assert(typeof data.succeedTotalSize === 'string', ret.stderr)
+      assert(data.succeedTotalSize.length, ret.stderr)
+      assert(data.uploadDirs === 1, ret.stderr)
+      assert(data.uploadFiles === 9)
 
       for await (const file of files) {
         await assertFileExists(client, bucket, target + file)
       }
+
       return
     })
 
@@ -306,7 +325,17 @@ describe(fileShortPath(import.meta.url), () => {
       const ret = await client.upload(opts)
       CI || console.log(ret)
       assert(! ret.exitCode, `upload ${src} ${target} failed, ${ret.stderr}`)
-      assert(ret.data)
+
+      const { data } = ret
+      assert(data)
+      assert(typeof data.elapsed === 'string', ret.stderr)
+      assert(typeof data.averageSpeed === 'number', ret.stderr)
+      assert(typeof data.succeedTotalNumber === 'number', ret.stderr)
+      assert(data.succeedTotalNumber === 5, ret.stderr)
+      assert(typeof data.succeedTotalSize === 'string', ret.stderr)
+      assert(data.succeedTotalSize.length, ret.stderr)
+      assert(data.uploadDirs === 1, ret.stderr)
+      assert(data.uploadFiles === 4)
 
       for await (const file of files) {
         const d2 = join(target, file)

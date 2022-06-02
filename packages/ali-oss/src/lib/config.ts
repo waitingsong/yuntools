@@ -1,4 +1,4 @@
-import { DownLinks } from './types.js'
+import { DataKey, DownLinks } from './types.js'
 
 // eslint-disable-next-line no-shadow-restricted-names
 export const undefined = void 0
@@ -12,3 +12,11 @@ export const configDownLinks: DownLinks = {
   win32: 'https://gosspublic.alicdn.com/ossutil/1.7.12/ossutil64.zip',
 }
 
+export const cpKeys: DataKey[] = [
+  DataKey.elapsed,
+  DataKey.averageSpeed,
+  DataKey.succeedTotalNumber,
+  DataKey.succeedTotalSize,
+  DataKey.uploadDirs,
+  DataKey.uploadFiles,
+]

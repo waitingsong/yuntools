@@ -125,6 +125,10 @@ export const initOptions: CpOptions = {
 export interface DataCp extends DataBase {
   /** byte/s */
   [DataKey.averageSpeed]: number | undefined
+  [DataKey.succeedTotalNumber]: number | undefined
+  [DataKey.succeedTotalSize]: string | undefined
+  [DataKey.uploadDirs]: number | undefined
+  [DataKey.uploadFiles]: number | undefined
 }
 
 
