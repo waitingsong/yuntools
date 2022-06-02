@@ -309,12 +309,14 @@ describe(fileShortPath(import.meta.url), () => {
       assert(ret.data)
 
       for await (const file of files) {
+        const d2 = join(target, file)
+
         if (file.endsWith('.txt')) {
-          await assertFileExists(client, bucket, target + file)
+          await assertFileExists(client, bucket, d2)
         }
         else {
           try {
-            await assertFileExists(client, bucket, target + file)
+            await assertFileExists(client, bucket, d2)
           }
           catch {
             continue

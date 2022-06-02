@@ -17,5 +17,6 @@ export {
   StatOptions, DataStat,
 } from './stat.js'
 export { StatOptions as PathExistsOptions } from './stat.js'
+export { SyncOptions } from './sync.js'
 export { UploadOptions } from './upload.js'
 

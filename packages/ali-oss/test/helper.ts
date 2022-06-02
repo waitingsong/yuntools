@@ -17,6 +17,6 @@ export async function assertFileExists(
     target: cloudFile,
   }
   const exists = await client.pathExists(opts)
-  assert(exists === true)
+  assert(exists === true, `${cloudFile} should exists`)
 }
 

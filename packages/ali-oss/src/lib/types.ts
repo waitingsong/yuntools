@@ -83,6 +83,9 @@ export enum FnKey {
   rmrf = 'rmrf',
   sign = 'sign',
   stat = 'stat',
+  syncLocal2Cloud = 'syncLocal2Cloud',
+  syncCloud2Local = 'syncCloud2Local',
+  syncBetween = 'syncBetween',
   upload = 'upload',
 }
 
@@ -97,6 +100,9 @@ export enum CmdKey {
   rmrf = 'rm',
   sign = 'sign',
   stat = 'stat',
+  syncLocal2Cloud = 'sync',
+  syncCloud2Local = 'sync',
+  syncBetween = 'sync',
   upload = 'cp',
 }
 

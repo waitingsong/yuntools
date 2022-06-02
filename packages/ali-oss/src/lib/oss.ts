@@ -27,6 +27,7 @@ import {
   StatOptions,
   UploadOptions,
 } from './method/index.js'
+import { SyncOptions } from './method/sync.js'
 import { processInputFnMap } from './process-input.js'
 import { regxStat } from './rule.js'
 import {
@@ -252,6 +253,17 @@ export class OssClient {
     return ret
   }
 
+  /**
+   * 同步本地文件到 OSS
+   * - force 参数默认 true
+   * - 若 force 为 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
+   * @link https://help.aliyun.com/document_detail/193394.html
+   */
+  async syncLocal2Cloud(options: SyncOptions): Promise<ProcessRet<DataCp>> {
+    const keys = [DataKey.elapsed, DataKey.averageSpeed]
+    const ret = await this.runner<SyncOptions, DataCp>(options, FnKey.syncLocal2Cloud, keys)
+    return ret
+  }
 
   private async runner<T extends BaseOptions, R extends DataBase = DataBase>(
     options: T,
