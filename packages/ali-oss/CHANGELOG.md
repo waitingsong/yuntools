@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.2.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@12.1.0...@yuntools/ali-oss@12.2.0) (2022-06-02)
+
+
+### Features
+
+* **ali-oss:** syncLocal2Cloud() ([bd0eb13](https://github.com/waitingsong/yuntools/commit/bd0eb13ba3d50a9d323c1aa2e02f2d9add63a755))
+
+
+
+
+
 # [12.1.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@12.0.1...@yuntools/ali-oss@12.1.0) (2022-06-02)
 
 
