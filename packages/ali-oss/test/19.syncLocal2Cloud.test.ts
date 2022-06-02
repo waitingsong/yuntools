@@ -5,7 +5,7 @@ import { fileShortPath } from '@waiting/shared-core'
 
 import { SyncOptions } from '../src/index.js'
 
-import { assertFileExists } from './helper.js'
+import { assertFileExists, assertUploadFiles } from './helper.js'
 import {
   cloudUrlPrefix,
   client,
@@ -42,17 +42,7 @@ describe(fileShortPath(import.meta.url), () => {
       const ret = await client.syncLocal2Cloud(opts)
       CI || console.log(ret)
       assert(! ret.exitCode, `upload ${srcDir} ${target} failed, ${ret.stderr}`)
-
-      const { data } = ret
-      assert(data)
-      assert(typeof data.elapsed === 'string', ret.stderr)
-      assert(typeof data.averageSpeed === 'number', ret.stderr)
-      assert(typeof data.succeedTotalNumber === 'number', ret.stderr)
-      assert(data.succeedTotalNumber === 5, ret.stderr)
-      assert(typeof data.succeedTotalSize === 'string', ret.stderr)
-      assert(data.succeedTotalSize.length, ret.stderr)
-      assert(data.uploadDirs === 1, ret.stderr)
-      assert(data.uploadFiles === 4)
+      assertUploadFiles(ret.data, 5, 1, 4, ret.stderr)
 
       for await (const file of files) {
         const d2 = join(target, file)
@@ -81,17 +71,7 @@ describe(fileShortPath(import.meta.url), () => {
       const ret = await client.syncLocal2Cloud(opts)
       CI || console.log(ret)
       assert(! ret.exitCode, `upload ${srcDir} ${target} failed, ${ret.stderr}`)
-
-      const { data } = ret
-      assert(data)
-      assert(typeof data.elapsed === 'string', ret.stderr)
-      assert(typeof data.averageSpeed === 'number', ret.stderr)
-      assert(typeof data.succeedTotalNumber === 'number', ret.stderr)
-      assert(data.succeedTotalNumber === 10, ret.stderr)
-      assert(typeof data.succeedTotalSize === 'string', ret.stderr)
-      assert(data.succeedTotalSize.length, ret.stderr)
-      assert(data.uploadDirs === 1, ret.stderr)
-      assert(data.uploadFiles === 9)
+      assertUploadFiles(ret.data, 10, 1, 9, ret.stderr)
 
       for await (const file of files) {
         const d2 = join(target, file)

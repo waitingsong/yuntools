@@ -5,6 +5,7 @@ import { fileShortPath, genCurrentDirname } from '@waiting/shared-core'
 
 import { CpOptions } from '../src/index.js'
 
+import { assertUploadFiles } from './helper.js'
 import {
   cloudUrlPrefix,
   client,
@@ -31,17 +32,7 @@ describe(fileShortPath(import.meta.url), () => {
       const ret = await client2.cp(opts)
       CI || console.log(ret)
       assert(! ret.exitCode, `cp ${src} ${target} failed, ${ret.stderr}`)
-
-      const { data } = ret
-      assert(data)
-      assert(typeof data.elapsed === 'string', ret.stderr)
-      assert(typeof data.averageSpeed === 'number', ret.stderr)
-      assert(typeof data.succeedTotalNumber === 'number', ret.stderr)
-      assert(data.succeedTotalNumber === 1, ret.stderr)
-      assert(typeof data.succeedTotalSize === 'string', ret.stderr)
-      assert(data.succeedTotalSize.length, ret.stderr)
-      assert(typeof data.uploadDirs === 'undefined', ret.stderr)
-      assert(data.uploadFiles === 1)
+      assertUploadFiles(ret.data, 1, void 0, 1, ret.stderr)
     })
 
   })
