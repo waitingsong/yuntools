@@ -2,6 +2,8 @@ import assert from 'node:assert/strict'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 
+import { genCurrentDirname } from '@waiting/shared-core'
+
 import {
   Config,
   OssClient,
@@ -44,4 +46,10 @@ else {
 
 export const client = CI ? new OssClient(config) : new OssClient(configPath)
 export { client2 }
+
+export const nameLT = '联通€-&a\'b^c=.json'
+export const testDir = genCurrentDirname(import.meta.url)
+export const src = join(testDir, 'tsconfig.json')
+export const srcLT = join(testDir, 'files', nameLT)
+export const srcDir = join(testDir, 'files')
 

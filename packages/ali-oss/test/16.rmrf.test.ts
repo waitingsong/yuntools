@@ -8,6 +8,7 @@ import {
   client,
   CI,
   bucket,
+  src,
 } from './root.config.js'
 
 import { CpOptions, RmrfOptions, StatOptions } from '~/index.js'
@@ -19,7 +20,6 @@ describe(fileShortPath(import.meta.url), () => {
 
   describe('rmrf should work', () => {
     it('normal', async () => {
-      const src = join(__dirname, 'tsconfig.json')
       const dir = `${cloudUrlPrefix}/bbb/${Date.now().toString()}`
       const target = `${dir}/${Date.now().toString()}-tsconfig.json`
 

@@ -10,6 +10,7 @@ import {
   client,
   CI,
   bucket,
+  src,
 } from './root.config.js'
 
 
@@ -19,7 +20,6 @@ describe(fileShortPath(import.meta.url), () => {
 
   describe('rm should work', () => {
     it('normal', async () => {
-      const src = join(__dirname, 'tsconfig.json')
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
       const opts: CpOptions = {
         bucket,
@@ -39,7 +39,6 @@ describe(fileShortPath(import.meta.url), () => {
     })
 
     it('rescusive', async () => {
-      const src = join(__dirname, 'tsconfig.json')
       const dir = `${cloudUrlPrefix}/bbb/${Date.now().toString()}`
       const target = `${dir}/${Date.now().toString()}-tsconfig.json`
 

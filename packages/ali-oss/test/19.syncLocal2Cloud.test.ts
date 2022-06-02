@@ -11,6 +11,7 @@ import {
   client,
   CI,
   bucket,
+  srcDir,
 } from './root.config.js'
 
 
@@ -30,20 +31,19 @@ describe(fileShortPath(import.meta.url), () => {
     'subdir/.nycrc.json',
     'subdir/tsconfig.json',
   ]
-  const src = join(__dirname, 'files')
   const target = `${cloudUrlPrefix}/sync-${Date.now().toString()}`
 
   describe('syncLocal2Cloud should work', () => {
     it('only txt', async () => {
       const opts: SyncOptions = {
         bucket,
-        src,
+        src: srcDir,
         target,
         include: '*.txt',
       }
       const ret = await client.syncLocal2Cloud(opts)
       CI || console.log(ret)
-      assert(! ret.exitCode, `upload ${src} ${target} failed, ${ret.stderr}`)
+      assert(! ret.exitCode, `upload ${srcDir} ${target} failed, ${ret.stderr}`)
 
       for await (const file of files) {
         const d2 = join(target, file)
@@ -66,12 +66,12 @@ describe(fileShortPath(import.meta.url), () => {
     it('all', async () => {
       const opts: SyncOptions = {
         bucket,
-        src,
+        src: srcDir,
         target,
       }
       const ret = await client.syncLocal2Cloud(opts)
       CI || console.log(ret)
-      assert(! ret.exitCode, `upload ${src} ${target} failed, ${ret.stderr}`)
+      assert(! ret.exitCode, `upload ${srcDir} ${target} failed, ${ret.stderr}`)
 
       for await (const file of files) {
         const d2 = join(target, file)

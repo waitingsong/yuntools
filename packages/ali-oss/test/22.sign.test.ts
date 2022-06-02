@@ -8,6 +8,7 @@ import {
   client,
   CI,
   bucket,
+  src,
 } from './root.config.js'
 
 import { CpOptions, SignOptions } from '~/index.js'
@@ -19,9 +20,7 @@ describe(fileShortPath(import.meta.url), () => {
 
   describe('sign should work', () => {
     it('normal', async () => {
-      const src = join(__dirname, 'tsconfig.json')
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
-
       const opts: CpOptions = {
         bucket,
         src,
@@ -60,16 +59,16 @@ describe(fileShortPath(import.meta.url), () => {
     })
 
     it('param trafic-limit (typo)', async () => {
-      const src = join(__dirname, '../rollup.config.js')
+      const src2 = join(__dirname, '../rollup.config.js')
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-config.js`
       const opts: CpOptions = {
         bucket,
-        src,
+        src: src2,
         target,
       }
       const ret = await client.cp(opts)
       CI || console.log(ret)
-      assert(! ret.exitCode, `cp ${src} ${target} failed, ${ret.stderr}`)
+      assert(! ret.exitCode, `cp ${src2} ${target} failed, ${ret.stderr}`)
       assert(ret.data)
 
       const opts2: SignOptions = {

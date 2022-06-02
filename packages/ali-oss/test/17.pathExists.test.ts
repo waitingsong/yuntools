@@ -8,6 +8,7 @@ import {
   client,
   CI,
   bucket,
+  src,
 } from './root.config.js'
 
 import { CpOptions, PathExistsOptions } from '~/index.js'
@@ -19,7 +20,6 @@ describe(fileShortPath(import.meta.url), () => {
 
   describe('pathExists should work', () => {
     it('file', async () => {
-      const src = join(__dirname, 'tsconfig.json')
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
 
       const opts: CpOptions = {
@@ -43,7 +43,6 @@ describe(fileShortPath(import.meta.url), () => {
     })
 
     // it('link', async () => {
-    //   const src = join(__dirname, 'tsconfig.json')
     //   const dst = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
     //   await client.cp(src, dst)
 

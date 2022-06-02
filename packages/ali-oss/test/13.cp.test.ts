@@ -11,10 +11,9 @@ import {
   client2,
   CI,
   bucket,
+  src,
 } from './root.config.js'
 
-
-const __dirname = genCurrentDirname(import.meta.url)
 
 describe(fileShortPath(import.meta.url), () => {
 
@@ -22,7 +21,6 @@ describe(fileShortPath(import.meta.url), () => {
     it('normal', async () => {
       assert(client2, 'client2 should be defined')
 
-      const src = join(__dirname, 'tsconfig.json')
       const target = `${cloudUrlPrefix}/cp-${Date.now().toString()}-tsconfig.json`
 
       const opts: CpOptions = {

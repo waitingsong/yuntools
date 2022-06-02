@@ -8,6 +8,7 @@ import {
   client,
   CI,
   bucket,
+  src,
 } from './root.config.js'
 
 import { CpOptions, LinkOptions } from '~/index.js'
@@ -19,7 +20,6 @@ describe(fileShortPath(import.meta.url), () => {
 
   describe('createSymlink should work', () => {
     it('normal', async () => {
-      const src = join(__dirname, 'tsconfig.json')
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
 
       const opts: CpOptions = {

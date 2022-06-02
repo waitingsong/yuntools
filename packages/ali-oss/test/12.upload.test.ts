@@ -17,14 +17,15 @@ import {
   client2,
   CI,
   bucket,
+  src,
+  srcDir,
+  nameLT,
+  srcLT,
 } from './root.config.js'
 
 
-const __dirname = genCurrentDirname(import.meta.url)
-
 describe(fileShortPath(import.meta.url), () => {
 
-  const nameLT = '联通€-&a\'b^c=.json'
   const files: string[] = [
     nameLT,
     '1.txt',
@@ -39,7 +40,6 @@ describe(fileShortPath(import.meta.url), () => {
 
   describe('upload should work', () => {
     it('normal', async () => {
-      const src = join(__dirname, 'tsconfig.json')
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
       const opts: UploadOptions = {
         bucket,
@@ -63,43 +63,39 @@ describe(fileShortPath(import.meta.url), () => {
     })
 
     it('complex', async () => {
-      const src = join(__dirname, 'files', nameLT)
 
       const target = `${cloudUrlPrefix}/${nameLT}-${Date.now().toString()}-tsconfig.json`
       const opts: UploadOptions = {
         bucket,
-        src,
+        src: srcLT,
         target,
       }
       const ret = await client.upload(opts)
       CI || console.log(ret)
-      assert(! ret.exitCode, `upload ${src} ${target} failed, ${ret.stderr}`)
+      assert(! ret.exitCode, `upload ${srcLT} ${target} failed, ${ret.stderr}`)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
       assert(typeof ret.data.averageSpeed === 'number')
     })
 
     it('complex encoded', async () => {
-      const src0 = join(__dirname, 'files', nameLT)
-      const src = encodeInputPath(src0, true)
-
+      const srcLTEncoded = encodeInputPath(srcLT, true)
       const target = `${cloudUrlPrefix}/${nameLT}-${Date.now().toString()}-tsconfig.json`
       const opts: UploadOptions = {
         bucket,
-        src,
+        src: srcLTEncoded,
         target,
         encodeSource: false,
       }
       const ret = await client.upload(opts)
       CI || console.log(ret)
-      assert(! ret.exitCode, `upload ${src} ${target} failed, ${ret.stderr}`)
+      assert(! ret.exitCode, `upload ${srcLTEncoded} ${target} failed, ${ret.stderr}`)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')
       assert(typeof ret.data.averageSpeed === 'number')
     })
 
     it('param:force', async () => {
-      const src = join(__dirname, 'tsconfig.json')
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
       const opts: UploadOptions = {
         bucket,
@@ -142,7 +138,6 @@ describe(fileShortPath(import.meta.url), () => {
     })
 
     it('duplicate detection', async () => {
-      const src = join(__dirname, 'tsconfig.json')
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
       const opts: UploadOptions = {
         bucket,
@@ -161,7 +156,6 @@ describe(fileShortPath(import.meta.url), () => {
     })
 
     it('acl:private', async () => {
-      const src = join(__dirname, 'tsconfig.json')
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
       const opts: UploadOptions = {
         bucket,
@@ -182,7 +176,6 @@ describe(fileShortPath(import.meta.url), () => {
     })
 
     it('acl:public-read', async () => {
-      const src = join(__dirname, 'tsconfig.json')
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
       const opts: UploadOptions = {
         bucket,
@@ -203,7 +196,6 @@ describe(fileShortPath(import.meta.url), () => {
     })
 
     it('acl:public-read-write', async () => {
-      const src = join(__dirname, 'tsconfig.json')
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
       const opts: UploadOptions = {
         bucket,
@@ -224,7 +216,6 @@ describe(fileShortPath(import.meta.url), () => {
     })
 
     it('failed with invalid bucket', async () => {
-      const src = join(__dirname, 'tsconfig.json')
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
 
       const bucketFake = 'fake' + Date.now().toString()
@@ -242,7 +233,6 @@ describe(fileShortPath(import.meta.url), () => {
     })
 
     it('failed with invaild endpoint', async () => {
-      const src = join(__dirname, 'tsconfig.json')
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
 
       const endpoint = 'https://oss-cn-beijing.aliyuncs.com'
@@ -263,7 +253,6 @@ describe(fileShortPath(import.meta.url), () => {
     it('pass config file', async () => {
       assert(client2, 'client2 should be defined')
 
-      const src = join(__dirname, 'tsconfig.json')
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
 
       const opts: UploadOptions = {
@@ -280,18 +269,17 @@ describe(fileShortPath(import.meta.url), () => {
     })
 
     it('folder', async () => {
-      const src = join(__dirname, 'files')
       const target = `${cloudUrlPrefix}/${Date.now().toString()}/`
 
       const opts: UploadOptions = {
         bucket,
-        src,
+        src: srcDir,
         target,
         recursive: true,
       }
       const ret = await client.upload(opts)
       CI || console.log(ret)
-      assert(! ret.exitCode, `upload ${src} ${target} failed, ${ret.stderr}`)
+      assert(! ret.exitCode, `upload ${srcDir} ${target} failed, ${ret.stderr}`)
 
       const { data } = ret
       assert(data)
@@ -312,19 +300,18 @@ describe(fileShortPath(import.meta.url), () => {
     })
 
     it('param:include', async () => {
-      const src = join(__dirname, 'files')
       const target = `${cloudUrlPrefix}/${Date.now().toString()}/`
 
       const opts: UploadOptions = {
         bucket,
-        src,
+        src: srcDir,
         target,
         recursive: true,
         include: '*.txt',
       }
       const ret = await client.upload(opts)
       CI || console.log(ret)
-      assert(! ret.exitCode, `upload ${src} ${target} failed, ${ret.stderr}`)
+      assert(! ret.exitCode, `upload ${srcDir} ${target} failed, ${ret.stderr}`)
 
       const { data } = ret
       assert(data)
