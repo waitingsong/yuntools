@@ -326,7 +326,8 @@ export async function setBinExecutable(
 }
 
 export function encodeInputPath(input: string, encode = false): string {
-  const ret = encode === true ? encodeURIComponent(input).replace(/'/ug, '%27') : input
+  const str = input.replace(/\\/ug, '/')
+  const ret = encode === true ? encodeURIComponent(str).replace(/'/ug, '%27') : input
   return ret
 }
 
