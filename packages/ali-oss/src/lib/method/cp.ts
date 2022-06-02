@@ -127,8 +127,8 @@ export interface DataCp extends DataBase {
   [DataKey.averageSpeed]: number | undefined
   [DataKey.succeedTotalNumber]: number | undefined
   [DataKey.succeedTotalSize]: string | undefined
-  [DataKey.uploadDirs]: number | undefined
-  [DataKey.uploadFiles]: number | undefined
+  [DataKey.uploadDirs]: number
+  [DataKey.uploadFiles]: number
 }
 
 

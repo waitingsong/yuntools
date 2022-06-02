@@ -49,7 +49,7 @@ describe(fileShortPath(import.meta.url), () => {
       const ret = await client.upload(opts)
       CI || console.log(ret)
       assert(! ret.exitCode, `upload ${src} ${target} failed, ${ret.stderr}`)
-      assertUploadFiles(ret.data, 1, void 0, 1, ret.stderr)
+      assertUploadFiles(ret.data, 1, 0, 1, ret.stderr)
     })
 
     it('complex', async () => {

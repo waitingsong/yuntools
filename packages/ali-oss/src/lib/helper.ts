@@ -98,7 +98,8 @@ export function parseRespStdout<T extends DataBase = DataBase>(
       return
     }
 
-    const value = func(input.stdout, rule, debug)
+    let value = func(input.stdout, rule, debug)
+    value = convertUndefiedToZero(key, value)
     Object.defineProperty(ret, key, {
       enumerable: true,
       value,
@@ -106,6 +107,22 @@ export function parseRespStdout<T extends DataBase = DataBase>(
   })
 
   return ret
+}
+
+function convertUndefiedToZero(
+  key: DataKey,
+  value: string | number | undefined,
+): string | number | undefined {
+
+  const keys: DataKey[] = [
+    DataKey.uploadDirs,
+    DataKey.uploadFiles,
+  ]
+
+  if (keys.includes(key)) {
+    return value ? +value : 0
+  }
+  return value
 }
 
 

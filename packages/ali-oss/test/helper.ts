@@ -25,8 +25,8 @@ export async function assertFileExists(
 export function assertUploadFiles(
   data: DataCp | undefined,
   expectTotalNumber: number,
-  expectDirs: number | undefined,
-  expectFiles: number | undefined,
+  expectDirs: number,
+  expectFiles: number,
   stderr: string,
 ): void {
 
@@ -37,6 +37,9 @@ export function assertUploadFiles(
   assert(data.succeedTotalNumber === expectTotalNumber, stderr)
   assert(typeof data.succeedTotalSize === 'string', stderr)
   assert(data.succeedTotalSize.length, stderr)
+
+  assert(typeof data.uploadDirs === 'number', stderr)
+  assert(typeof data.uploadFiles === 'number', stderr)
   assert(data.uploadDirs === expectDirs, stderr)
   assert(data.uploadFiles === expectFiles, stderr)
 }
