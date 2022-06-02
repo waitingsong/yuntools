@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.1.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@12.0.1...@yuntools/ali-oss@12.1.0) (2022-06-02)
+
+
+### Features
+
+* **ali-oss:** encodeInputPath() will convert '\' to '/' if encode:true ([4f37ce4](https://github.com/waitingsong/yuntools/commit/4f37ce43ebfc45522120ceaa1f9ac15f8d76367c))
+
+
+
+
+
 ## [12.0.1](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@12.0.0...@yuntools/ali-oss@12.0.1) (2022-05-31)
 
 **Note:** Version bump only for package @yuntools/ali-oss
