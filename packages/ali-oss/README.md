@@ -83,18 +83,16 @@ cd example
 
 ### OSS 操作实例方法
 
-- cp() 在远程拷贝
-- createSymlink() 创建软连接
-- mkdir() 创建目录
-- mv() 在远程移动对象
-- pathExists() 检测远程文件是否存在
-- probeUpload() 上传探测
-- rm() 删除远程对象
-- rmrf() 删除远程对象及其下级所有对象
-- stat() 获取远程对象属性
-- syncLocal2Cloud() （强制）同步本地目录到远程
-- upload() 上传本地文件到远程
-
+- `cp()` 在远程拷贝
+- `createSymlink()` 创建软连接
+- `mkdir()` 创建目录
+- `mv()` 在远程移动对象
+- `pathExists()` 检测远程文件是否存在
+- `rm()` 删除远程对象
+- `rmrf()` 删除远程对象及其下级所有对象
+- `stat()` 获取远程对象属性
+- `syncLocal2Cloud()` （强制）同步本地目录到远程
+- `upload()` 上传本地文件到远程
 
 ## License
 [MIT](LICENSE)
