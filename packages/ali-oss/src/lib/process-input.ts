@@ -23,7 +23,7 @@ export const processInputFnMap = new Map<FnKey, ProcessInputFn>([
   [FnKey.rmrf, rmrf],
   [FnKey.sign, sign],
   [FnKey.stat, stat],
-  [FnKey.syncLocal2Cloud, syncLocal2Cloud],
+  [FnKey.syncCloud, syncLocal2Cloud],
   [FnKey.syncLocal, syncLocal],
   [FnKey.upload, upload],
 ])

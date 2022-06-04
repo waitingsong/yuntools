@@ -91,7 +91,7 @@ cd example
 - `rm()` 删除远程对象
 - `rmrf()` 删除远程对象及其下级所有对象
 - `stat()` 获取远程对象属性
-- `syncLocal2Cloud()` （强制）同步本地目录到远程
+- `syncCloud()` （强制）同步本地目录到远程
 - `syncLocal()` （强制）同步远程到本地目录
 - `upload()` 上传本地文件到远程
 
