@@ -1,10 +1,13 @@
 import assert from 'node:assert'
+import { rm } from 'node:fs/promises'
+import { join } from 'node:path'
 
 import {
   cloudUrlPrefix,
   client,
   CI,
   bucket,
+  testDir,
 } from './root.config.js'
 
 import type { MkdirOptions, RmrfOptions } from '~/index.js'
@@ -46,6 +49,12 @@ export const mochaHooks = async () => {
 
     afterAll: async () => {
       await client.rmrf(rmOpts)
+      try {
+        await rm(join(testDir, 'tmp'), { recursive: true })
+      }
+      catch {
+        void 0
+      }
     },
   }
 

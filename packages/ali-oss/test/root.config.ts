@@ -52,4 +52,14 @@ export const testDir = genCurrentDirname(import.meta.url)
 export const src = join(testDir, 'tsconfig.json')
 export const srcLT = join(testDir, 'files', nameLT)
 export const srcDir = join(testDir, 'files')
-
+export const files: string[] = [
+  nameLT,
+  '1.txt',
+  '2.txt',
+  '.nycrc.json',
+  'tsconfig.json',
+  'subdir/1.txt',
+  'subdir/2.txt',
+  'subdir/.nycrc.json',
+  'subdir/tsconfig.json',
+]

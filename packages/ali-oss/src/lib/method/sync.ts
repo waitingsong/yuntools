@@ -63,3 +63,35 @@ export async function processInputLocal2Cloud(
   return map
 }
 
+
+export async function processInputLocal(
+  input: SyncOptions,
+  globalConfig: Config | undefined,
+): Promise<ParamMap> {
+
+  const { target: dst, encodeSource, encodeTarget } = input
+  assert(dst, 'target is required')
+
+  const encode2 = !! (typeof encodeTarget === 'undefined' || encodeTarget === true)
+  const dstNew = encode2
+    ? encodeInputPath(dst, true)
+    : dst
+  const opts: SyncOptions = {
+    ...input,
+    target: dstNew,
+    encodeSource: encodeSource ?? true,
+    encodeTarget: false,
+  }
+
+  const map = commonProcessInputMap(opts, initOptions, globalConfig)
+  assert(map.get(PlaceholderKey.dest), 'dest is required')
+  assert(map.get(PlaceholderKey.src), 'src is required')
+
+  const bucket = map.get(PlaceholderKey.bucket)
+  assert(bucket, 'bucket is required')
+  assert(typeof bucket === 'string', 'bucket must be string')
+
+  map.set('encodeTarget', encode2)
+
+  return map
+}

@@ -263,6 +263,19 @@ export class OssClient {
     return ret
   }
 
+
+  /**
+   * 同步 OSS 文件到本地
+   * - force 参数默认 true
+   * - 若 force 为 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
+   * @link https://help.aliyun.com/document_detail/256352.html
+   */
+  async syncLocal(options: SyncOptions): Promise<ProcessRet<DataCp>> {
+    const ret = await this.runner<SyncOptions, DataCp>(options, FnKey.syncLocal, cpKeys)
+    return ret
+  }
+
+
   private async runner<T extends BaseOptions, R extends DataBase = DataBase>(
     options: T,
     fnKey: FnKey,
