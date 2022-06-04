@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [13.1.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@13.0.1...@yuntools/ali-oss@13.1.0) (2022-06-04)
+
+
+### Features
+
+* **ali-oss:** syncLocal() ([28effb0](https://github.com/waitingsong/yuntools/commit/28effb0245e7b042fcc53172ebb679e114f466eb))
+
+
+
+
+
 ## [13.0.1](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@13.0.0...@yuntools/ali-oss@13.0.1) (2022-06-02)
 
 **Note:** Version bump only for package @yuntools/ali-oss
