@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [14.0.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@13.1.0...@yuntools/ali-oss@14.0.0) (2022-06-04)
+
+**Note:** Version bump only for package @yuntools/ali-oss
+
+
+
+
+
 # [13.1.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@13.0.1...@yuntools/ali-oss@13.1.0) (2022-06-04)
 
 
