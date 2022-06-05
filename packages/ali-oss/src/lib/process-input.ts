@@ -7,7 +7,7 @@ import { processInput as rmrf } from './method/rmrf.js'
 import { processInput as sign } from './method/sign.js'
 import { processInput as stat } from './method/stat.js'
 import {
-  processInputLocal2Cloud as syncLocal2Cloud,
+  processInputCloud as syncLocal2Cloud,
   processInputLocal as syncLocal,
 } from './method/sync.js'
 import { processInput as upload } from './method/upload.js'
