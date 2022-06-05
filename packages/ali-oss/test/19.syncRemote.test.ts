@@ -20,7 +20,7 @@ describe(fileShortPath(import.meta.url), () => {
 
   const target = `${cloudUrlPrefix}/sync-${Date.now().toString()}`
 
-  describe('syncCloud should work', () => {
+  describe('syncRemote should work', () => {
     it('include *.txt', async () => {
       const opts: SyncOptions = {
         bucket,
@@ -28,7 +28,7 @@ describe(fileShortPath(import.meta.url), () => {
         target,
         include: '*.txt',
       }
-      const ret = await client.syncCloud(opts)
+      const ret = await client.syncRemote(opts)
       CI || console.log(ret)
       assert(! ret.exitCode, `upload ${srcDir} ${target} failed, ${ret.stderr}`)
       assertUploadFiles(ret.data, 5, 1, 4, ret.stderr)
@@ -57,7 +57,7 @@ describe(fileShortPath(import.meta.url), () => {
         src: srcDir,
         target,
       }
-      const ret = await client.syncCloud(opts)
+      const ret = await client.syncRemote(opts)
       CI || console.log(ret)
       assert(! ret.exitCode, `upload ${srcDir} ${target} failed, ${ret.stderr}`)
       assertUploadFiles(ret.data, 10, 1, 9, ret.stderr)

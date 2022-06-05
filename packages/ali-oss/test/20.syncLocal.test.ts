@@ -29,7 +29,7 @@ describe(fileShortPath(import.meta.url), () => {
         src: srcDir,
         target,
       }
-      await client.syncCloud(opts)
+      await client.syncRemote(opts)
 
       const localDir = join(testDir, 'tmp', `files-${Math.random().toString()}/`)
       await mkdir(localDir, { recursive: true })
@@ -66,7 +66,7 @@ describe(fileShortPath(import.meta.url), () => {
         src: srcDir,
         target,
       }
-      await client.syncCloud(opts)
+      await client.syncRemote(opts)
 
       const localDir = join(testDir, 'tmp', `files-${Math.random().toString()}/`)
       await mkdir(localDir, { recursive: true })

@@ -36,7 +36,7 @@ export const initOptions: SyncOptions = {
 }
 
 
-export async function processInputCloud(
+export async function processInputRemote(
   input: SyncOptions,
   globalConfig: Config | undefined,
 ): Promise<ParamMap> {

@@ -258,8 +258,8 @@ export class OssClient {
    * - 若 force 为 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
    * @link https://help.aliyun.com/document_detail/193394.html
    */
-  async syncCloud(options: SyncOptions): Promise<ProcessRet<DataCp>> {
-    const ret = await this.runner<SyncOptions, DataCp>(options, FnKey.syncCloud, cpKeys)
+  async syncRemote(options: SyncOptions): Promise<ProcessRet<DataCp>> {
+    const ret = await this.runner<SyncOptions, DataCp>(options, FnKey.syncRemote, cpKeys)
     return ret
   }
 

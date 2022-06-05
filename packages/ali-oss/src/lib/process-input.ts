@@ -7,7 +7,7 @@ import { processInput as rmrf } from './method/rmrf.js'
 import { processInput as sign } from './method/sign.js'
 import { processInput as stat } from './method/stat.js'
 import {
-  processInputCloud as syncLocal2Cloud,
+  processInputRemote as syncRemote,
   processInputLocal as syncLocal,
 } from './method/sync.js'
 import { processInput as upload } from './method/upload.js'
@@ -23,7 +23,7 @@ export const processInputFnMap = new Map<FnKey, ProcessInputFn>([
   [FnKey.rmrf, rmrf],
   [FnKey.sign, sign],
   [FnKey.stat, stat],
-  [FnKey.syncCloud, syncLocal2Cloud],
+  [FnKey.syncRemote, syncRemote],
   [FnKey.syncLocal, syncLocal],
   [FnKey.upload, upload],
 ])
