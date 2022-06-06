@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [15.1.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@15.0.1...@yuntools/ali-oss@15.1.0) (2022-06-06)
+
+
+### Features
+
+* **ali-oss:** add type SyncLocalOptions, SyncRemoteOptions ([efa2744](https://github.com/waitingsong/yuntools/commit/efa2744e9c69961a4c6a384673888f29ed8527b2))
+
+
+
+
+
 ## [15.0.1](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@15.0.0...@yuntools/ali-oss@15.0.1) (2022-06-06)
 
 **Note:** Version bump only for package @yuntools/ali-oss
