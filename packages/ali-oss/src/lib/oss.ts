@@ -88,16 +88,6 @@ export class OssClient {
   }
 
   /**
-   * 创建目录
-   * @link https://help.aliyun.com/document_detail/120062.html
-   */
-  async mkdir(options: MkdirOptions): Promise<ProcessRet> {
-    const keys: DataKey[] = [DataKey.elapsed]
-    const ret = await this.runner<MkdirOptions>(options, FnKey.mkdir, keys)
-    return ret
-  }
-
-  /**
    * 在远程拷贝文件
    * 若 force 为空或者 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
    * @link https://help.aliyun.com/document_detail/120057.html
@@ -122,30 +112,6 @@ export class OssClient {
   }
 
   /**
-   * 上传本地文件到 OSS
-   * 若 force 为空或者 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
-   * @link https://help.aliyun.com/document_detail/120057.html
-   */
-  async upload(options: UploadOptions): Promise<ProcessRet<DataCp>> {
-    if (! options.force) {
-      const statRet = await this.stat(options as StatOptions)
-      if (! statRet.exitCode) {
-        const ret: ProcessRet<DataCp> = {
-          exitCode: 1,
-          exitSignal: '',
-          stdout: '',
-          stderr: `${Msg.cloudFileAlreadyExists}: "${options.target}"`,
-          data: void 0,
-        }
-        return ret
-      }
-    }
-
-    const ret = await this.runner<UploadOptions, DataCp>(options, FnKey.upload, cpKeys)
-    return ret
-  }
-
-  /**
    * 创建软链接
    * @link https://help.aliyun.com/document_detail/120059.html
    */
@@ -155,48 +121,15 @@ export class OssClient {
     return ret
   }
 
-
   /**
-   * 删除云对象，不支持删除 bucket 本身
-   * 如果在 recusive 为 false 时删除目录，则目录参数值必须以 '/' 结尾，否则不会删除成功
-   * @link https://help.aliyun.com/document_detail/120053.html
+   * 创建目录
+   * @link https://help.aliyun.com/document_detail/120062.html
    */
-  async rm(options: RmOptions): Promise<ProcessRet> {
-    const keys = [DataKey.elapsed, DataKey.averageSpeed]
-    const ret = await this.runner<RmOptions>(options, FnKey.rm, keys)
+  async mkdir(options: MkdirOptions): Promise<ProcessRet> {
+    const keys: DataKey[] = [DataKey.elapsed]
+    const ret = await this.runner<MkdirOptions>(options, FnKey.mkdir, keys)
     return ret
   }
-
-  /**
-   * 递归删除，相当于 `rm -rf`
-   * @link https://help.aliyun.com/document_detail/120053.html
-   */
-  async rmrf(options: RmrfOptions): Promise<ProcessRet> {
-    const keys = [DataKey.elapsed, DataKey.averageSpeed]
-    const ret = await this.runner<RmrfOptions>(options, FnKey.rmrf, keys)
-    return ret
-  }
-
-  /**
-   * 查看 Bucket 和 Object 信息
-   * @link https://help.aliyun.com/document_detail/120054.html
-   */
-  async stat(options: StatOptions): Promise<ProcessRet<DataStat>> {
-    const keys: DataKey[] = [DataKey.elapsed].concat(Array.from(regxStat.keys()))
-    const ret = await this.runner<StatOptions, DataStat>(options, FnKey.stat, keys)
-    return ret
-  }
-
-
-  /**
-   * OSS 远程路径是否存在
-   */
-  async pathExists(options: StatOptions): Promise<boolean> {
-    const statRet = await this.stat(options)
-    const exists = !! (statRet.exitCode === 0 && statRet.data)
-    return exists
-  }
-
 
   /**
    * 移动云端的 OSS 对象
@@ -225,6 +158,45 @@ export class OssClient {
     return statRet
   }
 
+  /**
+   * OSS 远程路径是否存在
+   */
+  async pathExists(options: StatOptions): Promise<boolean> {
+    const statRet = await this.stat(options)
+    const exists = !! (statRet.exitCode === 0 && statRet.data)
+    return exists
+  }
+
+  /**
+   * 探测上传状态
+   * @link https://help.aliyun.com/document_detail/120061.html
+   */
+  async probeUpload(options: ProbUpOptions): Promise<ProcessRet> {
+    const keys = [DataKey.elapsed]
+    const ret = await this.runner<ProbUpOptions>(options, FnKey.probeUpload, keys)
+    return ret
+  }
+
+  /**
+   * 删除云对象，不支持删除 bucket 本身
+   * 如果在 recusive 为 false 时删除目录，则目录参数值必须以 '/' 结尾，否则不会删除成功
+   * @link https://help.aliyun.com/document_detail/120053.html
+   */
+  async rm(options: RmOptions): Promise<ProcessRet> {
+    const keys = [DataKey.elapsed, DataKey.averageSpeed]
+    const ret = await this.runner<RmOptions>(options, FnKey.rm, keys)
+    return ret
+  }
+
+  /**
+   * 递归删除，相当于 `rm -rf`
+   * @link https://help.aliyun.com/document_detail/120053.html
+   */
+  async rmrf(options: RmrfOptions): Promise<ProcessRet> {
+    const keys = [DataKey.elapsed, DataKey.averageSpeed]
+    const ret = await this.runner<RmrfOptions>(options, FnKey.rmrf, keys)
+    return ret
+  }
 
   /**
    * sign（生成签名URL）
@@ -243,12 +215,23 @@ export class OssClient {
   }
 
   /**
-   * 探测上传状态
-   * @link https://help.aliyun.com/document_detail/120061.html
+   * 查看 Bucket 和 Object 信息
+   * @link https://help.aliyun.com/document_detail/120054.html
    */
-  async probeUpload(options: ProbUpOptions): Promise<ProcessRet> {
-    const keys = [DataKey.elapsed]
-    const ret = await this.runner<ProbUpOptions>(options, FnKey.probeUpload, keys)
+  async stat(options: StatOptions): Promise<ProcessRet<DataStat>> {
+    const keys: DataKey[] = [DataKey.elapsed].concat(Array.from(regxStat.keys()))
+    const ret = await this.runner<StatOptions, DataStat>(options, FnKey.stat, keys)
+    return ret
+  }
+
+  /**
+   * 同步 OSS 文件到本地
+   * - force 参数默认 true
+   * - 若 force 为 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
+   * @link https://help.aliyun.com/document_detail/256352.html
+   */
+  async syncLocal(options: SyncOptions): Promise<ProcessRet<DataCp>> {
+    const ret = await this.runner<SyncOptions, DataCp>(options, FnKey.syncLocal, cpKeys)
     return ret
   }
 
@@ -263,17 +246,30 @@ export class OssClient {
     return ret
   }
 
-
   /**
-   * 同步 OSS 文件到本地
-   * - force 参数默认 true
-   * - 若 force 为 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
-   * @link https://help.aliyun.com/document_detail/256352.html
+   * 上传本地文件到 OSS
+   * 若 force 为空或者 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
+   * @link https://help.aliyun.com/document_detail/120057.html
    */
-  async syncLocal(options: SyncOptions): Promise<ProcessRet<DataCp>> {
-    const ret = await this.runner<SyncOptions, DataCp>(options, FnKey.syncLocal, cpKeys)
+  async upload(options: UploadOptions): Promise<ProcessRet<DataCp>> {
+    if (! options.force) {
+      const statRet = await this.stat(options as StatOptions)
+      if (! statRet.exitCode) {
+        const ret: ProcessRet<DataCp> = {
+          exitCode: 1,
+          exitSignal: '',
+          stdout: '',
+          stderr: `${Msg.cloudFileAlreadyExists}: "${options.target}"`,
+          data: void 0,
+        }
+        return ret
+      }
+    }
+
+    const ret = await this.runner<UploadOptions, DataCp>(options, FnKey.upload, cpKeys)
     return ret
   }
+
 
 
   private async runner<T extends BaseOptions, R extends DataBase = DataBase>(
