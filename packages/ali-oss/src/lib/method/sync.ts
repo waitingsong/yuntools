@@ -28,6 +28,24 @@ export interface SyncOptions extends Omit<UploadOptions, 'recursive'> {
   delete?: boolean
 }
 
+/**
+ * @link https://help.aliyun.com/document_detail/193394.html
+ */
+export interface SyncLocalOptions extends SyncOptions {
+  /** 目的本地路径 */
+  target: string
+  /** 源 cloudurl 路径，不包括 bucket */
+  src: string
+}
+
+/**
+ * @link https://help.aliyun.com/document_detail/193394.html
+ */
+export interface SyncRemoteOptions extends SyncOptions {
+  /** 源路径，本地目录 */
+  src: string
+}
+
 export const initOptions: SyncOptions = {
   ...uploadOptions,
 
@@ -37,7 +55,7 @@ export const initOptions: SyncOptions = {
 
 
 export async function processInputRemote(
-  input: SyncOptions,
+  input: SyncRemoteOptions,
   globalConfig: Config | undefined,
 ): Promise<ParamMap> {
 
@@ -47,7 +65,7 @@ export async function processInputRemote(
   const srcNew = typeof encodeSource === 'undefined' || encodeSource === true
     ? encodeInputPath(src, true)
     : src
-  const opts: SyncOptions = {
+  const opts: SyncRemoteOptions = {
     ...input,
     src: srcNew,
     encodeSource: false,
@@ -65,7 +83,7 @@ export async function processInputRemote(
 
 
 export async function processInputLocal(
-  input: SyncOptions,
+  input: SyncLocalOptions,
   globalConfig: Config | undefined,
 ): Promise<ParamMap> {
 
@@ -76,7 +94,7 @@ export async function processInputLocal(
   const dstNew = encode2
     ? encodeInputPath(dst, true)
     : dst
-  const opts: SyncOptions = {
+  const opts: SyncLocalOptions = {
     ...input,
     target: dstNew,
     encodeSource: encodeSource ?? true,

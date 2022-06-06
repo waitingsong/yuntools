@@ -4,7 +4,7 @@ import { join } from 'node:path'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { SyncOptions } from '../src/index.js'
+import { SyncLocalOptions, SyncOptions, SyncRemoteOptions } from '../src/index.js'
 
 import { assertLocalFileExists, assertUploadFiles } from './helper.js'
 import {
@@ -24,7 +24,7 @@ describe(fileShortPath(import.meta.url), () => {
 
   describe('syncLocal should work', () => {
     it('include *.txt', async () => {
-      const opts: SyncOptions = {
+      const opts: SyncRemoteOptions = {
         bucket,
         src: srcDir,
         target,
@@ -33,7 +33,7 @@ describe(fileShortPath(import.meta.url), () => {
 
       const localDir = join(testDir, 'tmp', `files-${Math.random().toString()}/`)
       await mkdir(localDir, { recursive: true })
-      const opts2: SyncOptions = {
+      const opts2: SyncLocalOptions = {
         bucket,
         src: target,
         target: localDir,
@@ -61,7 +61,7 @@ describe(fileShortPath(import.meta.url), () => {
     })
 
     it('all', async () => {
-      const opts: SyncOptions = {
+      const opts: SyncRemoteOptions = {
         bucket,
         src: srcDir,
         target,
@@ -70,7 +70,7 @@ describe(fileShortPath(import.meta.url), () => {
 
       const localDir = join(testDir, 'tmp', `files-${Math.random().toString()}/`)
       await mkdir(localDir, { recursive: true })
-      const opts2: SyncOptions = {
+      const opts2: SyncLocalOptions = {
         bucket,
         src: target,
         target: localDir,

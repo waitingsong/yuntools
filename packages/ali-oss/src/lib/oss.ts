@@ -26,9 +26,10 @@ import {
   RmrfOptions,
   SignOptions,
   StatOptions,
+  SyncLocalOptions,
+  SyncRemoteOptions,
   UploadOptions,
 } from './method/index.js'
-import { SyncOptions } from './method/sync.js'
 import { processInputFnMap } from './process-input.js'
 import { regxStat } from './rule.js'
 import {
@@ -230,8 +231,8 @@ export class OssClient {
    * - 若 force 为 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
    * @link https://help.aliyun.com/document_detail/256352.html
    */
-  async syncLocal(options: SyncOptions): Promise<ProcessRet<DataCp>> {
-    const ret = await this.runner<SyncOptions, DataCp>(options, FnKey.syncLocal, cpKeys)
+  async syncLocal(options: SyncLocalOptions): Promise<ProcessRet<DataCp>> {
+    const ret = await this.runner<SyncLocalOptions, DataCp>(options, FnKey.syncLocal, cpKeys)
     return ret
   }
 
@@ -241,8 +242,8 @@ export class OssClient {
    * - 若 force 为 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
    * @link https://help.aliyun.com/document_detail/193394.html
    */
-  async syncRemote(options: SyncOptions): Promise<ProcessRet<DataCp>> {
-    const ret = await this.runner<SyncOptions, DataCp>(options, FnKey.syncRemote, cpKeys)
+  async syncRemote(options: SyncRemoteOptions): Promise<ProcessRet<DataCp>> {
+    const ret = await this.runner<SyncRemoteOptions, DataCp>(options, FnKey.syncRemote, cpKeys)
     return ret
   }
 

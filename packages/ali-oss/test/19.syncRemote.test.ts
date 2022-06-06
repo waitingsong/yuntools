@@ -3,7 +3,7 @@ import { join } from 'node:path'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { SyncOptions } from '../src/index.js'
+import { SyncOptions, SyncRemoteOptions } from '../src/index.js'
 
 import { assertFileExists, assertUploadFiles } from './helper.js'
 import {
@@ -22,7 +22,7 @@ describe(fileShortPath(import.meta.url), () => {
 
   describe('syncRemote should work', () => {
     it('include *.txt', async () => {
-      const opts: SyncOptions = {
+      const opts: SyncRemoteOptions = {
         bucket,
         src: srcDir,
         target,
