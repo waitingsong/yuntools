@@ -14,7 +14,7 @@ import { initOptions as uploadOptions, UploadOptions } from './upload.js'
  * @link https://help.aliyun.com/document_detail/193394.html
  */
 export interface SyncOptions extends Omit<UploadOptions, 'recursive'> {
-  /** 目的 cloudurl 路径 */
+  /** 目的 cloudurl 路径，不包括 bucket */
   target: string
   /** 源路径，可以是本地文件或 cloudurl */
   src: string

@@ -10,6 +10,7 @@ import { initOptions as rmOptions, RmOptions } from './rm.js'
  * @link https://help.aliyun.com/document_detail/120053.html
  */
 export interface RmrfOptions extends Omit<RmOptions, 'recursive'> {
+  /** cloudurl 目的路径，不包括 bucket */
   target: string
 }
 

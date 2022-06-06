@@ -14,7 +14,7 @@ import { initOptions as cpOptions, CpOptions } from './cp.js'
  * @link https://help.aliyun.com/document_detail/120057.html
  */
 export interface UploadOptions extends CpOptions {
-  /** 目的 cloudurl 路径 */
+  /** 目的 cloudurl 路径，不包括 bucket */
   target: string
   /** 源路径，必须是本地文件 */
   src: string

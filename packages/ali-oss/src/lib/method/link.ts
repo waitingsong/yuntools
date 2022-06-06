@@ -15,9 +15,9 @@ import { initOptions as mvOptions } from './mv.js'
  * @link https://help.aliyun.com/document_detail/120057.html
  */
 export interface LinkOptions extends BaseOptions {
-  /** cloudurl 源路径 */
+  /** cloudurl 源路径，不包括 bucket */
   src: string
-  /** cloudurl 目的路径 */
+  /** cloudurl 目的路径，不包括 bucket */
   target: string
 }
 

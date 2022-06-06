@@ -4,7 +4,9 @@ import { initBaseOptions } from './common.js'
 
 
 export interface MvOptions extends BaseOptions {
+  /** cloudurl 源路径，不包括 bucket */
   src: string
+  /** cloudurl 目的路径，不包括 bucket */
   target: string
   /** 强制操作，不进行询问提示 */
   force?: boolean

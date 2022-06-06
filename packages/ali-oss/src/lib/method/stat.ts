@@ -11,7 +11,7 @@ import { initBaseOptions, processInputWoSrc } from './common.js'
 
 
 export interface StatOptions extends BaseOptions {
-  /** 目的 cloudurl 路径 */
+  /** cloudurl 路径，不包括 bucket */
   target: string
 
   versionId?: string | undefined

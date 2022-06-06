@@ -18,7 +18,7 @@ import { initOptions as mvOptions, MvOptions } from './mv.js'
  * @link https://help.aliyun.com/document_detail/120057.html
  */
 export interface CpOptions extends MvOptions {
-  /** 目的 cloudurl 路径 */
+  /** 目的 cloudurl 路径，不包括 bucket */
   target: string
   /** 源路径，可以是本地文件或 cloudurl */
   src: string

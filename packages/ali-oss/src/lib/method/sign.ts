@@ -15,7 +15,7 @@ import { initBaseOptions } from './common.js'
 
 
 export interface SignOptions extends BaseOptions {
-  /** cloudurl 源路径 */
+  /** cloudurl 路径，不包括 bucket */
   src: string
 
   /**
