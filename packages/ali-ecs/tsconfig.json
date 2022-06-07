@@ -18,7 +18,9 @@
       "~/*": ["./src/*"],
       "@/*": ["./test/*"]
     },
+    "preserveConstEnums": true,
     "pretty": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
@@ -27,6 +29,13 @@
     "target": "ES2022",
     "tsBuildInfoFile": ".vscode/.tsbuildinfo",
     "types" : ["mocha", "node"]
+  },
+  "ts-node": {
+    "esm": true,
+    "experimentalResolver": true,
+    "experimentalSpecifierResolution": "node",
+    "preferTsExts": true,
+    "transpileOnly": false
   },
   "include": [
     "src/**/*.ts"
