@@ -6,7 +6,7 @@ import type {
   DataCp,
   OssClient,
   PathExistsOptions,
-} from '~/index'
+} from '~/index.js'
 
 
 export async function assertFileExists(
