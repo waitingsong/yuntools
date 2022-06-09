@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [15.2.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@15.1.1...@yuntools/ali-oss@15.2.0) (2022-06-09)
+
+
+### Features
+
+* **ali-oss:** validate path with pathIsCloudUrl() for sync ([4971659](https://github.com/waitingsong/yuntools/commit/497165989895770629706cb51f0e3141be3c6477))
+
+
+
+
+
 ## [15.1.1](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@15.1.0...@yuntools/ali-oss@15.1.1) (2022-06-08)
 
 **Note:** Version bump only for package @yuntools/ali-oss
