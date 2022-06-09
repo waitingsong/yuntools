@@ -402,5 +402,5 @@ export function pathIsCloudUrl(
 
   assert(path, 'path should not be empty')
   assert(typeof path === 'string', 'path should be a string')
-  return path.startsWith('oss://')
+  return path.trimStart().startsWith('oss://')
 }
