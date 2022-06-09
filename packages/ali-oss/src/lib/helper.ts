@@ -393,3 +393,14 @@ export function processInputAsEncodedCloudUrl(
   }
   return ret
 }
+
+
+/** start with `oss://` */
+export function pathIsCloudUrl(
+  path: unknown,
+): boolean {
+
+  assert(path, 'path should not be empty')
+  assert(typeof path === 'string', 'path should be a string')
+  return path.startsWith('oss://')
+}

@@ -1,6 +1,10 @@
 import assert from 'node:assert'
 
-import { commonProcessInputMap, encodeInputPath } from '../helper.js'
+import {
+  pathIsCloudUrl,
+  commonProcessInputMap,
+  encodeInputPath,
+} from '../helper.js'
 import {
   Config,
   ParamMap,
@@ -72,7 +76,8 @@ export async function processInputRemote(
   }
 
   const map = commonProcessInputMap(opts, initOptions, globalConfig)
-  assert(map.get(PlaceholderKey.dest), 'dest is required')
+  assert(pathIsCloudUrl(map.get(PlaceholderKey.dest)), 'dest should be a cloud url')
+  assert(! pathIsCloudUrl(map.get(PlaceholderKey.src)), 'src should not be a cloud url')
 
   const bucket = map.get(PlaceholderKey.bucket)
   assert(bucket, 'bucket is required')
@@ -104,6 +109,9 @@ export async function processInputLocal(
   const map = commonProcessInputMap(opts, initOptions, globalConfig)
   assert(map.get(PlaceholderKey.dest), 'dest is required')
   assert(map.get(PlaceholderKey.src), 'src is required')
+
+  assert(! pathIsCloudUrl(map.get(PlaceholderKey.dest)), 'dest should not be a cloud url')
+  assert(pathIsCloudUrl(map.get(PlaceholderKey.src)), 'src should be a cloud url')
 
   const bucket = map.get(PlaceholderKey.bucket)
   assert(bucket, 'bucket is required')
