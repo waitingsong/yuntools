@@ -33,7 +33,7 @@ describe(fileShortPath(import.meta.url), () => {
       assert(! ret.exitCode, `upload ${srcDir} ${target} failed, ${ret.stderr}`)
       assertUploadFiles(ret.data, 5, 1, 4, 0, ret.stderr)
 
-      for await (const file of files) {
+      for (const file of files) {
         const d2 = join(target, file)
 
         if (file.endsWith('.txt')) {
@@ -62,7 +62,7 @@ describe(fileShortPath(import.meta.url), () => {
       assert(! ret.exitCode, `upload ${srcDir} ${target} failed, ${ret.stderr}`)
       assertUploadFiles(ret.data, 10, 1, 9, 0, ret.stderr)
 
-      for await (const file of files) {
+      for (const file of files) {
         const d2 = join(target, file)
         await assertFileExists(client, bucket, d2)
       }

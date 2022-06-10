@@ -42,7 +42,7 @@ describe(fileShortPath(import.meta.url), () => {
       const ret = await client.syncLocal(opts2)
       CI || console.log(ret)
 
-      for await (const file of files) {
+      for (const file of files) {
         const d2 = join(localDir, file)
 
         if (file.endsWith('.txt')) {
@@ -78,7 +78,7 @@ describe(fileShortPath(import.meta.url), () => {
       const ret = await client.syncLocal(opts2)
       CI || console.log(ret)
 
-      for await (const file of files) {
+      for (const file of files) {
         const d2 = join(localDir, file)
         await assertLocalFileExists(d2)
       }
