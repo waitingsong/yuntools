@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [15.3.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@15.2.1...@yuntools/ali-oss@15.3.0) (2022-06-10)
+
+
+### Features
+
+* **ali-oss:** syncCloud() ([4b5e1d6](https://github.com/waitingsong/yuntools/commit/4b5e1d688aa68ff852cae5d40b557dd744249f17))
+
+
+
+
+
 ## [15.2.1](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@15.2.0...@yuntools/ali-oss@15.2.1) (2022-06-09)
 
 **Note:** Version bump only for package @yuntools/ali-oss
