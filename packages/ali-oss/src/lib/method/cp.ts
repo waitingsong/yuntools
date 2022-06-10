@@ -129,6 +129,8 @@ export interface DataCp extends DataBase {
   [DataKey.succeedTotalSize]: string | undefined
   [DataKey.uploadDirs]: number
   [DataKey.uploadFiles]: number
+  /** sync between cloud */
+  [DataKey.copyObjects]: number
 }
 
 

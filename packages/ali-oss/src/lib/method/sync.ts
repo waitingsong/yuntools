@@ -33,7 +33,18 @@ export interface SyncOptions extends Omit<UploadOptions, 'recursive'> {
 }
 
 /**
- * @link https://help.aliyun.com/document_detail/193394.html
+ * @link https://help.aliyun.com/document_detail/256354.html
+ */
+export interface SyncCloudOptions extends SyncOptions {
+  /** 目的 cloudurl 路径，不包括 bucket */
+  target: string
+  /** 源 cloudurl 路径，不包括 bucket */
+  src: string
+}
+
+
+/**
+ * @link https://help.aliyun.com/document_detail/256352.html
  */
 export interface SyncLocalOptions extends SyncOptions {
   /** 目的本地路径 */
@@ -57,6 +68,30 @@ export const initOptions: SyncOptions = {
   force: true,
 }
 
+
+export async function processInputCloud(
+  input: SyncCloudOptions,
+  globalConfig: Config | undefined,
+): Promise<ParamMap> {
+
+  const { encodeSource, encodeTarget } = input
+
+  const opts: SyncCloudOptions = {
+    ...input,
+    encodeSource: encodeSource ?? true,
+    encodeTarget: encodeTarget ?? true,
+  }
+
+  const map = commonProcessInputMap(opts, initOptions, globalConfig)
+  assert(pathIsCloudUrl(map.get(PlaceholderKey.dest)), 'dest should be a cloud url')
+  assert(pathIsCloudUrl(map.get(PlaceholderKey.src)), 'src should be a cloud url')
+
+  const bucket = map.get(PlaceholderKey.bucket)
+  assert(bucket, 'bucket is required')
+  assert(typeof bucket === 'string', 'bucket must be string')
+
+  return map
+}
 
 export async function processInputRemote(
   input: SyncRemoteOptions,

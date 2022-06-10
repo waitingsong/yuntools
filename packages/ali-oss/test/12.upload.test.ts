@@ -49,7 +49,7 @@ describe(fileShortPath(import.meta.url), () => {
       const ret = await client.upload(opts)
       CI || console.log(ret)
       assert(! ret.exitCode, `upload ${src} ${target} failed, ${ret.stderr}`)
-      assertUploadFiles(ret.data, 1, 0, 1, ret.stderr)
+      assertUploadFiles(ret.data, 1, 0, 1, 0, ret.stderr)
     })
 
     it('complex', async () => {
@@ -270,7 +270,7 @@ describe(fileShortPath(import.meta.url), () => {
       const ret = await client.upload(opts)
       CI || console.log(ret)
       assert(! ret.exitCode, `upload ${srcDir} ${target} failed, ${ret.stderr}`)
-      assertUploadFiles(ret.data, 10, 1, 9, ret.stderr)
+      assertUploadFiles(ret.data, 10, 1, 9, 0, ret.stderr)
 
       for await (const file of files) {
         await assertFileExists(client, bucket, target + file)
@@ -292,7 +292,7 @@ describe(fileShortPath(import.meta.url), () => {
       const ret = await client.upload(opts)
       CI || console.log(ret)
       assert(! ret.exitCode, `upload ${srcDir} ${target} failed, ${ret.stderr}`)
-      assertUploadFiles(ret.data, 5, 1, 4, ret.stderr)
+      assertUploadFiles(ret.data, 5, 1, 4, 0, ret.stderr)
 
       for await (const file of files) {
         const d2 = join(target, file)

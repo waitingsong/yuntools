@@ -6,7 +6,7 @@ import { fileShortPath } from '@waiting/shared-core'
 
 import { SyncLocalOptions, SyncOptions, SyncRemoteOptions } from '../src/index.js'
 
-import { assertLocalFileExists, assertUploadFiles } from './helper.js'
+import { assertLocalFileExists } from './helper.js'
 import {
   cloudUrlPrefix,
   client,

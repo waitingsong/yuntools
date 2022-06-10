@@ -28,6 +28,7 @@ export function assertUploadFiles(
   expectTotalNumber: number,
   expectDirs: number,
   expectFiles: number,
+  expectObjects: number,
   stderr: string,
 ): void {
 
@@ -41,8 +42,10 @@ export function assertUploadFiles(
 
   assert(typeof data.uploadDirs === 'number', stderr)
   assert(typeof data.uploadFiles === 'number', stderr)
+  assert(typeof data.copyObjects === 'number', stderr)
   assert(data.uploadDirs === expectDirs, stderr)
   assert(data.uploadFiles === expectFiles, stderr)
+  assert(data.copyObjects === expectObjects, stderr)
 }
 
 export async function assertLocalFileExists(

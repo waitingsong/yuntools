@@ -19,4 +19,5 @@ export const cpKeys: DataKey[] = [
   DataKey.succeedTotalSize,
   DataKey.uploadDirs,
   DataKey.uploadFiles,
+  DataKey.copyObjects,
 ]

@@ -30,6 +30,7 @@ import {
   SyncRemoteOptions,
   UploadOptions,
 } from './method/index.js'
+import { SyncCloudOptions } from './method/sync.js'
 import { processInputFnMap } from './process-input.js'
 import { regxStat } from './rule.js'
 import {
@@ -222,6 +223,17 @@ export class OssClient {
   async stat(options: StatOptions): Promise<ProcessRet<DataStat>> {
     const keys: DataKey[] = [DataKey.elapsed].concat(Array.from(regxStat.keys()))
     const ret = await this.runner<StatOptions, DataStat>(options, FnKey.stat, keys)
+    return ret
+  }
+
+  /**
+   * 在 OSS 之间同步文件
+   * - force 参数默认 true
+   * - 若 force 为 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
+   * @link https://help.aliyun.com/document_detail/256354.html
+   */
+  async syncCloud(options: SyncCloudOptions): Promise<ProcessRet<DataCp>> {
+    const ret = await this.runner<SyncCloudOptions, DataCp>(options, FnKey.syncCloud, cpKeys)
     return ret
   }
 

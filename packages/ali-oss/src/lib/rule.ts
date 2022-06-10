@@ -29,6 +29,8 @@ export const regxCommon = new Map<DataKey, RegExp>([
   [DataKey.succeedTotalSize, new RegExp('Succeed: Total.+? size:\\s+([\\d,]+)', 'u')],
   [DataKey.uploadDirs, new RegExp('OK num:.+?upload.+?(\\d+)\\s+directories', 'u')],
   [DataKey.uploadFiles, new RegExp('OK num:.+?upload.+?(\\d+)\\s+files', 'u')],
+  // Succeed: Total num: 10, size: 2,125. OK num: 10(copy 9 objects).
+  [DataKey.copyObjects, new RegExp('OK num:.+?copy\\s+?(\\d+)\\s+objects', 'u')],
 ])
 
 export const pickRegxMap = new Map<DataKey, RegExp>([
@@ -60,6 +62,7 @@ export const pickFuncMap = new Map<DataKey, PickFunc>([
   [DataKey.succeedTotalSize, pickNumberStr],
   [DataKey.uploadDirs, pickNumber],
   [DataKey.uploadFiles, pickNumber],
+  [DataKey.copyObjects, pickNumber],
 ])
 
 

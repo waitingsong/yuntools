@@ -15,26 +15,36 @@ import {
   files,
 } from './root.config.js'
 
+import { SyncCloudOptions } from '~/lib/method/sync.js'
+
 
 describe(fileShortPath(import.meta.url), () => {
 
   const target = `${cloudUrlPrefix}/sync-${Date.now().toString()}`
 
-  describe('syncRemote should work', () => {
+  describe('syncCloud should work', () => {
     it('include *.txt', async () => {
       const opts: SyncRemoteOptions = {
         bucket,
         src: srcDir,
         target,
+      }
+      await client.syncRemote(opts)
+
+      const target2 = `${cloudUrlPrefix}/sync-${Date.now().toString()}`
+      const opts2: SyncCloudOptions = {
+        bucket,
+        src: target,
+        target: target2,
         include: '*.txt',
       }
-      const ret = await client.syncRemote(opts)
+      const ret = await client.syncCloud(opts2)
       CI || console.log(ret)
-      assert(! ret.exitCode, `upload ${srcDir} ${target} failed, ${ret.stderr}`)
-      assertUploadFiles(ret.data, 5, 1, 4, 0, ret.stderr)
+      assert(! ret.exitCode, `upload ${target2} ${target} failed, ${ret.stderr}`)
+      assertUploadFiles(ret.data, 4, 0, 0, 4, ret.stderr)
 
-      for await (const file of files) {
-        const d2 = join(target, file)
+      for (const file of files) {
+        const d2 = join(target2, file)
 
         if (file.endsWith('.txt')) {
           await assertFileExists(client, bucket, d2)
@@ -51,22 +61,6 @@ describe(fileShortPath(import.meta.url), () => {
       }
     })
 
-    it('all', async () => {
-      const opts: SyncOptions = {
-        bucket,
-        src: srcDir,
-        target,
-      }
-      const ret = await client.syncRemote(opts)
-      CI || console.log(ret)
-      assert(! ret.exitCode, `upload ${srcDir} ${target} failed, ${ret.stderr}`)
-      assertUploadFiles(ret.data, 10, 1, 9, 0, ret.stderr)
-
-      for await (const file of files) {
-        const d2 = join(target, file)
-        await assertFileExists(client, bucket, d2)
-      }
-    })
   })
 })
 

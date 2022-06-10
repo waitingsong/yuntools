@@ -32,7 +32,7 @@ describe(fileShortPath(import.meta.url), () => {
       const ret = await client2.cp(opts)
       CI || console.log(ret)
       assert(! ret.exitCode, `cp ${src} ${target} failed, ${ret.stderr}`)
-      assertUploadFiles(ret.data, 1, 0, 1, ret.stderr)
+      assertUploadFiles(ret.data, 1, 0, 1, 0, ret.stderr)
     })
 
   })

@@ -117,6 +117,7 @@ function convertUndefiedToZero(
   const keys: DataKey[] = [
     DataKey.uploadDirs,
     DataKey.uploadFiles,
+    DataKey.copyObjects,
   ]
 
   if (keys.includes(key)) {
