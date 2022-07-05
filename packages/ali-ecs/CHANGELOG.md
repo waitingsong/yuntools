@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 10.0.0 (2022-07-05)
+
+**Note:** Version bump only for package @yuntools/ali-ecs
+
+
+
+
+
 ## 9.1.2 (2022-06-08)
 
 **Note:** Version bump only for package @yuntools/ali-ecs
