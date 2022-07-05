@@ -40,7 +40,7 @@
     "rxjs": "^7.5.0"
   },
   "devDependencies": {
-    "@waiting/shared-core": "^18.0.0",
+    "@waiting/shared-core": "^19.0.0",
     "cross-env": "7"
   },
   "engines": {
