@@ -190,28 +190,28 @@ export interface BaseOptions extends Config {
    * - 若为本地目录，则不能设置为 true
    * @default false
    */
-  [PlaceholderKey.encodeSource]?: boolean
+  [PlaceholderKey.encodeSource]?: boolean | undefined
   /**
    * 是否对 `oss://bucket_name` 后面的key（目录名称）进行编码。
    * 若输入参数已经被编码（比如从操作结果中获取），则需要显示设置为 false
    * @default true
    */
-  [PlaceholderKey.encodeTarget]?: boolean
+  [PlaceholderKey.encodeTarget]?: boolean | undefined
   /** `oss://bucket_name` */
-  [PlaceholderKey.bucket]?: string
+  [PlaceholderKey.bucket]?: string | undefined
 
   /**
    * 客户端连接超时的时间，单位为秒，
    * @default 120
    */
-  connectTimeoutSec?: number
+  connectTimeoutSec?: number | undefined
   /**
    * 客户端读超时的时间，单位为秒，
    * @default 1200
    */
-  readTimeoutSec?: number
+  readTimeoutSec?: number | undefined
   /** 在当前工作目录下输出ossutil日志文件ossutil.log。该选项默认为空，表示不输出日志文件 */
-  loglevel?: 'info' | 'debug'
+  loglevel?: 'info' | 'debug' | undefined
 }
 
 

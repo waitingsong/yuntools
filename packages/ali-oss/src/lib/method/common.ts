@@ -11,15 +11,15 @@ import {
 
 
 export const initBaseOptions: BaseOptions = {
-  accessKeyId: undefined,
-  accessKeySecret: undefined,
+  accessKeyId: '',
+  accessKeySecret: '',
   bucket: '',
   connectTimeoutSec: undefined,
   encodeSource: false,
   encodeTarget: true,
   readTimeoutSec: undefined,
-  stsToken: undefined,
-  endpoint: undefined,
+  stsToken: '',
+  endpoint: '',
   loglevel: undefined,
 }
 
