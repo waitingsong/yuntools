@@ -63,18 +63,18 @@ export interface UpdateServerWeightOptions {
   /** 服务组id */
   serverGroupId: string
   /** Ecs 实例id, 不能和 publicIp 同时为空 */
-  ecsId?: string
+  ecsId?: string | undefined
   /** Ecs 实例公网ip，不能和 ecsId 同时为空 */
-  ip?: string
+  ip?: string | undefined
   /** 目标权重 */
   weight: number
   /** 当前权重 */
-  currentWeight?: number
+  currentWeight?: number | undefined
   /**
    * 首次更新步长
    * @default 10
    */
-  startStep?: number
+  startStep?: number | undefined
   /**
    * 每次更新步长
    * @default 30
