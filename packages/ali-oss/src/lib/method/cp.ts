@@ -27,34 +27,34 @@ export interface CpOptions extends MvOptions {
    * 设置断点续传文件的大小阈值，单位为字节
    * @default 100 * 1024 * 1024 (100MB)
    */
-  bigfileThreshold?: number
+  bigfileThreshold?: number | undefined
 
   /** 指定断点续传记录信息所在的目录 */
-  checkpointDir?: string
+  checkpointDir?: string | undefined
 
   /**
    * 上传链接子目录，默认不上传
    * @default false
    * */
-  enableSymlinkDir?: boolean
+  enableSymlinkDir?: boolean | undefined
 
   /**
    * 表示上传文件时不为目录生成Object
    * @default false
    */
-  disableCrc64?: boolean
+  disableCrc64?: boolean | undefined
 
   /** 批量操作时不忽略错误 */
-  disableIgnoreError?: boolean
+  disableIgnoreError?: boolean | undefined
 
   /** 仅上传当前目录下的文件，忽略子目录及子目录下的文件 */
-  onlyCurrentDir?: boolean
+  onlyCurrentDir?: boolean | undefined
 
   /** 设置分片大小，单位为字节 */
-  partSize?: number
+  partSize?: number | undefined
 
   /** 指定保存上传文件时的快照信息所在的目录。在下一次上传文件时，ossutil会读取指定目录下的快照信息进行增量上传 */
-  snapshotPath?: string
+  snapshotPath?: string | undefined
 
   /**
    * @default ACLKey.default
