@@ -4,7 +4,7 @@ import { join } from 'node:path'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { SyncLocalOptions, SyncOptions, SyncRemoteOptions } from '../src/index.js'
+import { SyncLocalOptions, SyncRemoteOptions } from '../src/index.js'
 
 import { assertLocalFileExists } from './helper.js'
 import {

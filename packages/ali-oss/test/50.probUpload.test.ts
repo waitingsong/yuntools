@@ -6,12 +6,23 @@ import {
   client,
   bucket,
   CI,
+  cloudUrlPrefix,
 } from './root.config.js'
 
-import { ProbUpOptions } from '~/index.js'
+import { ProbUpOptions, RmrfOptions } from '~/index.js'
 
 
 describe(fileShortPath(import.meta.url), () => {
+
+  beforeEach(async () => {
+    const target = `${cloudUrlPrefix}/`
+    const rmOpts: RmrfOptions = {
+      bucket,
+      target,
+    }
+    await client.rmrf(rmOpts)
+  })
+
 
   describe('probeUpload should work', () => {
     it('normal', async () => {

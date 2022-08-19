@@ -21,3 +21,13 @@ export const cpKeys: DataKey[] = [
   DataKey.uploadFiles,
   DataKey.copyObjects,
 ]
+
+export const downloadKeys: DataKey[] = [
+  DataKey.elapsed,
+  DataKey.averageSpeed,
+  DataKey.succeedTotalNumber,
+  DataKey.succeedTotalSize,
+  // DataKey.uploadDirs,
+  // DataKey.uploadFiles,
+  DataKey.downloadObjects,
+]

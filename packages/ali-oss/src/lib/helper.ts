@@ -204,11 +204,13 @@ export function preGenParams(
   paramMap: ParamMap,
 ): ParamMap {
 
+  const encodeSource = paramMap.get(PlaceholderKey.encodeSource)
   paramMap.delete(PlaceholderKey.encodeSource)
 
-  const encode = paramMap.get(PlaceholderKey.encodeTarget)
+  const encodeTarget = paramMap.get(PlaceholderKey.encodeTarget)
   paramMap.delete(PlaceholderKey.encodeTarget)
-  if (encode) {
+
+  if (encodeTarget || encodeSource) {
     paramMap.set(MKey.encodingType, 'url')
   }
 
