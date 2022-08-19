@@ -74,6 +74,8 @@ export enum DataKey {
   uploadFiles = 'uploadFiles',
   /** sync between cloud */
   copyObjects = 'copyObjects',
+
+  downloadObjects = 'downloadObjects',
 }
 
 
@@ -81,6 +83,7 @@ export type PickFunc = (input: string, rule: RegExp, debug: boolean) => string |
 
 export enum FnKey {
   cp = 'cp',
+  download = 'download',
   link = 'createSymlink',
   mkdir = 'mkdir',
   mv = 'mv',
@@ -98,6 +101,7 @@ export enum FnKey {
 
 export enum CmdKey {
   cp = 'cp',
+  download = 'cp',
   link = 'create-symlink',
   createSymlink = 'create-symlink',
   mkdir = 'mkdir',

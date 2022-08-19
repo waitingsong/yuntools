@@ -6,18 +6,20 @@ import { join } from 'node:path'
 
 import { run } from 'rxrunscript'
 
-import { cpKeys } from './config.js'
+import { cpKeys, downloadKeys } from './config.js'
 import {
   combineProcessRet,
   genParams,
   parseRespStdout,
   processResp,
 } from './helper.js'
+import { DataDownload } from './method/download.js'
 import {
   CpOptions,
   DataCp,
   DataSign,
   DataStat,
+  DownloadOptions,
   LinkOptions,
   MkdirOptions,
   MvOptions,
@@ -90,8 +92,9 @@ export class OssClient {
   }
 
   /**
-   * 在远程拷贝文件
+   * 在远程之间拷贝文件。
    * 若 force 为空或者 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
+   * @note 下载文件使用 `download()`
    * @link https://help.aliyun.com/document_detail/120057.html
    */
   async cp(options: CpOptions): Promise<ProcessRet<DataCp>> {
@@ -122,6 +125,17 @@ export class OssClient {
     const ret = await this.runner<CpOptions, DataCp>(options, FnKey.link, keys)
     return ret
   }
+
+  /**
+   * 下载远程文件到本地
+   * 若 force 为空或者 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
+   * @link https://help.aliyun.com/document_detail/120057.html
+   */
+  async download(options: DownloadOptions): Promise<ProcessRet<DataDownload>> {
+    const ret = await this.runner<DownloadOptions, DataDownload>(options, FnKey.download, downloadKeys)
+    return ret
+  }
+
 
   /**
    * 创建目录
@@ -300,9 +314,11 @@ export class OssClient {
 
     const ps = await this.genCliParams(fnKey, options)
     const resp$ = run(`${this.cmd} ${cmdKey} ${ps.join(' ')} `)
-    const res = await processResp(resp$, this.debug)
+    // const res = await processResp(resp$, this.debug)
+    const res = await processResp(resp$, true)
 
-    const data = parseRespStdout<R>(res, retKeys, this.debug)
+    // const data = parseRespStdout<R>(res, retKeys, this.debug)
+    const data = parseRespStdout<R>(res, retKeys, true)
     const ret = combineProcessRet<R>(res, data)
     return ret
   }

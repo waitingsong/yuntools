@@ -21,4 +21,5 @@ export {
   SyncOptions, SyncLocalOptions, SyncRemoteOptions,
 } from './sync.js'
 export { UploadOptions } from './upload.js'
+export { DownloadOptions } from './download.js'
 
