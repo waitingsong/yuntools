@@ -77,11 +77,12 @@ jobs:
 
       - name: Inatall Dependencies
         run: |
+          chown -R 1001:121 "/github/home/.npm"
           chmod a+w -R .
           # DO NOT execute: npm config set unsafe-perm=true
           export cwd=`pwd`
           # .github/workflows/fix.sh
-          npm i -g c8 lerna rollup zx
+          npm i --no-audit -g c8 lerna rollup zx
           npm run bootstrap
         env:
           CI: true
@@ -158,7 +159,7 @@ jobs:
           ALI_OSS_BUCKET: ${{ secrets.ALI_OSS_BUCKET }}
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
 
 
     services:

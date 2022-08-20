@@ -17,7 +17,8 @@
         "package-lock.json",
         "packages/demo",
         "packages/mw-demo"
-      ]
+      ],
+      "verifyAccess": false
     },
     "bootstrap": {
       "hoist": true,
@@ -27,13 +28,15 @@
         "egg"
       ],
       "npmClientArgs": [
+        "--no-audit"
       ]
     },
     "version": {
       "conventionalCommits": true,
       "allowBranch": [
-        "main",
-        "release"
+        "main", 
+        "release",
+        "fix"
       ],
       "registry": "https://registry.npmjs.org/"
     }

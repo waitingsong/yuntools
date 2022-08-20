@@ -45,11 +45,6 @@ jobs:
           path: |
             node_modules
             package-lock.json
-            packages/*/.eslintcache
-            packages/*/.vscode
-            packages/*/dist
-            packages/*/node_modules
-            packages/*/package-lock.json
             /usr/bin/ossutil
           key: ${{ runner.OS }}-build-${{ env.cache-name }}-${{ github.ref }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
@@ -193,7 +188,7 @@ jobs:
           git config user.name $GITHUB_ACTOR
           git config user.email gh-actions-${GITHUB_ACTOR}@github.com
           # npm run pub major
-          .scripts/publish.sh --yes --conventional-commits --create-release github ${{ github.event.inputs.semver }}
+          .scripts/publish.sh --yes --no-verify-access --conventional-commits --create-release github ${{ github.event.inputs.semver }}
           git push -v origin --follow-tags
         env:
           CI: true
