@@ -18,6 +18,7 @@
   "types": "src/index.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
@@ -33,20 +34,18 @@
   },
   "license": "MIT",
   "dependencies": {
+    "rxjs": "^7.5.0",
     "rxrunscript": "^11.0.1"
   },
   "devDependencies": {
-    "@waiting/shared-core": "^19.0.0",
     "cross-env": "7"
-  },
-  "peerDependencies": {
-    "rxjs": "^7.5.0"
   },
   "engines": {
     "node": ">=16.13.0"
   },
   "files": [
     "tsconfig.json",
+    "Dockerfile",
     "src/**/*.ts",
     "bin/*.js",
     "dist"
@@ -55,21 +54,17 @@
     "access": "public"
   },
   "scripts": {
-    "build": "npm run tsc && npm run rp",
-    "clean": "npm run clean:lock & npm run clean:cache & rm -rf dist/* -rf",
+    "build": "npm run tsc && tsc-alias && npm run rp",
+    "clean": "npm run clean:lock & npm run clean:cache & rm -rf dist/*",
     "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .vscode/.tsbuildinfo.*",
     "clean:lock": "rm package-lock.json -f",
     "cov": "cross-env TS_NODE_PROJECT=test/tsconfig.json c8 mocha --loader=ts-node/esm --parallel=false",
     "lint": "eslint --fix --cache {src,test}/**/*.ts",
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
-    "prepublishOnly": "sh ../../.scripts/change-pkg-types-dist.sh",
-    "postpublish": "sh ../../.scripts/change-pkg-types-src.sh",
     "purge": "npm run clean && rm node_modules -rf",
     "rp": "rollup -c rollup.config.js --context this",
-    "rp:w": "npm run tsc:w | rollup -wc rollup.config.js",
     "test": "cross-env TS_NODE_PROJECT=test/tsconfig.json mocha --loader=ts-node/esm",
     "test:local": "cross-env TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha --loader=ts-node/esm --parallel=false",
-    "tsc": "tsc -p tsconfig.json",
-    "tsc:w": "tsc -p tsconfig.json -w"
+    "tsc": "tsc -b "
   }
 }

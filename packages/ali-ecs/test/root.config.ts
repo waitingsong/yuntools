@@ -6,7 +6,7 @@ import { EcsClient } from '../src/index.js'
 const aid = process.env.ALI_ECS_AID
 const secret = process.env.ALI_ECS_ASECRET
 const endpoint = process.env.ALI_ECS_ENDPOINT ?? 'ecs-cn-hangzhou.aliyuncs.com'
-export const CI = process.env.CI
+export const CI = !! process.env['CI']
 
 assert(aid, 'ALI_ECS_AID should be set')
 assert(secret, 'ALI_ECS_ASECRET should be set')

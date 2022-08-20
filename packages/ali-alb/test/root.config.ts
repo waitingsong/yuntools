@@ -10,7 +10,7 @@ const secret = process.env.ALI_ECS_ASECRET
 const endpointEcs = process.env.ALI_ECS_ENDPOINT ?? 'ecs-cn-hangzhou.aliyuncs.com'
 const endpoint = process.env.ALI_ALB_ENDPOINT ?? 'alb.cn-hangzhou.aliyuncs.com'
 export const groupId = process.env.ALI_ALB_GROUPID ?? ''
-export const CI = process.env.CI
+export const CI = !! process.env['CI']
 
 assert(aid, 'ALI_ECS_AID should be set')
 assert(secret, 'ALI_ECS_ASECRET should be set')

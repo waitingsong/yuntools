@@ -1,7 +1,7 @@
-import { dirname, basename } from 'path'
+import { basename } from 'node:path'
 // import commonjs from '@rollup/plugin-commonjs'
 // import resolve from '@rollup/plugin-node-resolve'
-import { terser } from 'rollup-plugin-terser'
+// import { terser } from 'rollup-plugin-terser'
 import pkg from './package.json'
 
 // `npm run build` -> `production` is true
@@ -18,7 +18,6 @@ if (name.slice(0, 1) === '@') {
 name = parseName(name)
 console.log({ name })
 
-const targetDir = dirname(pkg.main)
 const deps = pkg.dependencies
 const peerDeps = pkg.peerDependencies
 
@@ -78,7 +77,30 @@ external = [...new Set(external)]
 const config = []
 const input = 'dist/index.js'
 
-if (pkg.main) {
+if (pkg.exports) {
+  Object.entries(pkg.exports).forEach(([key, row]) => {
+    if (typeof row !== 'object') { return }
+    if (! row.import && ! row.require) { return }
+
+    config.push(
+      {
+        external: external.concat(nodeModule),
+        input: row.import,
+        output: [
+          {
+            file: row.require,
+            banner,
+            format: 'cjs',
+            globals,
+            sourcemap: true,
+            sourcemapExcludeSources: true,
+          },
+        ],
+      },
+    )
+  })
+}
+else if (pkg.main) {
   config.push(
     {
       external: external.concat(nodeModule),
@@ -98,6 +120,7 @@ if (pkg.main) {
     },
   )
 }
+
 
 /*
 if (production) {
@@ -133,7 +156,8 @@ if (production) {
 */
 
 if (pkg.bin) {
-  const shebang = `#!/usr/bin/env node\n\n${banner}`
+  // const shebang = `#!/usr/bin/env node\n\n${banner}`
+  const shebang = `#!/usr/bin/env ts-node-esm\n\n${banner}`
 
   for (const binPath of Object.values(pkg.bin)) {
     if (! binPath) {
@@ -150,7 +174,8 @@ if (pkg.bin) {
         {
           file: binPath,
           banner: shebang,
-          format: 'cjs',
+          // format: 'cjs',
+          format: 'esm',
           globals,
         },
       ],
