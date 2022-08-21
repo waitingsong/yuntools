@@ -59,42 +59,42 @@ export interface CpOptions extends MvOptions {
   /**
    * @default ACLKey.default
    */
-  acl?: ACLKey
+  acl?: ACLKey | undefined
 
   /** 不包含任何符合指定条件的文件 */
-  exclude?: string
+  exclude?: string | undefined
 
   /** 包含符合指定条件的所有文件 */
-  include?: string
+  include?: string | undefined
 
   /**
    * 多文件操作时的并发任务数
    * @default 3
    */
-  jobs?: number
+  jobs?: number | undefined
 
   /**
    * 最大上传速度，单位为 KB/s
    * @default 0 不限制上传速度
    */
-  maxupspeed?: number
+  maxupspeed?: number | undefined
 
   /** 文件的元信息。包括部分HTTP标准属性（HTTP Header）以及以x-oss-meta-开头的用户自定义元数据 */
-  meta?: string
+  meta?: string | undefined
 
   /** 请求的支付方式。如果希望访问指定路径下的资源产生的流量、请求次数等费用由请求者支付，请将此选项的值设置为requester */
-  payer?: string
+  payer?: string | undefined
 
   /** 单文件操作时的并发任务数，取值范围为 1~10000 */
-  parallel?: number
+  parallel?: number | undefined
 
   /**
    * 上传文件时设置标签信息，格式为 `TagkeyA=TagvalueA&TagkeyB=TagvalueB....`
    */
-  tagging?: string
+  tagging?: string | undefined
 
   /** 只有当目标文件不存在，或源文件的最后修改时间晚于目标文件时，才会执行上传操作 */
-  update?: boolean
+  update?: boolean | undefined
 }
 
 export const initOptions: CpOptions = {

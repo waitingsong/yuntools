@@ -164,10 +164,10 @@ export enum MKey {
 }
 
 export interface Config {
-  accessKeyId?: string
-  accessKeySecret?: string
-  stsToken?: string
-  endpoint?: string
+  accessKeyId?: string | undefined
+  accessKeySecret?: string | undefined
+  stsToken?: string | undefined
+  endpoint?: string | undefined
 }
 
 export enum Msg {
@@ -179,7 +179,7 @@ export enum Msg {
 
 
 export type DownLinks = {
-  [key in NodeJS.Platform]?: string
+  [key in NodeJS.Platform]?: string | undefined
 }
 
 

@@ -17,22 +17,22 @@ export interface RmOptions extends Omit<MvOptions, 'force' | 'src'> {
    * 仅适用于已开启或暂停版本控制状态 Bucket 下的 Object，
    * 且同一个删除示例中仅允许选择--version-id或--all-versions其中一个选项
    */
-  allVersions?: boolean
+  allVersions?: boolean | undefined
 
   /** Object 的指定版本。仅适用于已开启或暂停版本控制状态 Bucket下的 Object */
-  versionId?: string
+  versionId?: string | undefined
 
   /** 仅在删除 Bucket 时使用此选项 */
   // bucket?: string
 
   /** 不包含任何符合指定条件的 Object */
-  exclude?: string
+  exclude?: string | undefined
 
   /** 包含符合指定条件的所有 Object */
-  include?: string
+  include?: string | undefined
 
   /** 指定操作的对象为 Bucket 中未完成的 Multipart 事件 */
-  multipart?: boolean
+  multipart?: boolean | undefined
 }
 
 export const initOptions: RmOptions = {

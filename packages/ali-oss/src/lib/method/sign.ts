@@ -22,22 +22,22 @@ export interface SignOptions extends BaseOptions {
    * 不对cloud_url中携带的正斜线（/）进行编码
    * @default false
    */
-  disableEncodeSlash?: boolean
+  disableEncodeSlash?: boolean | undefined
 
   /**
    * 签名 URL 过期时间，单位秒
    * @default 60
    */
-  timeoutSec?: number
+  timeoutSec?: number | undefined
 
   /**
    * 限定HTTP的访问速度，单位为bit/s。缺省值为0，表示不受限制。
    * 取值范围为 245760~838860800
    */
-  trafficLimit?: number
+  trafficLimit?: number | undefined
 
   /** Object 的指定版本ID。仅适用于已开启或暂停版本控制状态 Bucket下的 Object */
-  versionId?: string
+  versionId?: string | undefined
 }
 
 export interface DataSign extends DataBase {
