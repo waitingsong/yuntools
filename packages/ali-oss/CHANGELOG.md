@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [16.1.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@16.0.0...@yuntools/ali-oss@16.1.0) (2022-08-21)
+
+
+### Features
+
+* **ali-oss:** download() ([3bc8650](https://github.com/waitingsong/yuntools/commit/3bc8650c6814e0dd3b4dbb00a29021cca29008ff))
+
+
+
+
+
 # [16.0.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-oss@15.3.0...@yuntools/ali-oss@16.0.0) (2022-07-05)
 
 **Note:** Version bump only for package @yuntools/ali-oss
