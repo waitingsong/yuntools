@@ -16,9 +16,9 @@ import { initOptions as cpOptions, CpOptions } from './cp.js'
  * @link https://help.aliyun.com/document_detail/120057.html
  */
 export interface DownloadOptions extends CpOptions {
-  /** 目的 cloudurl 路径，不包括 bucket */
+  /** 目的文件，必须是本地文件 */
   target: string
-  /** 源路径，必须是本地文件 */
+  /** cloudurl 路径，不包括 bucket */
   src: string
 }
 
@@ -33,9 +33,6 @@ export interface DataDownload extends DataBase {
   [DataKey.averageSpeed]: number | undefined
   [DataKey.succeedTotalNumber]: number | undefined
   [DataKey.succeedTotalSize]: string | undefined
-  // [DataKey.uploadDirs]: number
-  // [DataKey.uploadFiles]: number
-  /** sync between cloud */
   [DataKey.downloadObjects]: number
 }
 
