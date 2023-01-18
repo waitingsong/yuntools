@@ -36,9 +36,9 @@
   "license": "MIT",
   "dependencies": {
     "@alicloud/alb20200616": "^1.0.1",
-    "@alicloud/openapi-client": "^0.4.1",
+    "@alicloud/openapi-client": "^0.4.4",
     "@yuntools/ali-ecs": "^10.0.1",
-    "rxjs": "^7.5.0"
+    "rxjs": "^7.8.0"
   },
   "devDependencies": {
     "cross-env": "7"
