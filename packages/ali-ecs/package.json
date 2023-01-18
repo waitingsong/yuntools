@@ -34,7 +34,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@alicloud/ecs20140526": "^2.1.0",
+    "@alicloud/ecs20140526": "^3.0.1",
     "@alicloud/openapi-client": "^0.4.4"
   },
   "devDependencies": {
