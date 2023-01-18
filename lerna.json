@@ -34,7 +34,7 @@
     "version": {
       "conventionalCommits": true,
       "allowBranch": [
-        "main", 
+        "main",
         "release",
         "fix"
       ],
