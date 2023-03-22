@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.0.1](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-ecs@11.0.0...@yuntools/ali-ecs@11.0.1) (2023-03-22)
+
+**Note:** Version bump only for package @yuntools/ali-ecs
+
+
+
+
+
 # [11.0.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-ecs@10.0.2...@yuntools/ali-ecs@11.0.0) (2023-01-18)
 
 **Note:** Version bump only for package @yuntools/ali-ecs

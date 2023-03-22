@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.0.1](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-alb@12.0.0...@yuntools/ali-alb@12.0.1) (2023-03-22)
+
+**Note:** Version bump only for package @yuntools/ali-alb
+
+
+
+
+
 # [12.0.0](https://github.com/waitingsong/yuntools/compare/@yuntools/ali-alb@11.0.2...@yuntools/ali-alb@12.0.0) (2023-01-18)
 
 **Note:** Version bump only for package @yuntools/ali-alb
