@@ -3,7 +3,7 @@
   "editor.detectIndentation": false,
   "editor.stickyScroll.enabled": true,
   "editor.minimap.renderCharacters": false,
-  "editor.renderFinalNewline": false,
+  "editor.renderFinalNewline": "off",
   "editor.tabSize": 2,
   "editor.wordWrap": "on",
   "editor.codeActionsOnSave": {
@@ -62,6 +62,7 @@
   "files.insertFinalNewline": true,
   "files.refactoring.autoSave": true,
   "files.watcherExclude": {
+    ".tsbuildinfo": true,
     "coverage/**": true,
     "dist/**": true,
     "packages/*/dist/**": true,
@@ -89,6 +90,7 @@
   "search.exclude": {
     ".gitlab": false,
     ".scripts": false,
+    ".tsbuildinfo": true,
     "i18n": true,
     "library/": true,
     "node_modules": true,
