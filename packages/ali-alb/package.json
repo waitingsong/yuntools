@@ -15,11 +15,9 @@
   ],
   "type": "module",
   "bin": {},
-  "main": "dist/index.js",
-  "types": "src/index.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
@@ -36,7 +34,7 @@
   "license": "MIT",
   "dependencies": {
     "@alicloud/alb20200616": "^1.0.1",
-    "@alicloud/openapi-client": "^0.4.4",
+    "@alicloud/openapi-client": "^0.4.5",
     "@yuntools/ali-ecs": "^11.0.0",
     "rxjs": "^7.8.0"
   },
