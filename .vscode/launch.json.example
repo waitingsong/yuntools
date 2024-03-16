@@ -42,7 +42,7 @@
       "restart": false,
       "runtimeArgs": [
         "run",
-        "test:local",
+        "test",
         "--",
         "--runInBand",
         "--preserve-symlinks"
@@ -83,7 +83,6 @@
       ],
       "runtimeExecutable": "npm",
       "skipFiles": [
-        "**/node_modules/**",
         "**/node_modules/rxjs/**",
         "<node_internals>/**",
         "<node_internals>/**/*.js"

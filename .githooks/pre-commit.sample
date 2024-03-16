@@ -1,13 +1,14 @@
 #!/bin/sh
-#
-# commit前eslint校验提交文件中js文件
-# 若校验有error则阻止commit
-# 命令行执行设置 git config --global core.hooksPath ./.githooks
-#
-# Author: waiting
-# Date: 2017.02.09
-#
 
+<<<<<<<< HEAD:.githooks/pre-commit
+sh .githooks/set-scripts-executable.sh
+
+========
+if [[ -z $NVM_DIR ]]; then
+  if [[ -f $HOME/.nvm/nvm.sh ]]; then
+    . $HOME/.nvm/nvm.sh
+  fi
+fi
 
 if git rev-parse --verify HEAD >/dev/null 2>&1
 then
@@ -25,7 +26,7 @@ fi
 # ------------- parse ts
 files=$(git diff --cached --name-only --diff-filter=ACMR $against|grep '\.ts$')
 if [[ $files != "" ]] ; then
-  # echo $files | xargs eslint --fix 
+  # echo $files | xargs eslint --fix
   npm run lint
   rc=$?
   if [[ $rc != 0 ]] ; then
@@ -38,3 +39,4 @@ if [[ $files != "" ]] ; then
 fi
 
 exit 0
+>>>>>>>> bp/main:.githooks/pre-commit.sample

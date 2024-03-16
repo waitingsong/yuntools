@@ -1,0 +1,20 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "declaration": false,
+    "declarationMap": false,
+    "noEmit": true,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUnusedLocals": false,
+    "sourceMap": false
+  },
+  "include": [
+    "../src/",
+    "./**/*.ts"
+  ],
+  "exclude": [
+    "**/*.d.ts"
+  ],
+}
