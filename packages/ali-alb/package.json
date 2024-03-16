@@ -33,16 +33,13 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@alicloud/alb20200616": "^1.0.1",
-    "@alicloud/openapi-client": "^0.4.5",
+    "@alicloud/alb20200616": "^1.1.5",
+    "@alicloud/openapi-client": "^0.4.8",
     "@yuntools/ali-ecs": "^11.0.1",
-    "rxjs": "^7.8.0"
-  },
-  "devDependencies": {
-    "cross-env": "7"
+    "rxjs": "^7.8.1"
   },
   "engines": {
-    "node": ">=16.13.0"
+    "node": ">=18.12.0"
   },
   "files": [
     "tsconfig.json",
