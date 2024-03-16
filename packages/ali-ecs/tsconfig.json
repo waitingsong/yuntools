@@ -1,25 +1,10 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "baseUrl": ".",
-    "incremental": true,
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "outDir": "dist",
     "paths": {
-      "~/*": ["./src/*"],
-      "@/*": ["./test/*"]
-    },
-    "tsBuildInfoFile": ".tsbuildinfo"
-  },
-  "ts-node": {
-    "esm": true,
-    "experimentalResolver": true,
-    "experimentalSpecifierResolution": "node",
-    "preferTsExts": true,
-    "transpileOnly": false
-  },
-  "include": [
-    "src/**/*.ts"
-  ]
+      "##/*": ["src/*"],
+      "#a/*": ["src/app/*"],
+      "#@/*": ["test/*"]
+    }
+  }
 }
