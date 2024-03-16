@@ -1,8 +1,9 @@
 {
   "name": "yuntools",
   "version": "1.0.0",
-  "description": "�ƹ��߷�װ",
+  "description": "云工具封装",
   "private": true,
+  "type": "module",
   "devDependencies": {
     "@commitlint/cli": "19",
     "@commitlint/config-conventional": "19",
