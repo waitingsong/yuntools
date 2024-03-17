@@ -4,7 +4,6 @@
 import Alb from '@alicloud/alb20200616'
 
 
-export const _Client = typeof module === 'object'
-  ? Alb
-  : (Alb as any).default as typeof Alb
+export const _Client = Alb.default
+export type Client = Alb.default
 

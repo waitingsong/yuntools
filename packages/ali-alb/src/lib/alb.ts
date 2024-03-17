@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 
-import Alb, {
+import {
   ListAsynJobsRequest,
   UpdateServerGroupServersAttributeResponseBody,
   ListServerGroupsRequest,
@@ -21,7 +21,7 @@ import {
   take,
 } from 'rxjs'
 
-import { _Client } from './client.js'
+import { _Client, Client } from './client.js'
 import {
   Action,
   ActionRet,
@@ -50,7 +50,7 @@ export class AlbClient {
    */
   showProgressLog = true
 
-  client: Alb
+  client: Client
   nextToken = ''
   ecsClient: EcsClient
   groupServersCache = new Map<ServerGroupId, GroupServer[]>()
@@ -449,7 +449,7 @@ export class AlbClient {
   }
 
 
-  private createClient(accessKeyId: string, accessKeySecret: string): Alb {
+  private createClient(accessKeyId: string, accessKeySecret: string): Client {
     const config = new ApiConfig({ accessKeyId, accessKeySecret })
     config.endpoint = this.endpoint
     const client = new _Client(config)
