@@ -9,7 +9,7 @@ import {
   groupId,
 } from './root.config.js'
 
-import { UpdateServerWeightOptions } from '~/index.js'
+import { UpdateServerWeightOptions } from '##/index.js'
 
 
 describe(fileShortPath(import.meta.url), () => {

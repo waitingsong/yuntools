@@ -489,12 +489,12 @@ export function calculateWeights(options: CalcWeightOptions): number[] {
   return range
 }
 
-// const ps: CalcuWeightOptions = {
+// const ps: CalcWeightOptions = {
 //   currentWeight: 100,
 //   dstWeight: 0,
 //   step: 50,
 // }
-// const arr = caculateWeights(ps)
+// const arr = calculateWeights(ps)
 
 
 // ListAsynJobsResponseBodyJobs {
