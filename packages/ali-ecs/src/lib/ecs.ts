@@ -1,9 +1,9 @@
 import assert from 'node:assert'
 
-import Ecs, { DescribeInstancesRequest } from '@alicloud/ecs20140526'
+import { DescribeInstancesRequest } from '@alicloud/ecs20140526'
 import { Config as ApiConfig } from '@alicloud/openapi-client'
 
-import { _Client } from './client.js'
+import { _Client, Client } from './client.js'
 import {
   Action,
   EcsStatusKey,
@@ -15,13 +15,14 @@ import {
 } from './types.js'
 
 
+
 /**
  * 阿里云 ECS 服务接口
  * 最多支持 100 个实例
  */
 export class EcsClient {
 
-  client: Ecs
+  client: Client
   debug = false
   nextToken = ''
   /** ip -> instanceId */
@@ -170,13 +171,13 @@ export class EcsClient {
       this.nextToken = resp.body.nextToken
     }
 
-    const insts = resp.body.instances?.instance
-    assert(insts && Array.isArray(insts), 'insts is empty')
-    this.debug && console.log(`${ip} found ${insts.length}`)
-    this.updateInstancedCache(insts)
-    this.debug && console.info({ insts })
+    const instances = resp.body.instances?.instance
+    assert(instances && Array.isArray(instances), 'instances is empty')
+    this.debug && console.log(`${ip} found ${instances.length}`)
+    this.updateInstancedCache(instances)
+    this.debug && console.info({ instances })
 
-    for (const inst of insts) {
+    for (const inst of instances) {
       const ips = inst.publicIpAddress?.ipAddress
       if (ips?.includes(ip)) {
         return inst
@@ -232,7 +233,7 @@ export class EcsClient {
     return node
   }
 
-  private createClient(accessKeyId: string, accessKeySecret: string): Ecs {
+  private createClient(accessKeyId: string, accessKeySecret: string): Client {
     const config = new ApiConfig({ accessKeyId, accessKeySecret })
     config.endpoint = this.endpoint
     const client = new _Client(config)
