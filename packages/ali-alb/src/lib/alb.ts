@@ -25,7 +25,7 @@ import { _Client, Client } from './client.js'
 import {
   Action,
   ActionRet,
-  CalcuWeightOptions,
+  CalcWeightOptions,
   GroupServer,
   JobId,
   JobStatus,
@@ -393,13 +393,13 @@ export class AlbClient {
     const startStep = typeof options.startStep === 'undefined' ? 10 : options.startStep
     const step = typeof options.step === 'undefined' ? 30 : options.step
 
-    const opts: CalcuWeightOptions = {
+    const opts: CalcWeightOptions = {
       currentWeight: options.currentWeight,
       dstWeight: options.weight,
       startStep,
       step,
     }
-    const range = caculateWeights(opts)
+    const range = calculateWeights(opts)
     if (! range.length) {
       return
     }
@@ -460,7 +460,7 @@ export class AlbClient {
 }
 
 
-export function caculateWeights(options: CalcuWeightOptions): number[] {
+export function calculateWeights(options: CalcWeightOptions): number[] {
   const { currentWeight, dstWeight, startStep, step } = options
 
   assert(typeof currentWeight === 'number', 'currentWeight must be a number')

@@ -87,7 +87,7 @@ export interface UpdateServerWeightOptionsInner extends UpdateServerWeightOption
 }
 
 
-export interface CalcuWeightOptions {
+export interface CalcWeightOptions {
   dstWeight: number
   currentWeight: number
   /**
